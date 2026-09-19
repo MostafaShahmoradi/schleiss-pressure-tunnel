@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>راهنما | User Manual – Schleiss Pressure Tunnel Design</title>
+  <meta name="description" content="User manual for: Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory. Developer: Mostafa Shahmoradi." />
+  <meta name="author" content="Mostafa Shahmoradi / مصطفی شاهمرادی" />
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #5c6570;
+      --primary: #0d47a1;
+      --border: #d8dee6;
+      --accent: #1565c0;
+      --code-bg: #eef2f7;
+      --ok: #1b5e20;
+      --shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #e9ecef;
+      --muted: #adb5bd;
+      --primary: #6ea8fe;
+      --border: #343a40;
+      --accent: #3d8bfd;
+      --code-bg: #2a2a2a;
+      --ok: #75b798;
+      --shadow: 0 4px 22px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Vazirmatn", Tahoma, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    [lang="en"] body, html[lang="en"] body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.65rem 1.25rem;
+      display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;
+      box-shadow: var(--shadow);
+    }
+    .toolbar .title { flex: 1; font-weight: 700; color: var(--primary); font-size: 0.98rem; }
+    .toolbar button, .toolbar a.btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+    }
+    .toolbar button:hover, .toolbar a.btn:hover { border-color: var(--primary); }
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+    @media (min-width: 960px) {
+      .layout { grid-template-columns: 240px 1fr; align-items: start; }
+      .toc { position: sticky; top: 4.2rem; }
+    }
+    .toc, .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .toc { padding: 1rem 1.1rem; }
+    .toc h2 { font-size: 0.92rem; margin-bottom: 0.6rem; color: var(--primary); }
+    .toc a {
+      display: block;
+      padding: 0.35rem 0.4rem;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+    .toc a:hover { background: var(--code-bg); color: var(--primary); }
+    .content-card { padding: 1.35rem 1.5rem 1.75rem; }
+    h1 { font-size: 1.45rem; color: var(--primary); margin-bottom: 0.35rem; }
+    .subtitle { color: var(--muted); margin-bottom: 1.25rem; font-size: 0.95rem; }
+    h2 {
+      font-size: 1.12rem;
+      margin: 1.75rem 0 0.65rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid color-mix(in srgb, var(--primary) 40%, var(--border));
+      color: var(--primary);
+      scroll-margin-top: 4.5rem;
+    }
+    h3 { font-size: 1rem; margin: 1.1rem 0 0.45rem; color: var(--text); }
+    p, li { margin-bottom: 0.55rem; }
+    ul, ol { padding-inline-start: 1.35rem; margin-bottom: 0.75rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1.1rem;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.55rem;
+      text-align: start;
+      vertical-align: top;
+    }
+    th { background: var(--code-bg); font-weight: 700; }
+    td.num { font-variant-numeric: tabular-nums; text-align: end; white-space: nowrap; }
+    .callout {
+      border-inline-start: 4px solid var(--primary);
+      background: var(--code-bg);
+      padding: 0.75rem 0.95rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.85rem 0;
+      font-size: 0.92rem;
+    }
+    html[dir="rtl"] .callout { border-radius: 8px 0 0 8px; }
+    .badge {
+      display: inline-block;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--primary) 15%, transparent);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    code, .mono {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--code-bg);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+    .example {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin: 0.9rem 0 1.2rem;
+      background: color-mix(in srgb, var(--card) 92%, var(--primary));
+    }
+    .example h3 { margin-top: 0; color: var(--primary); }
+    footer.dev {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border);
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    footer.dev strong { color: var(--text); }
+    .lang-block { display: none; }
+    .lang-block.active { display: block; }
+    .steps { counter-reset: step; list-style: none; padding: 0; }
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.55rem 0.75rem 0.55rem 2.6rem;
+      margin-bottom: 0.45rem;
+      background: var(--code-bg);
+      border-radius: 8px;
+    }
+    html[dir="rtl"] .steps li { padding: 0.55rem 2.6rem 0.55rem 0.75rem; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      inset-inline-start: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.5rem; height: 1.5rem;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+  </style>
+</head>
+<body>
+<div class="toolbar">
+  <span class="title" id="toolbarTitle">راهنمای کاربری · User Manual</span>
+  <button type="button" id="btnLang">EN</button>
+  <button type="button" id="btnTheme">🌙</button>
+  <a class="btn" href="index.html" id="btnBack">← بازگشت به ماشین‌حساب</a>
+</div>
+
+<div class="layout">
+  <nav class="toc" id="toc"></nav>
+  <article class="content-card">
+    <!-- ========== PERSIAN ========== -->
+    <div class="lang-block active" id="lang-fa" lang="fa">
+      <h1>راهنمای کاربری — طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)</h1>
+      <p class="subtitle">مطابق بخش ۷.۴ کتاب اشلایس (Schleiss) — توسعه‌دهنده: <strong>مصطفی شاهمرادی</strong></p>
+
+      <h2 id="fa-intro">۱. معرفی</h2>
+      <p>این اپلیکیشن وب برای طراحی <strong>پوشش بتن مسلح تونل‌ها و شفت‌های تحت فشار</strong> بر اساس مرجع زیر ساخته شده است:</p>
+      <p><em>Anton J. Schleiss — Design of Pressure Tunnels and Shafts for Hydropower Plants, Section 7.4 – Reinforced Concrete Linings</em></p>
+      <p>قابلیت‌های اصلی:</p>
+      <ul>
+        <li>فاز ترک‌نخورده: فشار بحرانی ترک‌خوردگی <code>P<sub>i,crit</sub></code>، فشار خارجی <code>P<sub>a</sub></code>، تنش مماسی حداکثر</li>
+        <li>فاز ترک‌خورده: سری‌های ترک (Birkenmaier)، عرض ترک <code>2a</code>، تنش فولاد <code>σ<sub>s2</sub></code>، دبی نشت <code>q</code>، شعاع تأثیر <code>R</code></li>
+        <li>سه رژیم: تونل بالای GWL (ABOGWL)، تونل زیر GWL (BELGWL)، شفت قائم (VSHAFT)</li>
+        <li>بهینه‌سازی آرماتور با محدودیت‌های طراح</li>
+        <li>نمودارها، دفترچه محاسبات قابل چاپ، CSV و تحلیل حساسیت</li>
+      </ul>
+
+      <h2 id="fa-theory">۲. مبانی محاسبات (خلاصه مهندسی)</h2>
+      <h3>۲.۱ فاز ترک‌نخورده</h3>
+      <p>پوشش به‌صورت استوانه ضخیم الاستیک مدل می‌شود. فشار خارجی <code>P<sub>a</sub></code> بسته به نوع سازه از نشت (Bouvard / نسبت <code>R/r<sub>a</sub></code>) یا فشار هیدرواستاتیک آب زیرزمینی به‌دست می‌آید. فشار بحرانی داخلی وقتی است که تنش مماسی حداکثر به مقاومت کششی بتن برسد:</p>
+      <p class="callout"><code>σ<sub>t,max</sub> ≈ −β<sub>z</sub>  →  P<sub>i,crit</sub></code></p>
+      <ul>
+        <li><strong>ABOGWL (بالای GWL):</strong> <code>P<sub>i</sub></code> مطلق است؛ <code>P<sub>a</sub></code> از تعادل نشت پوشش ترک‌نخورده.</li>
+        <li><strong>BELGWL (زیر GWL):</strong> ابتدا <code>ΔP<sub>i,crit</sub></code> با <code>P<sub>a</sub> = ρgb/10<sup>5</sup></code> حل می‌شود؛ سپس <code>P<sub>i,crit</sub> = P<sub>a</sub> + ΔP<sub>i,crit</sub></code>.</li>
+        <li><strong>VSHAFT (شفت):</strong> در ترک‌نخورده مشابه ABOGWL با نسبت <code>R/r<sub>a</sub></code>؛ فشار مطلق <code>P<sub>i</sub> = ΔP<sub>i</sub> + ρgb/10<sup>5</sup></code>.</li>
+      </ul>
+
+      <h3>۲.۲ فاز ترک‌خورده (مدل Birkenmaier)</h3>
+      <p>پس از ترک‌خوردگی، فاصله ترک‌ها <code>d</code> در سری اول قفل می‌شود و در سری‌های بعدی نصف می‌گردد. عوامل توزیع تنش فولاد:</p>
+      <ul>
+        <li><code>m<sub>1</sub> = 1/3</code> ، <code>m<sub>k</sub> = (m<sub>k−1</sub> + 1)/2</code></li>
+        <li><code>p<sub>1</sub> = 0</code> ، <code>p<sub>k</sub> = (p<sub>k−1</sub> + 1)/2</code> (نسبت <code>σ<sub>s1</sub>/σ<sub>s2</sub></code>)</li>
+      </ul>
+      <p>عرض ترک متوسط:</p>
+      <p class="callout"><code>2a = ((σ<sub>s2</sub> + 2·σ<sub>s1</sub>) · d) / (3·E<sub>s</sub>) · 1000</code> &nbsp;[mm]</p>
+      <p>انتقال به سری بعدی وقتی <code>σ<sub>c1</sub> ≥ β<sub>z</sub></code>.</p>
+
+      <h3>۲.۳ نشت پس از ترک‌خوردگی</h3>
+      <table>
+        <thead><tr><th>حالت</th><th>شعاع تأثیر R</th><th>فشار خارجی P<sub>a</sub></th></tr></thead>
+        <tbody>
+          <tr><td>ABOGWL</td><td>متغیر (الگوی Bouvard)</td><td>پیوستگی دبی ترک و سنگ</td></tr>
+          <tr><td>BELGWL</td><td><code>R = b</code></td><td>فرم بسته از <code>q<sub>c</sub> = q<sub>r</sub></code></td></tr>
+          <tr><td>VSHAFT</td><td><code>R = (R/r<sub>a</sub>)<sub>cr</sub> · r<sub>a</sub></code> (معمولاً ۱۰)</td><td>فرم بسته با <code>ln(R/r<sub>a</sub>)</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>۲.۴ آرماتور</h3>
+      <p class="callout"><code>A<sub>s</sub> = n<sub>layers</sub> · (π s² / 4) · 100 / d<sub>s</sub></code> &nbsp;[mm²/m]</p>
+
+      <h2 id="fa-modes">۳. نوع سازه</h2>
+      <table>
+        <thead><tr><th>گزینه</th><th>کاربرد</th><th>نکته ورودی</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">خودکار</span></td><td>بر اساس b</td><td><code>b = 0</code> → بالا ؛ <code>b &gt; 0</code> → زیر GWL</td></tr>
+          <tr><td><span class="badge">ABOGWL</span></td><td>تونل بالای سطح آب زیرزمینی</td><td><code>b = 0</code></td></tr>
+          <tr><td><span class="badge">BELGWL</span></td><td>تونل زیر GWL</td><td><code>b</code> عمق محور نسبت به سطح آب</td></tr>
+          <tr><td><span class="badge">VSHAFT</span></td><td>شفت قائم</td><td>نسبت <code>(R/r<sub>a</sub>)<sub>cr</sub></code> معمولاً ۱۰</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="fa-inputs">۴. معنی سه فشار داخلی</h2>
+      <table>
+        <thead><tr><th>ورودی</th><th>نقش</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pi</strong></td><td>فشار طراحی برای یک محاسبه تکی (نتایج و کارت‌ها)</td></tr>
+          <tr><td><strong>حداکثر Pi (max_Pi)</strong></td><td>فقط برای بهینه‌سازی آرماتور در سخت‌ترین فشار</td></tr>
+          <tr><td><strong>سقف تحلیل سری‌ها</strong></td><td>محدوده ردیابی شروع/پایان سری ترک و نمودارها</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="fa-howto">۵. نحوه استفاده</h2>
+      <ol class="steps">
+        <li>در صورت نیاز یکی از دکمه‌های نمونه (بالای GWL / زیر GWL / شفت) را بزنید یا ورودی‌ها را دستی وارد کنید.</li>
+        <li><strong>نوع سازه</strong> را انتخاب کنید (یا خودکار بگذارید).</li>
+        <li>دکمه <strong>محاسبه</strong> را بزنید تا نتایج جزئی، سری‌ها و نمودارها پر شوند.</li>
+        <li>در صورت نیاز محدودیت‌های طراح را تنظیم و <strong>بهینه‌سازی آرماتور</strong> را اجرا کنید.</li>
+        <li><strong>دفترچه محاسبات</strong> را برای چاپ/PDF باز کنید.</li>
+        <li>اختیاری: <strong>خروجی CSV</strong> یا <strong>تحلیل حساسیت</strong> (Er، Kr، b).</li>
+      </ol>
+      <p class="callout">کنار هر پارامتر آیکن <strong>?</strong> راهنمای کوتاه همان پارامتر است.</p>
+
+      <h2 id="fa-features">۶. امکانات اپ</h2>
+      <ul>
+        <li>دوزبانه فارسی / انگلیسی و تم روشن / تیره</li>
+        <li>نمایش جزئی هر پارامتر خروجی با واحد</li>
+        <li>کارت‌های شروع و پایان هر سری ترک</li>
+        <li>نمودارهای 2a–Pi، 2a–σs2، q–Pi</li>
+        <li>جدول پاس/رد بهینه‌سازی آرماتور</li>
+        <li>چند لایه آرماتور، CSV، حساسیت</li>
+        <li>دفترچه انگلیسی قابل چاپ با واترمارک توسعه‌دهنده</li>
+      </ul>
+
+      <h2 id="fa-ex1">۷. مثال ۱ — تونل بالای GWL (ABOGWL)</h2>
+      <div class="example">
+        <h3>ورودی‌های نمونه</h3>
+        <p><code>r<sub>i</sub>=5.075 m</code> ، <code>r<sub>a</sub>=5.675 m</code> ، <code>r<sub>s</sub>=5.175 m</code> ، <code>E<sub>c</sub>=20000</code> ، <code>E<sub>r</sub>=5000</code> ، <code>E<sub>s</sub>=200000</code> MPa ، <code>β<sub>z</sub>=1</code> ، <code>s=20</code> ، <code>d<sub>s</sub>=20</code> mm ، <code>b=0</code> ، نوع سازه: ABOGWL ، <code>P<sub>i</sub>=2.827</code> bar</p>
+        <h3>نتایج کلیدی (اعتبارسنجی‌شده با ABOGWL.xls)</h3>
+        <table>
+          <thead><tr><th>پارامتر</th><th>مقدار</th><th>واحد</th></tr></thead>
+          <tbody>
+            <tr><td>P<sub>i,crit</sub></td><td class="num">۲.۸۲۷</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub> (ترک‌خورده در crit)</td><td class="num">۰.۸۴۵</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">۴۲.۵</td><td>MPa</td></tr>
+            <tr><td>2a</td><td class="num">۰.۰۲۴۲</td><td>mm</td></tr>
+            <tr><td>R</td><td class="num">≈ ۸.۲</td><td>m</td></tr>
+            <tr><td>n (تعداد ترک)</td><td class="num">۹۵</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p>در صفحه اصلی روی <strong>نمونه بالای GWL</strong> سپس <strong>محاسبه</strong> بزنید.</p>
+      </div>
+
+      <h2 id="fa-ex2">۸. مثال ۲ — تونل زیر GWL (BELGWL)</h2>
+      <div class="example">
+        <h3>ورودی‌های نمونه</h3>
+        <p>همان هندسه و مصالح مثال ۱ با <code>b=100 m</code> ، نوع سازه: BELGWL ، <code>P<sub>i</sub>≈12.35</code> bar</p>
+        <h3>نتایج کلیدی (اعتبارسنجی‌شده با BELGWL.xls)</h3>
+        <table>
+          <thead><tr><th>پارامتر</th><th>مقدار</th><th>واحد</th></tr></thead>
+          <tbody>
+            <tr><td>P<sub>i,crit</sub> (مطلق)</td><td class="num">۱۲.۳۵</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub></td><td class="num">≈ ۱۰.۹۵</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">≈ ۴۰.۱</td><td>MPa</td></tr>
+            <tr><td>2a</td><td class="num">≈ ۰.۰۲۲</td><td>mm</td></tr>
+            <tr><td>R</td><td class="num">۱۰۰</td><td>m (= b)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="fa-ex3">۹. مثال ۳ — شفت قائم (VSHAFT)</h2>
+      <div class="example">
+        <h3>ورودی‌های نمونه</h3>
+        <p><code>r<sub>i</sub>=10.5</code> ، <code>r<sub>a</sub>=11</code> ، <code>r<sub>s</sub>=10.6</code> m ، <code>b=100</code> m ، <code>(R/r<sub>a</sub>)<sub>cr</sub>=10</code> ، <code>s=ds=20</code> mm ، نوع سازه: VSHAFT ، <code>P<sub>i</sub>≈12.17</code> bar</p>
+        <h3>نتایج کلیدی (اعتبارسنجی‌شده با VSHAFT.xls)</h3>
+        <table>
+          <thead><tr><th>پارامتر</th><th>مقدار</th><th>واحد</th></tr></thead>
+          <tbody>
+            <tr><td>ΔP<sub>i,crit</sub></td><td class="num">۲.۳۵۹</td><td>bar</td></tr>
+            <tr><td>P<sub>i,crit</sub> مطلق</td><td class="num">۱۲.۱۶۹</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub></td><td class="num">≈ ۱۰.۹۲</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">≈ ۳۷.۰</td><td>MPa</td></tr>
+            <tr><td>R</td><td class="num">۱۱۰</td><td>m</td></tr>
+            <tr><td>n</td><td class="num">۲۱۵</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="fa-opt">۱۰. بهینه‌سازی آرماتور</h2>
+      <p>در <code>max_Pi</code> همه ترکیب‌های مجاز <code>s × d<sub>s</sub></code> بررسی می‌شوند. ترکیب‌هایی که محدودیت‌های 2a، q، R و σs را پاس کنند، از سبک به سنگین رتبه‌بندی می‌شوند و سبک‌ترین <code>A<sub>s</sub></code> پیشنهاد می‌شود.</p>
+
+      <h2 id="fa-notes">۱۱. نکات و فرضیات</h2>
+      <ul>
+        <li>مرجع محاسباتی: Schleiss §7.4 و صفحات گسترده همراه (ABOGWL / BELGWL / VSHAFT).</li>
+        <li>فاصله ترک در سری اول قفل و در سری‌های بعدی نصف می‌شود.</li>
+        <li>نتایج باید با آیین‌نامه پروژه، داده‌های زمین‌شناسی و قضاوت مهندسی کنترل شوند.</li>
+        <li>© ۲۰۲۶ مصطفی شاهمرادی — تکثیر با نام دیگران بدون مجوز ممنوع است.</li>
+      </ul>
+
+      <footer class="dev">
+        <div>راهنمای کاربری — طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)</div>
+        <div style="margin-top:0.35rem;"><strong>توسعه‌دهنده: مصطفی شاهمرادی / Mostafa Shahmoradi</strong></div>
+      </footer>
+    </div>
+
+    <!-- ========== ENGLISH ========== -->
+    <div class="lang-block" id="lang-en" lang="en">
+      <h1>User Manual – Schleiss Pressure Tunnel Design</h1>
+      <p class="subtitle">Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory<br/>Developer: <strong>Mostafa Shahmoradi</strong></p>
+
+      <h2 id="en-intro">1. Introduction</h2>
+      <p>This web application designs <strong>reinforced concrete linings for pressure tunnels and shafts</strong> based on:</p>
+      <p><em>Anton J. Schleiss — Design of Pressure Tunnels and Shafts for Hydropower Plants, Section 7.4 – Reinforced Concrete Linings</em></p>
+      <p>Main capabilities:</p>
+      <ul>
+        <li>Uncracked phase: critical pressure <code>P<sub>i,crit</sub></code>, outer pressure <code>P<sub>a</sub></code>, maximum tangential stress</li>
+        <li>Cracked phase: crack series (Birkenmaier), crack width <code>2a</code>, steel stress <code>σ<sub>s2</sub></code>, seepage <code>q</code>, reach <code>R</code></li>
+        <li>Three regimes: tunnel above GWL (ABOGWL), tunnel below GWL (BELGWL), vertical shaft (VSHAFT)</li>
+        <li>Reinforcement optimization under designer limits</li>
+        <li>Charts, printable calculation notebook, CSV export and sensitivity analysis</li>
+      </ul>
+
+      <h2 id="en-theory">2. Calculation basis (engineering summary)</h2>
+      <h3>2.1 Uncracked phase</h3>
+      <p>The lining is modelled as a thick elastic cylinder. Outer pressure <code>P<sub>a</sub></code> follows seepage (Bouvard / <code>R/r<sub>a</sub></code>) or groundwater head, depending on structure type. First cracking when:</p>
+      <p class="callout"><code>σ<sub>t,max</sub> ≈ −β<sub>z</sub>  →  P<sub>i,crit</sub></code></p>
+      <ul>
+        <li><strong>ABOGWL (above GWL):</strong> absolute <code>P<sub>i</sub></code>; seepage-driven uncracked <code>P<sub>a</sub></code>.</li>
+        <li><strong>BELGWL (below GWL):</strong> solve <code>ΔP<sub>i,crit</sub></code> with hydrostatic <code>P<sub>a</sub> = ρgb/10<sup>5</sup></code>; then <code>P<sub>i,crit</sub> = P<sub>a</sub> + ΔP<sub>i,crit</sub></code>.</li>
+        <li><strong>VSHAFT:</strong> uncracked seepage like ABOGWL; absolute <code>P<sub>i</sub> = ΔP<sub>i</sub> + ρgb/10<sup>5</sup></code>.</li>
+      </ul>
+
+      <h3>2.2 Cracked phase (Birkenmaier)</h3>
+      <p>Crack spacing <code>d</code> is locked at series 1 and halved in later series. Steel stress factors:</p>
+      <ul>
+        <li><code>m<sub>1</sub> = 1/3</code>, <code>m<sub>k</sub> = (m<sub>k−1</sub> + 1)/2</code></li>
+        <li><code>p<sub>1</sub> = 0</code>, <code>p<sub>k</sub> = (p<sub>k−1</sub> + 1)/2</code> (<code>σ<sub>s1</sub>/σ<sub>s2</sub></code>)</li>
+      </ul>
+      <p>Mean crack width:</p>
+      <p class="callout"><code>2a = ((σ<sub>s2</sub> + 2·σ<sub>s1</sub>) · d) / (3·E<sub>s</sub>) · 1000</code> &nbsp;[mm]</p>
+      <p>Next series starts when <code>σ<sub>c1</sub> ≥ β<sub>z</sub></code>.</p>
+
+      <h3>2.3 Seepage after cracking</h3>
+      <table>
+        <thead><tr><th>Mode</th><th>Reach R</th><th>Outer pressure P<sub>a</sub></th></tr></thead>
+        <tbody>
+          <tr><td>ABOGWL</td><td>Variable (Bouvard)</td><td>Crack–rock flow continuity</td></tr>
+          <tr><td>BELGWL</td><td><code>R = b</code></td><td>Closed form <code>q<sub>c</sub> = q<sub>r</sub></code></td></tr>
+          <tr><td>VSHAFT</td><td><code>R = (R/r<sub>a</sub>)<sub>cr</sub> · r<sub>a</sub></code> (often 10)</td><td>Closed form with <code>ln(R/r<sub>a</sub>)</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>2.4 Reinforcement</h3>
+      <p class="callout"><code>A<sub>s</sub> = n<sub>layers</sub> · (π s² / 4) · 100 / d<sub>s</sub></code> &nbsp;[mm²/m]</p>
+
+      <h2 id="en-modes">3. Structure types</h2>
+      <table>
+        <thead><tr><th>Option</th><th>Use when</th><th>Input tip</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">Auto</span></td><td>Based on b</td><td><code>b = 0</code> → above; <code>b &gt; 0</code> → below GWL</td></tr>
+          <tr><td><span class="badge">ABOGWL</span></td><td>Tunnel above groundwater</td><td><code>b = 0</code></td></tr>
+          <tr><td><span class="badge">BELGWL</span></td><td>Tunnel below GWL</td><td><code>b</code> = depth of axis below water table</td></tr>
+          <tr><td><span class="badge">VSHAFT</span></td><td>Vertical shaft</td><td><code>(R/r<sub>a</sub>)<sub>cr</sub></code> typically 10</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="en-inputs">4. Three internal pressure inputs</h2>
+      <table>
+        <thead><tr><th>Input</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pi</strong></td><td>Design pressure for a single calculation (results cards)</td></tr>
+          <tr><td><strong>Max Pi</strong></td><td>Only for reinforcement optimization at the governing pressure</td></tr>
+          <tr><td><strong>Series ceiling</strong></td><td>Range for tracing series start/end and charts</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="en-howto">5. How to use</h2>
+      <ol class="steps">
+        <li>Optionally click a sample button (above GWL / below GWL / shaft) or enter inputs manually.</li>
+        <li>Select <strong>structure type</strong> (or leave Auto).</li>
+        <li>Press <strong>Calculate</strong> for detailed results, series history and charts.</li>
+        <li>Set designer limits and run <strong>Optimize reinforcement</strong> if needed.</li>
+        <li>Open the <strong>Calculation Report</strong> for print/PDF.</li>
+        <li>Optional: <strong>CSV export</strong> or <strong>Sensitivity</strong> (Er, Kr, b).</li>
+      </ol>
+      <p class="callout">The <strong>?</strong> icon next to each parameter shows a short tooltip.</p>
+
+      <h2 id="en-features">6. Features</h2>
+      <ul>
+        <li>Persian / English UI and light / dark themes</li>
+        <li>Per-parameter outputs with units</li>
+        <li>Series start/end cards</li>
+        <li>Charts: 2a–Pi, 2a–σs2, q–Pi</li>
+        <li>Optimization Pass/Fail table</li>
+        <li>Multi-layer reinforcement, CSV, sensitivity</li>
+        <li>Printable English notebook with developer watermark</li>
+      </ul>
+
+      <h2 id="en-ex1">7. Example 1 — Tunnel above GWL (ABOGWL)</h2>
+      <div class="example">
+        <h3>Sample inputs</h3>
+        <p><code>r<sub>i</sub>=5.075 m</code>, <code>r<sub>a</sub>=5.675 m</code>, <code>r<sub>s</sub>=5.175 m</code>, <code>E<sub>c</sub>=20000</code>, <code>E<sub>r</sub>=5000</code>, <code>E<sub>s</sub>=200000</code> MPa, <code>β<sub>z</sub>=1</code>, <code>s=20</code>, <code>d<sub>s</sub>=20</code> mm, <code>b=0</code>, mode ABOGWL, <code>P<sub>i</sub>=2.827</code> bar</p>
+        <h3>Key results (validated vs ABOGWL.xls)</h3>
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>P<sub>i,crit</sub></td><td class="num">2.827</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub> (cracked at crit)</td><td class="num">0.845</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">42.5</td><td>MPa</td></tr>
+            <tr><td>2a</td><td class="num">0.0242</td><td>mm</td></tr>
+            <tr><td>R</td><td class="num">≈ 8.2</td><td>m</td></tr>
+            <tr><td>n</td><td class="num">95</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p>On the main page click <strong>Sample above GWL</strong> then <strong>Calculate</strong>.</p>
+      </div>
+
+      <h2 id="en-ex2">8. Example 2 — Tunnel below GWL (BELGWL)</h2>
+      <div class="example">
+        <h3>Sample inputs</h3>
+        <p>Same geometry/materials as Example 1 with <code>b=100 m</code>, mode BELGWL, <code>P<sub>i</sub>≈12.35</code> bar</p>
+        <h3>Key results (validated vs BELGWL.xls)</h3>
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>P<sub>i,crit</sub> (absolute)</td><td class="num">12.35</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub></td><td class="num">≈ 10.95</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">≈ 40.1</td><td>MPa</td></tr>
+            <tr><td>2a</td><td class="num">≈ 0.022</td><td>mm</td></tr>
+            <tr><td>R</td><td class="num">100</td><td>m (= b)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="en-ex3">9. Example 3 — Vertical shaft (VSHAFT)</h2>
+      <div class="example">
+        <h3>Sample inputs</h3>
+        <p><code>r<sub>i</sub>=10.5</code>, <code>r<sub>a</sub>=11</code>, <code>r<sub>s</sub>=10.6</code> m, <code>b=100</code> m, <code>(R/r<sub>a</sub>)<sub>cr</sub>=10</code>, <code>s=ds=20</code> mm, mode VSHAFT, <code>P<sub>i</sub>≈12.17</code> bar</p>
+        <h3>Key results (validated vs VSHAFT.xls)</h3>
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
+          <tbody>
+            <tr><td>ΔP<sub>i,crit</sub></td><td class="num">2.359</td><td>bar</td></tr>
+            <tr><td>P<sub>i,crit</sub> absolute</td><td class="num">12.169</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub></td><td class="num">≈ 10.92</td><td>bar</td></tr>
+            <tr><td>σ<sub>s2</sub></td><td class="num">≈ 37.0</td><td>MPa</td></tr>
+            <tr><td>R</td><td class="num">110</td><td>m</td></tr>
+            <tr><td>n</td><td class="num">215</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="en-opt">10. Reinforcement optimization</h2>
+      <p>At <code>max_Pi</code> all allowed <code>s × d<sub>s</sub></code> pairs are checked. Combinations that satisfy 2a, q, R and σs limits are ranked light-to-heavy; the smallest feasible <code>A<sub>s</sub></code> is recommended.</p>
+
+      <h2 id="en-notes">11. Notes &amp; assumptions</h2>
+      <ul>
+        <li>Reference: Schleiss §7.4 and companion spreadsheets (ABOGWL / BELGWL / VSHAFT).</li>
+        <li>Crack spacing locked at series 1, halved thereafter.</li>
+        <li>Always verify against project codes, geology and engineering judgement.</li>
+        <li>© 2026 Mostafa Shahmoradi — Redistribution or rebranding without permission is prohibited.</li>
+      </ul>
+
+      <footer class="dev">
+        <div>User manual — Schleiss Pressure Tunnel Design</div>
+        <div style="margin-top:0.35rem;"><strong>Developer: Mostafa Shahmoradi / مصطفی شاهمرادی</strong></div>
+      </footer>
+    </div>
+  </article>
+</div>
+
+<script>
+let lang = "fa";
+const tocFa = [
+  ["fa-intro", "۱. معرفی"],
+  ["fa-theory", "۲. مبانی محاسبات"],
+  ["fa-modes", "۳. نوع سازه"],
+  ["fa-inputs", "۴. سه فشار داخلی"],
+  ["fa-howto", "۵. نحوه استفاده"],
+  ["fa-features", "۶. امکانات"],
+  ["fa-ex1", "۷. مثال ABOGWL"],
+  ["fa-ex2", "۸. مثال BELGWL"],
+  ["fa-ex3", "۹. مثال VSHAFT"],
+  ["fa-opt", "۱۰. بهینه‌سازی"],
+  ["fa-notes", "۱۱. نکات"]
+];
+const tocEn = [
+  ["en-intro", "1. Introduction"],
+  ["en-theory", "2. Theory"],
+  ["en-modes", "3. Structure types"],
+  ["en-inputs", "4. Pressure inputs"],
+  ["en-howto", "5. How to use"],
+  ["en-features", "6. Features"],
+  ["en-ex1", "7. Example ABOGWL"],
+  ["en-ex2", "8. Example BELGWL"],
+  ["en-ex3", "9. Example VSHAFT"],
+  ["en-opt", "10. Optimization"],
+  ["en-notes", "11. Notes"]
+];
+
+function renderToc() {
+  const items = lang === "fa" ? tocFa : tocEn;
+  document.getElementById("toc").innerHTML =
+    "<h2>" + (lang === "fa" ? "فهرست" : "Contents") + "</h2>" +
+    items.map(([id, label]) => '<a href="#' + id + '">' + label + "</a>").join("");
+}
+
+function setLang(next) {
+  lang = next;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+  document.getElementById("lang-fa").classList.toggle("active", lang === "fa");
+  document.getElementById("lang-en").classList.toggle("active", lang === "en");
+  document.getElementById("btnLang").textContent = lang === "fa" ? "EN" : "FA";
+  document.getElementById("toolbarTitle").textContent =
+    lang === "fa" ? "راهنمای کاربری · User Manual" : "User Manual · راهنما";
+  document.getElementById("btnBack").textContent =
+    lang === "fa" ? "← بازگشت به ماشین‌حساب" : "← Back to calculator";
+  document.title = lang === "fa"
+    ? "راهنما | طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)"
+    : "User Manual | Schleiss Pressure Tunnel Design";
+  renderToc();
+}
+
+document.getElementById("btnLang").addEventListener("click", () => setLang(lang === "fa" ? "en" : "fa"));
+document.getElementById("btnTheme").addEventListener("click", () => {
+  const html = document.documentElement;
+  const dark = html.getAttribute("data-theme") === "dark";
+  html.setAttribute("data-theme", dark ? "light" : "dark");
+  document.getElementById("btnTheme").textContent = dark ? "🌙" : "☀️";
+});
+
+// Prefer language from main app if available
+try {
+  const stored = localStorage.getItem("tunnelAppLang");
+  if (stored === "en" || stored === "fa") lang = stored;
+} catch (e) {}
+setLang(lang);
+</script>
+</body>
+</html>

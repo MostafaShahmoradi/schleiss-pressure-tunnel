@@ -1,0 +1,31 @@
+Copyright (c) 2026 Mostafa Shahmoradi (مصطفی شاهمرادی)
+
+All rights reserved.
+
+This software (the "Pressure Tunnel & Shaft Design – Schleiss §7.4" web calculator),
+including its source code, user interface, calculation workbook layout, documentation,
+and associated materials, is the intellectual property of Mostafa Shahmoradi.
+
+PERMISSIONS
+- You may use this application online for personal, educational, and non-commercial
+  engineering study purposes.
+- You may cite results obtained from this tool in reports, provided the developer
+  name "Mostafa Shahmoradi / مصطفی شاهمرادی" is clearly acknowledged.
+
+RESTRICTIONS
+- You may NOT copy, republish, redistribute, sublicense, or host this software
+  (in whole or in part) under another name or without attribution.
+- You may NOT remove, obscure, or alter copyright notices, developer credits,
+  watermarks, or attribution in the user interface, calculation reports, or source.
+- You may NOT use this software, or derivatives of it, for commercial resale,
+  rebranding, or presentation as your own product without prior written permission
+  from the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. The author is not
+liable for design decisions or damages arising from use of this tool. Always verify
+results against project codes, site data, and the reference:
+
+  Anton J. Schleiss — Design of Pressure Tunnels and Shafts for Hydropower Plants,
+  Section 7.4.
+
+For permissions beyond this license, contact the copyright holder.

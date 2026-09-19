@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Mostafa Shahmoradi / مصطفی شاهمرادی. All rights reserved. See LICENSE. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculation Notebook – Schleiss Pressure Tunnel Design</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --muted: #555;
+      --border: #c8c8c8;
+      --bg: #fff;
+      --accent: #0d47a1;
+      --formula-bg: #f4f6f9;
+      --result: #0d47a1;
+      --ok: #1b5e20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Times New Roman", Times, Georgia, serif;
+      color: var(--text);
+      background: #e6e6e6;
+      line-height: 1.45;
+      font-size: 10.5pt;
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #1a1a1a; color: #fff;
+      padding: 0.55rem 1.2rem;
+      display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+    }
+    .toolbar button {
+      background: #fff; color: #1a1a1a; border: none;
+      padding: 0.4rem 0.95rem; border-radius: 4px;
+      cursor: pointer; font-weight: 600; font-size: 0.88rem;
+    }
+    .toolbar button:hover { background: #e0e0e0; }
+    .toolbar .title { flex: 1; font-size: 0.92rem; }
+    .page {
+      max-width: 920px; margin: 1.25rem auto;
+      background: var(--bg); padding: 1.75rem 2.25rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+    h1 { font-size: 1.35rem; text-align: center; color: var(--accent); margin-bottom: 0.2rem; }
+    .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem; }
+    h2 {
+      font-size: 1.08rem; margin: 1.35rem 0 0.55rem;
+      padding-bottom: 0.25rem; border-bottom: 2px solid var(--accent); color: var(--accent);
+    }
+    h3 { font-size: 1rem; margin: 0.95rem 0 0.4rem; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 0.45rem 0 0.9rem; font-size: 0.9rem; }
+    th, td { border: 1px solid var(--border); padding: 0.32rem 0.5rem; text-align: left; vertical-align: top; }
+    th { background: #eef2f7; font-weight: 600; }
+    td.sym { font-family: "Cambria Math", "Times New Roman", serif; white-space: nowrap; }
+    td.formula {
+      background: var(--formula-bg);
+      font-family: "Cambria Math", "Times New Roman", serif;
+      font-size: 0.84rem;
+    }
+    td.result { font-weight: 700; color: var(--result); text-align: right; white-space: nowrap; }
+    td.unit { color: var(--muted); white-space: nowrap; }
+    .note { font-size: 0.82rem; color: var(--muted); margin: 0.35rem 0 0.7rem; font-style: italic; }
+    .badge {
+      display: inline-block; padding: 0.12rem 0.45rem; border-radius: 4px;
+      font-size: 0.78rem; font-weight: 700; background: #e3f2fd; color: var(--accent);
+    }
+    footer.dev {
+      margin-top: 2rem; padding-top: 0.9rem; border-top: 2px solid #333;
+      text-align: center; font-size: 0.92rem;
+    }
+    footer.dev strong { font-size: 1.02rem; }
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .empty a { color: var(--accent); }
+    .meta-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem;
+      margin: 0.5rem 0 1rem; font-size: 0.9rem;
+    }
+    .meta-grid dt { color: var(--muted); }
+    .meta-grid dd { font-weight: 600; margin: 0; }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin: 0.75rem 0 1rem;
+    }
+    .chart-box {
+      border: 1px solid var(--border);
+      padding: 0.45rem;
+      height: 260px;
+      background: #fafafa;
+      position: relative;
+    }
+    .chart-box.full { grid-column: 1 / -1; height: 280px; }
+    @media (max-width: 700px) { .charts-grid { grid-template-columns: 1fr; } }
+    @media print {
+      body { background: #fff; font-size: 10pt; }
+      .toolbar { display: none !important; }
+      .page { margin: 0; box-shadow: none; padding: 0.4rem 0.8rem; max-width: 100%; }
+      h2 { break-after: avoid; }
+      table { break-inside: avoid; }
+      footer.dev { break-before: avoid; }
+    }
+    @media (max-width: 700px) {
+      .page { padding: 1rem; margin: 0.5rem; }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Copyright watermark (print + screen) */
+    .page { position: relative; }
+    .page::before {
+      content: "Mostafa Shahmoradi  ·  مصطفی شاهمرادی";
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-28deg);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(13, 71, 161, 0.07);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+    .page > * { position: relative; z-index: 1; }
+    @media print {
+      .page::before {
+        color: rgba(0, 0, 0, 0.06);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="title">Calculation Notebook – Schleiss Pressure Tunnel Design</span>
+  <button type="button" onclick="window.print()">Print</button>
+  <button type="button" onclick="window.location.href='index.html'">Back to Calculator</button>
+</div>
+
+<div class="page" id="report">
+  <div class="empty" id="emptyMsg">
+    <p><strong>No calculation data found.</strong></p>
+    <p>Run a calculation on the <a href="index.html">main page</a> first, then open this report.</p>
+  </div>
+  <div id="content" style="display:none;"></div>
+</div>
+
+<script>
+function fmt(v, d) {
+  if (v == null || (typeof v === "number" && isNaN(v))) return "—";
+  const n = Number(v);
+  if (!isFinite(n)) return "—";
+  if (Math.abs(n) > 0 && Math.abs(n) < 1e-4) return n.toExponential(3);
+  return n.toFixed(d != null ? d : 4);
+}
+function fmtExp(v) {
+  if (v == null || !isFinite(Number(v))) return "—";
+  return Number(v).toExponential(3);
+}
+function modeLabel(m) {
+  if (m === "shaft") return "Vertical shaft (VSHAFT)";
+  if (m === "below") return "Tunnel below GWL (BELGWL)";
+  if (m === "above") return "Tunnel above GWL (ABOGWL)";
+  return m || "—";
+}
+function row(sym, desc, formula, value, unit) {
+  return "<tr><td class=\"sym\">" + sym + "</td><td>" + desc + "</td><td class=\"formula\">" +
+    (formula || "—") + "</td><td class=\"result\">" + value + "</td><td class=\"unit\">" +
+    (unit || "") + "</td></tr>";
+}
+
+function buildReport(data) {
+  const i = data.inputs || {};
+  const u = data.uncracked || {};
+  const c = data.cracked || {};
+  const hist = data.seriesHistory || [];
+  const opt = data.optimization;
+  const mode = u.mode || i.struct_mode || (i.b > 0 ? "below" : "above");
+  const ts = data.timestamp ? new Date(data.timestamp).toLocaleString() : new Date().toLocaleString();
+
+  let html = "";
+  html += "<h1>Schleiss Pressure Tunnel Design</h1>";
+  html += "<p class=\"subtitle\">Reinforced concrete lining – Calculation notebook<br/>";
+  html += "Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory<br/>According to <em>Schleiss</em>, §7.4 – Reinforced Concrete Linings<br/>";
+  html += "Generated: " + ts + "</p>";
+  html += "<dl class=\"meta-grid\">";
+  html += "<dt>Structure mode</dt><dd><span class=\"badge\">" + modeLabel(mode) + "</span></dd>";
+  html += "<dt>Design internal pressure P<sub>i</sub></dt><dd>" + fmt(i.Pi, 4) + " bar</dd>";
+  html += "<dt>Depth below GWL (b)</dt><dd>" + fmt(i.b, 2) + " m</dd>";
+  html += "<dt>Active crack series</dt><dd>" + (c.currentSeries != null ? c.currentSeries : "—") + "</dd>";
+  html += "</dl>";
+
+  html += "<h2>A. Input parameters</h2><h3>Geometry &amp; materials</h3><table>";
+  html += "<thead><tr><th>Symbol</th><th>Description</th><th>Formula / note</th><th>Value</th><th>Unit</th></tr></thead><tbody>";
+  html += row("r<sub>i</sub>", "Internal radius of lining", "Input", fmt(i.ri, 3), "m");
+  html += row("r<sub>a</sub>", "External radius of lining", "Input", fmt(i.ra, 3), "m");
+  html += row("r<sub>s</sub>", "Radius to reinforcement", "Input", fmt(i.rs, 3), "m");
+  html += row("E<sub>c</sub>", "Concrete modulus of elasticity", "Input", fmt(i.Ec, 0), "MPa");
+  html += row("E<sub>r</sub>", "Rock modulus of elasticity", "Input", fmt(i.Er, 0), "MPa");
+  html += row("E<sub>s</sub>", "Steel modulus of elasticity", "Input", fmt(i.Es, 0), "MPa");
+  html += row("ν<sub>c</sub>", "Poisson ratio of concrete", "Input", fmt(i.vc, 2), "—");
+  html += row("ν<sub>r</sub>", "Poisson ratio of rock", "Input", fmt(i.vr, 2), "—");
+  html += row("K<sub>r</sub>", "Rock mass permeability", "Input", fmtExp(i.Kr), "m/s");
+  html += row("K<sub>c</sub>", "Uncracked concrete permeability", "Input", fmtExp(i.Kc), "m/s");
+  html += row("β<sub>z</sub>", "Tensile strength of concrete", "Input", fmt(i.Bz, 2), "MPa");
+  html += row("β<sub>w</sub>", "Bond / compressive strength parameter", "Input", fmt(i.Bw, 1), "MPa");
+  html += "</tbody></table>";
+
+  html += "<h3>Groundwater, seepage reach &amp; reinforcement</h3><table>";
+  html += "<thead><tr><th>Symbol</th><th>Description</th><th>Formula / note</th><th>Value</th><th>Unit</th></tr></thead><tbody>";
+  html += row("b", "Depth of axis below GWL", "0 = above GWL", fmt(i.b, 2), "m");
+  html += row("R/r<sub>a</sub>", "Seepage ratio (uncracked)", "Input", fmt(i.R_over_ra, 2), "—");
+  html += row("(R/r<sub>a</sub>)<sub>cr</sub>", "Seepage ratio (cracked / shaft)", "VSHAFT typically 10", fmt(i.Rra_cracked, 2), "—");
+  html += row("s", "Bar diameter", "Input", fmt(i.s, 1), "mm");
+  html += row("d<sub>s</sub>", "Bar spacing", "Input", fmt(i.ds, 1), "mm");
+  html += row("A<sub>s</sub>", "Reinforcement area per unit length", "n·(π s²/4)·100/d<sub>s</sub>", fmt(c.As, 1), "mm²/m");
+  html += row("P<sub>i</sub>", "Internal water pressure (design)", "Input", fmt(i.Pi, 4), "bar");
+  html += "</tbody></table>";
+
+  const paUncrFormula = mode === "below"
+    ? "P<sub>a</sub> = ρ g b / 10<sup>5</sup> (hydrostatic)"
+    : "P<sub>a</sub> = P<sub>i</sub> / [1 + (K<sub>r</sub> ln(r<sub>a</sub>/r<sub>i</sub>))/(K<sub>c</sub> ln(R/r<sub>a</sub>))]";
+  const piCritNote = (mode === "below" || mode === "shaft")
+    ? "Absolute P<sub>i,crit</sub> = ΔP<sub>i,crit</sub> + ρ g b / 10<sup>5</sup>"
+    : "Absolute internal pressure at first cracking";
+
+  html += "<h2>B. Uncracked phase</h2>";
+  html += "<p class=\"note\">First cracking when σ<sub>t,max</sub> ≈ −β<sub>z</sub>. Mode: " + modeLabel(mode) + ".</p>";
+  html += "<table><thead><tr><th>Symbol</th><th>Description</th><th>Formula / note</th><th>Value</th><th>Unit</th></tr></thead><tbody>";
+  html += row("P<sub>a,uncr</sub>", "Outer water pressure (uncracked)", paUncrFormula, fmt(u.Pa_uncracked, 4), "bar");
+  html += row("P<sub>f</sub>(r<sub>a</sub>)", "Boundary pressure concrete–rock", "Compatibility of radial displacement", fmt(u.pF_ra, 4), "bar");
+  html += row("σ<sub>t,max</sub>", "Max. tangential stress in lining", "Thick-cylinder + seepage body force", fmt(u.sigma_tmax, 4), "MPa");
+  if (u.dPi_crit != null && (mode === "below" || mode === "shaft")) {
+    html += row("ΔP<sub>i,crit</sub>", "Critical internal overpressure", "Solved for σ<sub>t,max</sub> = −β<sub>z</sub>", fmt(u.dPi_crit, 4), "bar");
+  }
+  html += row("P<sub>i,crit</sub>", "Critical internal pressure (absolute)", piCritNote, fmt(u.Pi_crit, 4), "bar");
+  html += "</tbody></table>";
+
+  const paCrNote = mode === "below" ? "Closed form q<sub>c</sub>=q<sub>r</sub> (BELGWL)"
+    : mode === "shaft" ? "Closed form with ln(R/r<sub>a</sub>) (VSHAFT)"
+    : "Bouvard continuity (ABOGWL)";
+  const rNote = mode === "below" ? "R = b" : mode === "shaft" ? "R = (R/r<sub>a</sub>)<sub>cr</sub> · r<sub>a</sub>" : "Bouvard characteristic";
+  const qNote = mode === "shaft" ? "((P<sub>a</sub>/ρg − b) 2π K<sub>r</sub>)/ln(R/r<sub>a</sub>)" : "Crack flow / rock continuity";
+
+  html += "<h2>C. Cracked phase – active series at design P<sub>i</sub></h2>";
+  html += "<p class=\"note\">Crack spacing d is locked from series 1 at P<sub>i,crit</sub> and halved for later series. Factors m and p follow Schleiss recurrence.</p>";
+  html += "<table><thead><tr><th>Symbol</th><th>Description</th><th>Formula / note</th><th>Value</th><th>Unit</th></tr></thead><tbody>";
+  html += row("Series", "Active crack series index", "σ<sub>c1</sub> ≥ β<sub>z</sub> advances series", String(c.currentSeries ?? c.series ?? "—"), "—");
+  html += row("P<sub>a</sub>", "Outer water pressure (cracked)", paCrNote, fmt(c.Pa_cracked, 4), "bar");
+  html += row("R", "Seepage reach in rock", rNote, fmt(c.R_calc, 2), "m");
+  html += row("P<sub>c</sub>(r<sub>s</sub>)", "Pressure transmitted by reinforcement", "D<sub>1</sub>/D<sub>2</sub> displacement compatibility", fmt(c.Pc, 4), "bar");
+  html += row("P<sub>s</sub>", "Water pressure at reinforcement level", "Linear interpolation P<sub>i</sub> → P<sub>a</sub>", fmt(c.Ps, 4), "bar");
+  html += row("σ<sub>s2</sub>", "Steel stress in cracked section", "(σ<sub>r</sub> − P<sub>c</sub>) r<sub>s</sub> / A<sub>s</sub>", fmt(c.ss2, 2), "MPa");
+  html += row("σ<sub>s1</sub>", "Steel stress between cracks", "σ<sub>s1</sub> = p · σ<sub>s2</sub>", fmt(c.ss1, 2), "MPa");
+  html += row("d", "Average crack spacing", "Locked at series 1; halved each series", fmt(c.d, 4), "m");
+  html += row("n", "Number of cracks", "⌊2 π r<sub>s</sub> / d⌋", String(c.n ?? "—"), "—");
+  html += row("2a", "Average crack width", "((σ<sub>s2</sub>+2σ<sub>s1</sub>) d)/(3 E<sub>s</sub>) · 1000", fmt(c.two_a, 5), "mm");
+  html += row("τ", "Bond stress steel–concrete", "β<sub>w</sub>(0.033 + 0.15 a<sup>0.25</sup>)", fmt(c.tau, 3), "MPa");
+  html += row("q", "Seepage loss per unit length", qNote, fmtExp(c.q), "m³/s/m");
+  html += row("σ<sub>c1</sub>", "Concrete stress between cracks", "(σ<sub>s2</sub> − σ<sub>s1</sub>) A<sub>s</sub> / (r<sub>a</sub> − r<sub>i</sub>)", fmt(c.sigma_c1, 4), "MPa");
+  html += "</tbody></table>";
+
+  html += "<h2>D. Crack series history</h2>";
+  if (hist.length) {
+    html += "<p class=\"note\">Start of series 1 = P<sub>i,crit</sub>. End of a series when σ<sub>c1</sub> reaches β<sub>z</sub>.</p>";
+    html += "<table><thead><tr><th>Series</th><th>Point</th><th>P<sub>i</sub> [bar]</th><th>P<sub>a</sub> [bar]</th><th>R [m]</th><th>σ<sub>s2</sub> [MPa]</th><th>2a [mm]</th><th>d [m]</th><th>σ<sub>c1</sub> [MPa]</th></tr></thead><tbody>";
+    hist.forEach(function (h) {
+      var st = h.start || {};
+      var en = h.end || {};
+      html += "<tr><td rowspan=\"2\"><strong>" + h.series + "</strong></td><td>Start</td>";
+      html += "<td class=\"result\">" + fmt(h.Pi_start, 3) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.Pa_cracked, 4) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.R_calc, 2) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.ss2, 2) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.two_a, 5) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.d, 4) + "</td>";
+      html += "<td class=\"result\">" + fmt(st.sigma_c1, 4) + "</td></tr>";
+      html += "<tr><td>End" + (h.reachedNext ? "" : " (ceiling)") + "</td>";
+      html += "<td class=\"result\">" + fmt(h.Pi_end, 3) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.Pa_cracked, 4) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.R_calc, 2) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.ss2, 2) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.two_a, 5) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.d, 4) + "</td>";
+      html += "<td class=\"result\">" + fmt(en.sigma_c1, 4) + "</td></tr>";
+    });
+    html += "</tbody></table>";
+  } else {
+    html += "<p class=\"note\">Series history was not stored for this run. Re-run Calculate on the main page.</p>";
+  }
+
+  html += "<h2>E. Reinforcement optimization</h2>";
+  if (opt && opt.s != null) {
+    html += "<p class=\"note\">Lightest feasible combination under designer limits at design P<sub>i</sub>.</p>";
+    html += "<table><thead><tr><th>Symbol</th><th>Description</th><th>Value</th><th>Unit</th></tr></thead><tbody>";
+    html += "<tr><td class=\"sym\">s</td><td>Optimum bar diameter</td><td class=\"result\">" + fmt(opt.s, 1) + "</td><td class=\"unit\">mm</td></tr>";
+    html += "<tr><td class=\"sym\">d<sub>s</sub></td><td>Optimum bar spacing</td><td class=\"result\">" + fmt(opt.ds, 1) + "</td><td class=\"unit\">mm</td></tr>";
+    html += "<tr><td class=\"sym\">A<sub>s</sub></td><td>Optimum reinforcement</td><td class=\"result\">" + fmt(opt.As, 1) + "</td><td class=\"unit\">mm²/m</td></tr>";
+    html += "<tr><td class=\"sym\">2a</td><td>Crack width at design P<sub>i</sub></td><td class=\"result\">" + fmt(opt.two_a, 5) + "</td><td class=\"unit\">mm</td></tr>";
+    html += "<tr><td class=\"sym\">σ<sub>s2</sub></td><td>Steel stress</td><td class=\"result\">" + fmt(opt.ss2, 2) + "</td><td class=\"unit\">MPa</td></tr>";
+    html += "<tr><td class=\"sym\">R</td><td>Seepage reach</td><td class=\"result\">" + fmt(opt.R, 2) + "</td><td class=\"unit\">m</td></tr>";
+    html += "<tr><td class=\"sym\">q</td><td>Seepage loss</td><td class=\"result\">" + fmtExp(opt.q) + "</td><td class=\"unit\">m³/s/m</td></tr>";
+    html += "<tr><td class=\"sym\">—</td><td>Feasible combinations</td><td class=\"result\">" + (opt.feasibleCount != null ? opt.feasibleCount : "—") + "</td><td class=\"unit\">—</td></tr>";
+    html += "</tbody></table>";
+  } else {
+    html += "<p class=\"note\">Optimization was not run for this session. Use Optimize on the main page if required.</p>";
+  }
+
+  html += "<h2>F. Charts</h2>";
+  html += "<p class=\"note\">Curves from the parametric sweep at the last calculation. Green triangles = series start; orange diamonds = series end.</p>";
+  html += "<div class=\"charts-grid\">";
+  html += "<div class=\"chart-box\"><canvas id=\"repChart2aPi\"></canvas></div>";
+  html += "<div class=\"chart-box\"><canvas id=\"repChart2aSs\"></canvas></div>";
+  html += "<div class=\"chart-box full\"><canvas id=\"repChartQ\"></canvas></div>";
+  html += "</div>";
+
+  html += "<h2>G. Design summary</h2>";
+  html += "<table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody>";
+  html += "<tr><td>Structure mode</td><td class=\"result\">" + modeLabel(mode) + "</td></tr>";
+  html += "<tr><td>P<sub>i,crit</sub> (first crack)</td><td class=\"result\">" + fmt(u.Pi_crit, 4) + " bar</td></tr>";
+  html += "<tr><td>Design P<sub>i</sub></td><td class=\"result\">" + fmt(i.Pi, 4) + " bar</td></tr>";
+  html += "<tr><td>Outer pressure P<sub>a</sub> at design P<sub>i</sub></td><td class=\"result\">" + fmt(c.Pa_cracked, 4) + " bar</td></tr>";
+  html += "<tr><td>P<sub>i</sub> − P<sub>a</sub></td><td class=\"result\">" + fmt((i.Pi || 0) - (c.Pa_cracked || 0), 4) + " bar</td></tr>";
+  html += "<tr><td>Crack width 2a</td><td class=\"result\">" + fmt(c.two_a, 5) + " mm</td></tr>";
+  html += "<tr><td>Steel stress σ<sub>s2</sub></td><td class=\"result\">" + fmt(c.ss2, 2) + " MPa</td></tr>";
+  html += "<tr><td>Seepage reach R</td><td class=\"result\">" + fmt(c.R_calc, 2) + " m</td></tr>";
+  html += "<tr><td>Reinforcement</td><td class=\"result\">s = " + fmt(i.s, 1) + " mm, d<sub>s</sub> = " + fmt(i.ds, 1) + " mm, A<sub>s</sub> ≈ " + fmt(c.As, 1) + " mm²/m</td></tr>";
+  html += "</tbody></table>";
+  html += "<p class=\"note\">Assumptions: Schleiss §7.4; Birkenmaier crack model; d locked from first series; ABOGWL / BELGWL / VSHAFT seepage models as selected. Verify against project-specific codes and site data.</p>";
+
+  html += "<footer class=\"dev\">";
+  html += "<div>Calculation notebook – Schleiss Pressure Tunnel Design</div>";
+  html += "<div style=\"margin-top:0.35rem;\"><strong>Developer: Mostafa Shahmoradi / مصطفی شاهمرادی</strong></div>";
+  html += "<div style=\"margin-top:0.4rem;font-size:0.82rem;color:#555;\">© 2026 Mostafa Shahmoradi. Redistribution or rebranding without permission is prohibited.</div>";
+  html += "</footer>";
+  return html;
+}
+
+(function init() {
+  var data = null;
+  try {
+    var raw = sessionStorage.getItem("tunnelCalcReport") || localStorage.getItem("tunnelCalcReport");
+    data = raw ? JSON.parse(raw) : null;
+  } catch (e) { data = null; }
+  var empty = document.getElementById("emptyMsg");
+  var content = document.getElementById("content");
+  if (!data || !data.inputs) {
+    empty.style.display = "block";
+    content.style.display = "none";
+    return;
+  }
+  empty.style.display = "none";
+  content.style.display = "block";
+  content.innerHTML = buildReport(data);
+  try { renderReportCharts(data); } catch (e) { console.warn(e); }
+})();
+
+function renderReportCharts(data) {
+  if (typeof Chart === "undefined") return;
+  var sw = data.sweep || {};
+  var labels = sw.labels || [];
+  var data2a = sw.data2a || [];
+  var dataSs2 = sw.dataSs2 || [];
+  var dataQ = sw.dataQ || [];
+  if (!labels.length) {
+    var box = document.querySelector(".charts-grid");
+    if (box) box.insertAdjacentHTML("beforebegin",
+      "<p class=\"note\">No chart sweep stored. Re-run <strong>Calculate</strong> on the main page, then open the report again.</p>");
+    return;
+  }
+  var line2aPi = labels.map(function (pi, i) { return { x: pi, y: data2a[i] }; });
+  var lineQ = labels.map(function (pi, i) { return { x: pi, y: dataQ[i] }; });
+  var scatterSs = sw.scatter2aSs2 || dataSs2.map(function (s, i) { return { x: s, y: data2a[i] }; });
+  var startPi = sw.startPts2aPi || [];
+  var endPi = sw.endPts2aPi || [];
+  var startSs = sw.startPts2aSs || [];
+  var endSs = sw.endPts2aSs || [];
+  var grid = "rgba(0,0,0,0.08)";
+  var text = "#333";
+
+  function baseOpts(xTitle, yTitle) {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: text, font: { size: 11 } } } },
+      scales: {
+        x: {
+          type: "linear",
+          title: { display: true, text: xTitle, color: text },
+          ticks: { color: text },
+          grid: { color: grid }
+        },
+        y: {
+          title: { display: true, text: yTitle, color: text },
+          ticks: { color: text },
+          grid: { color: grid },
+          beginAtZero: true
+        }
+      }
+    };
+  }
+
+  var el1 = document.getElementById("repChart2aPi");
+  if (el1) {
+    new Chart(el1, {
+      type: "scatter",
+      data: {
+        datasets: [
+          { label: "Crack width 2a (mm)", data: line2aPi, showLine: true, borderColor: "#0d6efd",
+            backgroundColor: "rgba(13,110,253,0.1)", pointRadius: 1.2, tension: 0.2, order: 3 },
+          { label: "Series start", data: startPi, showLine: false, pointRadius: 7, pointStyle: "triangle",
+            backgroundColor: "#198754", borderColor: "#146c43", order: 1 },
+          { label: "Series end", data: endPi, showLine: false, pointRadius: 7, pointStyle: "rectRot",
+            backgroundColor: "#fd7e14", borderColor: "#c45d0a", order: 1 }
+        ]
+      },
+      options: baseOpts("Internal pressure Pi (bar)", "2a (mm)")
+    });
+  }
+
+  var el2 = document.getElementById("repChart2aSs");
+  if (el2) {
+    new Chart(el2, {
+      type: "scatter",
+      data: {
+        datasets: [
+          { label: "2a vs σs2", data: scatterSs, showLine: true, borderColor: "#6f42c1",
+            backgroundColor: "rgba(111,66,193,0.1)", pointRadius: 1.2, tension: 0.2, order: 3 },
+          { label: "Series start", data: startSs, showLine: false, pointRadius: 7, pointStyle: "triangle",
+            backgroundColor: "#198754", borderColor: "#146c43", order: 1 },
+          { label: "Series end", data: endSs, showLine: false, pointRadius: 7, pointStyle: "rectRot",
+            backgroundColor: "#fd7e14", borderColor: "#c45d0a", order: 1 }
+        ]
+      },
+      options: baseOpts("Steel stress σs2 (MPa)", "2a (mm)")
+    });
+  }
+
+  var el3 = document.getElementById("repChartQ");
+  if (el3) {
+    new Chart(el3, {
+      type: "scatter",
+      data: {
+        datasets: [
+          { label: "Seepage q (m³/s/m)", data: lineQ, showLine: true, borderColor: "#198754",
+            backgroundColor: "rgba(25,135,84,0.12)", pointRadius: 1.2, tension: 0.2, fill: false }
+        ]
+      },
+      options: baseOpts("Internal pressure Pi (bar)", "q (m³/s/m)")
+    });
+  }
+}
+</script>
+</body>
+</html>
