@@ -8,7 +8,7 @@
 Online calculator for **permeable pressure tunnels and vertical shafts** with **reinforced concrete linings** under **internal pressure**, based on **Schleiss theory** (Section 7.4).
 
 ## Live demo
-https://mostafashahmoradi.github.io/grok-14/
+https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/
 
 ## Features
 - Uncracked and cracked phases (Birkenmaier series)
