@@ -217,7 +217,7 @@ function buildReport(data) {
   html += row("R/r<sub>a</sub>", "Seepage ratio (uncracked)", "Input", fmt(i.R_over_ra, 2), "—");
   html += row("(R/r<sub>a</sub>)<sub>cr</sub>", "Seepage ratio (cracked / shaft)", "VSHAFT typically 10", fmt(i.Rra_cracked, 2), "—");
   html += row("s", "Bar diameter", "Input", fmt(i.s, 1), "mm");
-  html += row("d<sub>s</sub>", "Bar spacing", "Input", fmt(i.ds, 1), "mm");
+  html += row("d<sub>s</sub>", "Bar spacing", "Input", fmt(i.ds, 1), "cm");
   html += row("A<sub>s</sub>", "Reinforcement area per unit length", "n·(π s²/4)·100/d<sub>s</sub>", fmt(c.As, 1), "mm²/m");
   html += row("P<sub>i</sub>", "Internal water pressure (design)", "Input", fmt(i.Pi, 4), "bar");
   html += "</tbody></table>";
@@ -329,7 +329,7 @@ function buildReport(data) {
   html += "<tr><td>Crack width 2a</td><td class=\"result\">" + fmt(c.two_a, 5) + " mm</td></tr>";
   html += "<tr><td>Steel stress σ<sub>s2</sub></td><td class=\"result\">" + fmt(c.ss2, 2) + " MPa</td></tr>";
   html += "<tr><td>Seepage reach R</td><td class=\"result\">" + fmt(c.R_calc, 2) + " m</td></tr>";
-  html += "<tr><td>Reinforcement</td><td class=\"result\">s = " + fmt(i.s, 1) + " mm, d<sub>s</sub> = " + fmt(i.ds, 1) + " mm, A<sub>s</sub> ≈ " + fmt(c.As, 1) + " mm²/m</td></tr>";
+  html += "<tr><td>Reinforcement</td><td class=\"result\">s = " + fmt(i.s, 1) + " mm, d<sub>s</sub> = " + fmt(i.ds, 1) + " cm, A<sub>s</sub> ≈ " + fmt(c.As, 1) + " mm²/m</td></tr>";
   html += "</tbody></table>";
   html += "<p class=\"note\">Assumptions: Schleiss §7.4; Birkenmaier crack model; d locked from first series; ABOGWL / BELGWL / VSHAFT seepage models as selected. Verify against project-specific codes and site data.</p>";
 

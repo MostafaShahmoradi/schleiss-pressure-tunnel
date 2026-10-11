@@ -478,6 +478,14 @@
       header { padding: 0.85rem 1rem; }
       .logo { max-width: 100%; font-size: 1rem; }
     }
+    .proj-name{font-size:.8rem;color:var(--muted);align-self:center;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .qs{position:relative;border:1px dashed var(--border);border-radius:10px;padding:.7rem 2rem .5rem .9rem;margin-bottom:.9rem;font-size:.88rem;background:rgba(13,110,253,.06);}
+    .qs ol{margin:.35rem 0 0;padding-inline-start:1.2rem;} .qs button{position:absolute;top:.2rem;inset-inline-end:.45rem;border:0;background:none;font-size:1.2rem;cursor:pointer;color:var(--muted);}
+    .sum-card{border-radius:10px;padding:.75rem .9rem;margin-bottom:.9rem;border:2px solid #198754;background:rgba(25,135,84,.08);font-size:.9rem;}
+    .sum-card.bad{border-color:#dc3545;background:rgba(220,53,69,.08);} .sum-card.info{border-color:#0d6efd;background:rgba(13,110,253,.08);}
+    .sum-card table{width:100%;border-collapse:collapse;margin-top:.4rem;} .sum-card td{padding:.2rem .3rem;border-bottom:1px solid var(--border);}
+    .val-err,.val-warn{border-radius:8px;padding:.5rem .75rem;margin:.5rem 0;font-size:.85rem;}
+    .val-err{background:rgba(220,53,69,.12);border:1px solid #dc3545;} .val-warn{background:rgba(255,193,7,.15);border:1px solid #e0a800;}
   </style>
 </head>
 <!-- Copyright (c) 2026 Mostafa Shahmoradi / مصطفی شاهمرادی. All rights reserved. See LICENSE. -->
@@ -488,6 +496,12 @@
     <span data-i18n="title">طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)</span>
   </div>
   <div class="controls">
+    <span id="projName" class="proj-name" title="Project"></span>
+    <button class="ctrl" id="btnNew" data-i18n="file_new">New</button>
+    <button class="ctrl" id="btnOpen" data-i18n="file_open">Open</button>
+    <button class="ctrl" id="btnSave" data-i18n="file_save">Save</button>
+    <button class="ctrl" id="btnSaveAs" data-i18n="file_saveas">Save As</button>
+    <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
     <a class="ctrl" id="btnHelp" href="help.html" target="_blank" rel="noopener" data-i18n="help" style="text-decoration:none;display:inline-flex;align-items:center;">راهنما</a>
     <button class="ctrl" id="btnLang">EN</button>
     <button class="ctrl" id="btnTheme">🌙</button>
@@ -496,6 +510,11 @@
 
 <main>
   <section class="card">
+    <div class="qs" id="quickStart">
+      <button type="button" id="qsClose" aria-label="close">×</button>
+      <b data-i18n="qs_title">Quick start</b>
+      <ol><li data-i18n="qs1"></li><li data-i18n="qs2"></li><li data-i18n="qs3"></li></ol>
+    </div>
     <h2 data-i18n="inputs_title">پارامترهای ورودی</h2>
 
     <div class="section-block">
@@ -628,7 +647,7 @@
       </div>
       <div class="form-group">
         <label><span data-i18n="ds">فاصله میلگردها ds</span>
-          <span class="tooltip-icon" data-tip-fa="فاصله مرکز به مرکز میلگردها (mm)" data-tip-en="Bar spacing (mm)">?</span>
+          <span class="tooltip-icon" data-tip-fa="فاصله مرکز به مرکز میلگردها بر حسب سانتی‌متر (cm) — مثلاً ۲۰ یعنی ۲۰ سانتی‌متر" data-tip-en="Centre-to-centre bar spacing in centimetres (cm) — e.g. 20 = 20 cm">?</span>
         </label>
         <input type="number" id="ds" value="20" />
       </div>
@@ -637,6 +656,12 @@
           <span class="tooltip-icon" data-tip-fa="تعداد لایه‌های آرماتور شعاعی (Excel: Number of layers) — As متناسب با آن افزایش می‌یابد" data-tip-en="Number of radial reinforcement layers (Excel field). As scales with this value">?</span>
         </label>
         <input type="number" id="n_layers" value="1" min="1" max="10" step="1" />
+      </div>
+      <div class="form-group" style="grid-column:1 / -1;">
+        <label style="display:flex;gap:.5rem;align-items:center;"><input type="checkbox" id="bel_consistent" style="width:auto;" />
+          <span data-i18n="bel_cons">BELGWL: consistent uncracked formulation</span>
+          <span class="tooltip-icon" data-tip-fa="فقط تونل زیر GWL. پیش‌فرض (بدون تیک): دقیقاً مطابق اکسل BELGWL. با تیک: فشار اضافی ΔPi و فشار بیرونی نسبت به حالت هیدرواستاتیک نوشته می‌شود (Pa'=0) که از نظر فیزیکی سازگارتر است و Pi_crit را کمی تغییر می‌دهد." data-tip-en="Tunnel below GWL only. Unchecked (default): identical to the BELGWL spreadsheet. Checked: ΔPi and outer pressure both measured relative to hydrostatic (Pa'=0), which is physically self-consistent and slightly changes Pi_crit.">?</span>
+        </label>
       </div>
       </div>
     </div>
@@ -654,7 +679,7 @@
         <label><span data-i18n="max_q">حداکثر دبی نشت q</span>
           <span class="tooltip-icon" data-tip-fa="حداکثر دبی نشت مجاز (m³/s/m)" data-tip-en="Maximum allowable seepage (m³/s/m)">?</span>
         </label>
-        <input type="number" id="max_q" value="0.001" step="0.0001" />
+        <input type="number" id="max_q" value="0.0005" step="0.00005" />
       </div>
       <div class="form-group">
         <label><span data-i18n="max_Pi">حداکثر فشار داخلی Pi</span>
@@ -672,7 +697,7 @@
         <label><span data-i18n="max_R">حداکثر شعاع نشت R</span>
           <span class="tooltip-icon" data-tip-fa="حداکثر شعاع تأثیر نشت در سنگ (m)" data-tip-en="Maximum seepage influence radius in rock (m)">?</span>
         </label>
-        <input type="number" id="max_R" value="50" step="1" />
+        <input type="number" id="max_R" value="100" step="1" />
       </div>
       <div class="form-group">
         <label><span data-i18n="max_ss">حداکثر تنش فولاد σs</span>
@@ -688,7 +713,7 @@
       </div>
       <div class="form-group" style="grid-column: 1 / -1;">
         <label><span data-i18n="ds_candidates">فاصله‌های میلگرد برای بهینه‌سازی (ds)</span>
-          <span class="tooltip-icon" data-tip-fa="لیست فاصله مرکز به مرکز میلگردها به میلی‌متر، جدا با ویرگول یا فاصله. فقط ترکیب‌های ds ≥ s بررسی می‌شوند." data-tip-en="Bar spacings in mm, separated by commas or spaces. Only combinations with ds ≥ s are evaluated.">?</span>
+          <span class="tooltip-icon" data-tip-fa="لیست فاصله مرکز به مرکز میلگردها به سانتی‌متر (cm)، جدا با ویرگول یا فاصله. فقط ترکیب‌هایی بررسی می‌شوند که فاصله (cm) از قطر (mm) کمتر نباشد (۱۰·ds ≥ s)." data-tip-en="Bar spacings in cm, separated by commas or spaces. Only combinations with 10·ds ≥ s (ds in cm, s in mm) are evaluated.">?</span>
         </label>
         <input type="text" id="ds_candidates" value="10, 12, 15, 18, 20, 22, 25, 30, 35, 40, 50" style="font-family:inherit;" />
       </div>
@@ -705,6 +730,7 @@
       <button type="button" class="btn-sample bel" id="btnSampleBEL" data-i18n="sample_bel">نمونه زیر GWL</button>
       <button type="button" class="btn-sample shaft" id="btnSampleShaft" data-i18n="sample_shaft">نمونه شفت قائم</button>
     </div>
+    <div id="validationBox"></div>
     <div class="status" id="status" data-i18n="ready">آماده برای محاسبه</div>
   </section>
 
@@ -886,6 +912,24 @@ const i18n = {
     meta_desc: "Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory. Online calculator for ABOGWL, BELGWL and VSHAFT modes, reinforcement optimization, charts and calculation notebook. Developer: Mostafa Shahmoradi."
   }
 };
+Object.assign(i18n.fa, {
+  file_new:"جدید", file_open:"باز کردن", file_save:"ذخیره", file_saveas:"ذخیره به نام…",
+  qs_title:"شروع سریع",
+  qs1:"یک نمونه (بالا/زیر GWL یا شفت) را بارگذاری کنید یا مقادیر خودتان را وارد کنید. واحدها کنار هر ورودی آمده است (ds بر حسب cm، s بر حسب mm).",
+  qs2:"دکمه «محاسبه» را بزنید؛ کارت خلاصه بالای نتایج، قبول/رد بودن 2a، σs2، q و R را نشان می‌دهد.",
+  qs3:"برای ادامه‌ی کار بعداً، از «ذخیره» استفاده کنید و با «باز کردن» پروژه را برگردانید (Ctrl+S / Ctrl+O).",
+  bel_cons:"BELGWL: فرمول‌بندی سازگار فاز ترک‌نخورده",
+  s:"قطر میلگرد s (mm)", ds:"فاصله میلگردها ds (cm)", ds_candidates:"فاصله‌های میلگرد برای بهینه‌سازی (ds، cm)", s_candidates:"قطرهای میلگرد برای بهینه‌سازی (s، mm)"
+});
+Object.assign(i18n.en, {
+  file_new:"New", file_open:"Open", file_save:"Save", file_saveas:"Save As…",
+  qs_title:"Quick start",
+  qs1:"Load a sample (above GWL / below GWL / shaft) or enter your own values. Units are shown next to each input (ds in cm, s in mm).",
+  qs2:"Press Calculate. The summary card above the results shows pass/fail for 2a, σs2, q and R.",
+  qs3:"Use Save to keep your work and Open to restore it later (Ctrl+S / Ctrl+O).",
+  bel_cons:"BELGWL: consistent uncracked formulation",
+  s:"Bar diameter s (mm)", ds:"Bar spacing ds (cm)", ds_candidates:"Bar spacings for optimization (ds, cm)", s_candidates:"Bar diameters for optimization (s, mm)"
+});
 let currentLang = "fa";
 
 function setLanguage(lang) {
@@ -971,7 +1015,7 @@ function calculateUncracked(inp) {
   for (let i = 0; i < 80; i++) {
     const mid = (lo + hi) / 2;
     let Pa;
-    if (mode === "below" && b > 0) Pa = Pgw;
+    if (mode === "below" && b > 0) Pa = inp.bel_consistent ? 0 : Pgw;
     else Pa = Pa_from_Pi(mid); // ABOGWL absolute Pi or VSHAFT ΔPi with seepage Pa
     const Pf = Pf_from_Pi_Pa(mid, Pa);
     const sigma = sigma_from(mid, Pa, Pf);
@@ -984,6 +1028,7 @@ function calculateUncracked(inp) {
     // BELGWL: absolute Pi_crit = Pa + ΔPi
     best.dPi_crit = best.Pi_crit;
     best.Pi_crit = Pgw + best.dPi_crit;
+    best.Pa_uncracked = Pgw;
   } else if (mode === "shaft" && b > 0) {
     // VSHAFT D5: absolute Pi = ΔPi + ρgb/1e5
     best.dPi_crit = best.Pi_crit;
@@ -991,7 +1036,7 @@ function calculateUncracked(inp) {
   }
 
   const Pi_design = inp.Pi != null ? +inp.Pi : best.Pi_crit;
-  const Pa_at_Pi = (mode === "below" && b > 0) ? Pgw : Pa_from_Pi(mode === "shaft" ? Math.max(Pi_design - Pgw, 0.01) : Pi_design);
+  const Pa_at_Pi = (mode === "below" && b > 0) ? (inp.bel_consistent ? 0 : Pgw) : Pa_from_Pi(mode === "shaft" ? Math.max(Pi_design - Pgw, 0.01) : Pi_design);
   const Pi_for_sigma = (mode === "below" && b > 0) ? Math.max(Pi_design - Pgw, 0.01)
     : (mode === "shaft" && b > 0) ? Math.max(Pi_design - Pgw, 0.01) : Pi_design;
   const Pf_at_Pi = Pf_from_Pi_Pa(Pi_for_sigma, Pa_at_Pi);
@@ -1030,7 +1075,97 @@ const MAX_SERIES = 12; // series 1..12 (m,p → 1 asymptotically)
  * Iterates Pa and R to satisfy Bouvard continuity + C1–C5 displacement compatibility.
  * Returns ss2, Pc, 2a, d, n, q, Pa, sc1, etc. matching ABOGWL.
  */
+function solveExcelFixedPoint(inp, Pi, x0, N) {
+  const lo = 2 * Math.PI * inp.rs / (N + 1), hi = 2 * Math.PI * inp.rs / N;
+  const F = x => {
+    const r = computeCrackedExcel({ ...inp, __probe: { Pa: x[0], R: x[1] }, __nFix: N }, Pi, 0, x[2]);
+    return [r.Pa_new / x[0] - 1, r.R_calc / x[1] - 1, r.d_calc / x[2] - 1];
+  };
+  const nrm = f => Math.max(...f.map(Math.abs));
+  let x = x0.slice();
+  try {
+    for (let it = 0; it < 60; it++) {
+      const f = F(x), res = nrm(f);
+      if (!isFinite(res)) return null;
+      if (res < 1e-10) break;
+      const A = [[], [], []];
+      for (let j = 0; j < 3; j++) {
+        const h = 1e-7 * Math.abs(x[j]), xp = x.slice(); xp[j] += h;
+        const fp = F(xp);
+        for (let i = 0; i < 3; i++) A[i][j] = (fp[i] - f[i]) / h;
+      }
+      const M = A.map((r, i) => [...r, -f[i]]);
+      for (let i = 0; i < 3; i++) {
+        let pv = i; for (let k = i + 1; k < 3; k++) if (Math.abs(M[k][i]) > Math.abs(M[pv][i])) pv = k;
+        [M[i], M[pv]] = [M[pv], M[i]];
+        if (Math.abs(M[i][i]) < 1e-14) return null;
+        for (let k = i + 1; k < 3; k++) { const m = M[k][i] / M[i][i]; for (let c = i; c < 4; c++) M[k][c] -= m * M[i][c]; }
+      }
+      const dx = [0, 0, 0];
+      for (let i = 2; i >= 0; i--) { let t = M[i][3]; for (let c = i + 1; c < 3; c++) t -= M[i][c] * dx[c]; dx[i] = t / M[i][i]; }
+      let lam = 1, moved = false;
+      for (let k = 0; k < 25; k++) {
+        const xn = x.map((v, i) => v + lam * dx[i]);
+        if (xn.every(v => v > 0)) { const fn = F(xn); if (nrm(fn) < res) { x = xn; moved = true; break; } }
+        lam /= 2;
+      }
+      if (!moved) return null;
+    }
+  } catch (e) { return null; }
+  if (nrm(F(x)) > 1e-8) return null;
+  if (!(x[2] > lo && x[2] <= hi)) return null;   // INT() must give N at this d
+  if (!(x[1] > inp.ra)) return null;             // rock zone must be larger than the tunnel
+  return { x, N };
+}
+
+// If INT() makes an exact solution impossible, pick the d next to the INT jump where typed and calculated d agree best.
+function solveNearFixedPoint(inp, Pi, x0, n0) {
+  let best = null;
+  for (const N of [n0 - 1, n0, n0 + 1]) {
+    const lo = 2 * Math.PI * inp.rs / (N + 1), hi = 2 * Math.PI * inp.rs / N;
+    for (const d of [lo * (1 + 1e-7), hi]) {
+      let Pa = x0[0], R = x0[1], r = null;
+      for (let k = 0; k < 250; k++) {
+        r = computeCrackedExcel({ ...inp, __probe: { Pa, R }, __nFix: N }, Pi, 0, d);
+        const dPa = 0.5 * (r.Pa_new - Pa), dR = 0.5 * (r.R_calc - R);
+        Pa += dPa; R += dR;
+        if (!(Pa > 0 && R > 0)) { r = null; break; }
+        if (Math.abs(dPa) < 1e-12 && Math.abs(dR) < 1e-10) break;
+      }
+      if (!r) continue;
+      r = computeCrackedExcel({ ...inp, __probe: { Pa, R }, __nFix: N }, Pi, 0, d);
+      const err = Math.max(Math.abs(r.Pa_new / Pa - 1), Math.abs(r.R_calc / R - 1), Math.abs(r.d_calc / d - 1));
+      if (isFinite(err) && R > inp.ra && (!best || err < best.err)) best = { x: [Pa, R, d], N, err };
+    }
+  }
+  return best;
+}
+
 function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
+  // First cracking (d not yet known): solve d with a continuous crack count so the Pa/R loop converges
+  // smoothly (INT() on n made it oscillate), then lock d - exactly like the spreadsheet - and iterate again.
+  if (sIdx === 0 && !(dFixed > 0) && !inp.__lockD) {
+    const pre = computeCrackedExcel({ ...inp, __lockD: true, __contN: true }, Pi, 0, null);
+    if (resolveStructMode(inp) === "above") {
+      // Exact simultaneous solution of the spreadsheet loop: typed (d, Pa, R) == calculated (rows 53, 60, 65)
+      const n0 = Math.floor(2 * Math.PI * inp.rs / pre.d);
+      for (const N of [n0, n0 - 1, n0 + 1]) {
+        const fp = solveExcelFixedPoint(inp, Pi, [pre.Pa_cracked, pre.R_calc, pre.d], N);
+        if (fp) {
+          const res = computeCrackedExcel({ ...inp, __probe: { Pa: fp.x[0], R: fp.x[1] }, __nFix: N }, Pi, 0, fp.x[2]);
+          return { ...res, Pa_cracked: fp.x[0], R_calc: fp.x[1], excelExact: true };
+        }
+      }
+      const near = solveNearFixedPoint(inp, Pi, [pre.Pa_cracked, pre.R_calc, pre.d], n0);
+      if (near && near.err < 2e-3) {
+        const res = computeCrackedExcel({ ...inp, __probe: { Pa: near.x[0], R: near.x[1] }, __nFix: near.N }, Pi, 0, near.x[2]);
+        return { ...res, Pa_cracked: near.x[0], R_calc: near.x[1], excelNear: true };
+      }
+    }
+    // No consistent solution (e.g. R < ra): lock d to 1 mm and iterate Pa, R
+    const dLock = Math.round(pre.d * 1000) / 1000;
+    return computeCrackedExcel({ ...inp, __lockD: true }, Pi, 0, dLock);
+  }
   const { ri, ra, rs, Ec, Er, Es, vc, vr, Kr, s, ds, b = 0, Bw = 30 } = inp;
   const nLayers = Math.max(1, Math.min(10, Math.round(+(inp.n_layers || 1))));
   const As_mm = nLayers * (Math.PI * s * s / 4) * 100 / ds; // mm²/m
@@ -1121,7 +1256,8 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
     // τ always from bond formula (Excel D56): Bw*(0.033+0.15*(a)^0.25)
     const a_half_mm = Math.max(two_a / 2, 1e-9);
     tau = Math.max(Bw * (0.033 + 0.15 * Math.pow(a_half_mm, 0.25)), 0.1);
-    const n = Math.max(1, Math.floor(2 * Math.PI * rs / d));
+    const d_s1 = sIdx === 0 ? d : d * Math.pow(2, sIdx);   // series-1 spacing
+    const n = inp.__nFix ? inp.__nFix * Math.pow(2, sIdx) : inp.__contN ? (2 * Math.PI * rs / d_s1) : Math.max(1, Math.floor(2 * Math.PI * rs / d_s1)) * Math.pow(2, sIdx); // n doubles each series (as in the spreadsheets)
     const q = computeQc(Pa, two_a, n);
     const aB = (b > 0) ? null : q / Kr;
     const R_calc = (b > 0 && b > ra) ? b : (aB != null ? aB * Math.log(2) / Math.PI : R_ass);
@@ -1129,11 +1265,17 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
 
     return {
       series: sIdx + 1, m, As: As_mm, Pa_cracked: Pa, Pc, sr_rs: sr, Ps, u_tot,
-      ss2, ss1, two_a, d, n, q, aB, R_calc, sigma_c1: sc1, tau,
+      ss2, ss1, two_a, d, n, q, aB, R_calc, R_used: R_ass, sigma_c1: sc1, tau,
       C1, C2, C3, C4, C5
     };
   }
 
+  // Spreadsheet probe: what Excel rows 53 / 60 / 65 would show for typed d / Pa / R
+  if (inp.__probe) {
+    const s0 = stateAtPaR(inp.__probe.Pa, inp.__probe.R);
+    const tx = Bw * (0.033 + 0.15 * Math.pow(Math.max(s0.two_a / 2, 1e-9), 0.25));
+    return { ...s0, Pa_new: PaFromQc_Bouvard(s0.q), d_calc: s0.ss2 * (s / 1000) / tx };
+  }
   // Outer iteration on Pa (and R for above-GWL)
   let Pa = Math.min(Pi * 0.3, Pi - 0.05);
   let R_ass = Math.max(ra * 1.5, 8.15);
@@ -1207,7 +1349,7 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
     // Outer loop on R; inner bisection on Pa so Pa_calc ≈ Pa_ass (60 ≈ 59)
     Pa = Pi * 0.95;
     R_ass = Math.max(ra * 3, 10);
-    for (let outer = 0; outer < 60; outer++) {
+    for (let outer = 0; outer < 120; outer++) {
       let lo = 0.01, hi = Pi * 0.999999;
       for (let it = 0; it < 50; it++) {
         const mid = (lo + hi) / 2;
@@ -1223,7 +1365,7 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
       Pa = (lo + hi) / 2;
       st = stateAtPaR(Pa, R_ass);
       const newR = Math.max(st.R_calc || R_ass, ra * 1.05);
-      if (Math.abs(newR - R_ass) < 1e-4 && Math.abs(PaFromQc_Bouvard(st.q) - Pa) < 1e-5) {
+      if (Math.abs(newR - R_ass) < 1e-6 && Math.abs(PaFromQc_Bouvard(st.q) - Pa) < 1e-7) {
         R_ass = newR;
         st = stateAtPaR(Pa, R_ass);
         break;
@@ -1237,6 +1379,15 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
 
 /* ========== Cracked Phase + Multi-Series + Continuity ========== */
 function calculateCrackedPhase(inp, Pi_crit) {
+  // Below the critical pressure the lining is uncracked: no crack quantities exist.
+  if (inp.Pi < Pi_crit * 0.995) {
+    const un = calculateUncracked(inp);
+    const nl = Math.max(1, Math.min(10, Math.round(+(inp.n_layers || 1))));
+    return { uncrackedState: true, series: 0, currentSeries: 0, m: 0,
+      As: nl * (Math.PI * inp.s * inp.s / 4) * 100 / inp.ds, Pa_cracked: un.Pa_at_Pi, Pc: 0, sr_rs: 0,
+      Ps: inp.Pi, ss2: 0, ss1: 0, two_a: 0, d: 0, n: 0, tau: 0, sigma_c1: 0, q: 0, aB: null,
+      R_calc: 0, dFirst: null, seriesResults: [] };
+  }
   const seriesResults = [];
   let final = null;
 
@@ -1252,8 +1403,7 @@ function calculateCrackedPhase(inp, Pi_crit) {
     seriesResults.push(st);
     final = st;
     // Advance series only if concrete between cracks has reached tensile strength
-    if (st.sigma_c1 < (inp.Bz || 1) * 0.98) break;
-    if (inp.Pi < Pi_crit * 1.2 && sIdx === 0) break;
+    if (st.sigma_c1 < (inp.Bz || 1)) break;
   }
 
   return { ...final, seriesResults, currentSeries: final.series, dFirst };
@@ -1283,7 +1433,7 @@ function analyzeSeriesHistory(inp, Pi_crit, Pi_max) {
     let lo = Pi_start, hi = Pi_max, found = false;
     // Ensure at Pi_max we can check
     const atHi = evaluateCrackedAtSeries(inp, Pi_max, sIdx, dFirst);
-    if (atHi.sigma_c1 >= Bz * 0.98) {
+    if (atHi.sigma_c1 >= Bz) {
       found = true;
       for (let i = 0; i < 45; i++) {
         const mid = (lo + hi) / 2;
@@ -1334,9 +1484,14 @@ function runCalculation() {
     Rra_cracked: +document.getElementById("Rra_cracked")?.value || 10,
     n_layers: +document.getElementById("n_layers")?.value || 1,
     struct_mode: document.getElementById("struct_mode")?.value || "auto",
+    bel_consistent: !!document.getElementById("bel_consistent")?.checked,
     s: +document.getElementById("s").value,
     ds: +document.getElementById("ds").value
   };
+
+  const vres = validateInputs(inp);
+  showValidation(vres);
+  if (vres.errs.length) { status.textContent = currentLang === "fa" ? "⚠ ورودی‌ها را اصلاح کنید" : "⚠ Please fix the inputs"; return; }
 
   setTimeout(() => {
     const uncr = calculateUncracked(inp);
@@ -1379,7 +1534,7 @@ function runCalculation() {
       { name: "σ_t,max", value: uncr.sigma_tmax.toFixed(4) + " MPa",
         tip: tip("تنش مماسی حداکثر در پوشش ترک‌نخورده", "Max tangential stress in uncracked lining") },
 
-      { section: (currentLang === "fa" ? "فاز ترک‌خورده – سری " : "Cracked Phase – Series ") + (crack.currentSeries || 1) },
+      { section: (currentLang === "fa" ? "فاز ترک‌خورده – سری " : "Cracked Phase – Series ") + (crack.uncrackedState ? "—" : (crack.currentSeries || 1)) },
       { name: "Series / m", value: (crack.currentSeries || 1) + " / " + (crack.m ? crack.m.toFixed(3) : "0.333"),
         tip: tip("شماره سری ترک و ضریب m", "Crack series number and m factor") },
       { name: "As", value: crack.As.toFixed(1) + " mm²/m",
@@ -1473,7 +1628,7 @@ function runCalculation() {
     });
 
     const container = document.getElementById("results");
-    let html = "";
+    let html = buildSummary(crack, inp, uncr) + buildExcelCheck(inp, uncr);
     if (seriesCardsHtml) {
       html += `<div class="section-label">${currentLang === "fa" ? "★ جزئیات هر سری ترک (شروع و پایان)" : "★ Per-series details (start & end)"}</div>`;
       html += seriesCardsHtml;
@@ -1492,18 +1647,7 @@ function runCalculation() {
     });
     container.innerHTML = html;
 
-    // Excel verification badge for ABOGWL sample inputs
-    const isExcelSample =
-      Math.abs(inp.ri - 5.075) < 0.01 && Math.abs(inp.ra - 5.675) < 0.01 &&
-      Math.abs(inp.Pi - 2.827) < 0.05 && Math.abs(inp.Ec - 20000) < 1 &&
-      Math.abs(inp.Er - 5000) < 1 && Math.abs(inp.Kr - 1e-6) < 1e-9;
-    if (isExcelSample) {
-      status.textContent = currentLang === "fa"
-        ? "محاسبه انجام شد – نتایج منطبق با اکسل ABOGWL ✓"
-        : "Calculation done – results match ABOGWL Excel ✓";
-    } else {
-      status.textContent = i18n[currentLang].done;
-    }
+    status.textContent = i18n[currentLang].done;
 
     // Update charts with parametric sweep + series markers
     const sweep = updateCharts(inp, uncr.Pi_crit, seriesHistory);
@@ -1573,6 +1717,8 @@ function loadSample(name) {
   });
   const modeEl = document.getElementById("struct_mode");
   if (modeEl && p.struct_mode) modeEl.value = p.struct_mode;
+  const mp = document.getElementById("max_Pi"); if (mp) mp.value = name === "ABOGWL" ? 10 : 30;
+  const bc = document.getElementById("bel_consistent"); if (bc) bc.checked = false;
   const st = document.getElementById("status");
   if (st) {
     st.textContent = currentLang === "fa"
@@ -1958,7 +2104,11 @@ function runSensitivity() {
       } else {
         inp[sc.key] = baseVal * f;
       }
-      // keep structure mode consistent with b for auto
+      const modeS = resolveStructMode(inp);
+      if ((modeS === "below" || modeS === "shaft") && inp.b > 0 && Pi <= 9.81 * inp.b / 100) {
+        html += `<div class="result-item"><span class="name">${sc.key}×${f}</span><span class="value">n/a (Pi ≤ ρgb)</span></div>`;
+        return;
+      }
       const uncr = calculateUncracked(inp);
       const crack = calculateCrackedPhase({ ...inp, Pi }, uncr.Pi_crit);
       const label = sc.key === "b"
@@ -2026,7 +2176,8 @@ function runOptimization() {
     R_over_ra: +document.getElementById("R_over_ra").value,
     Rra_cracked: +document.getElementById("Rra_cracked")?.value || 10,
     n_layers: +document.getElementById("n_layers")?.value || 1,
-    struct_mode: document.getElementById("struct_mode")?.value || "auto"
+    struct_mode: document.getElementById("struct_mode")?.value || "auto",
+    bel_consistent: !!document.getElementById("bel_consistent")?.checked
   };
 
   const max_2a = +document.getElementById("max_2a").value;
@@ -2034,6 +2185,10 @@ function runOptimization() {
   const max_Pi = +document.getElementById("max_Pi").value;
   const max_R = +document.getElementById("max_R").value;
   const max_ss = +document.getElementById("max_ss").value;
+
+  const vopt = validateInputs({ ...base, Pi: max_Pi, s: 20, ds: 20 });
+  showValidation(vopt);
+  if (vopt.errs.length) { status.textContent = currentLang === "fa" ? "⚠ ورودی‌ها را اصلاح کنید" : "⚠ Please fix the inputs"; return; }
 
   // Candidate bar diameters / spacings from user (comma or space separated)
   function parseNumList(str, fallback) {
@@ -2056,10 +2211,16 @@ function runOptimization() {
 
   // For optimization we evaluate at the design max Pi
   const uncr = calculateUncracked({ ...base, Pi: max_Pi });
+  if (max_Pi < uncr.Pi_crit * 0.995) {
+    const fa0 = currentLang === "fa";
+    document.getElementById("results").innerHTML = `<div class="sum-card info"><b>${fa0 ? "پوشش در این فشار ترک نمی‌خورد" : "The lining stays uncracked at this pressure"}</b><br>${fa0 ? "حداکثر فشار طراحی" : "Max design pressure"} = ${max_Pi} bar &lt; Pi_crit = ${uncr.Pi_crit.toFixed(3)} bar.<br>${fa0 ? "برای بهینه‌سازی، «حداکثر فشار داخلی Pi» را بالاتر از Pi_crit قرار دهید." : "To optimise reinforcement, set the max internal pressure Pi above Pi_crit."}</div>`;
+    status.textContent = fa0 ? "بهینه‌سازی لازم نیست: پوشش ترک نمی‌خورد" : "No optimisation needed: lining uncracked";
+    return;
+  }
 
   for (const s of sCandidates) {
     for (const ds of dsCandidates) {
-      if (ds < s) continue; // spacing usually >= diameter
+      if (ds * 10 < s) continue; // ds is in cm, s in mm: spacing must not be smaller than the bar diameter
       const inp = { ...base, Pi: max_Pi, s, ds };
       const crack = calculateCrackedPhase(inp, uncr.Pi_crit);
 
@@ -2103,7 +2264,7 @@ function runOptimization() {
       html += `<div class="series-card">
         <div class="series-card-header">
           <span>${fa ? "بهینه (سبک‌ترین قابل قبول)" : "Optimum (lightest feasible)"}</span>
-          <span class="series-badge">s=${best.s} mm · ds=${best.ds} mm · As=${best.As.toFixed(1)}</span>
+          <span class="series-badge">s=${best.s} mm · ds=${best.ds} cm · As=${best.As.toFixed(1)}</span>
         </div>
         <div class="series-point"><div class="param-grid">
           <div class="param-cell"><span class="pname">As</span><span class="pval">${best.As.toFixed(1)} <span class="punit">mm²/m</span></span></div>
@@ -2140,7 +2301,7 @@ function runOptimization() {
           <tr style="text-align:start;border-bottom:2px solid var(--border);">
             <th style="padding:0.4rem;">#</th>
             <th style="padding:0.4rem;">s<br><span style="font-weight:400;color:var(--muted);">mm</span></th>
-            <th style="padding:0.4rem;">ds<br><span style="font-weight:400;color:var(--muted);">mm</span></th>
+            <th style="padding:0.4rem;">ds<br><span style="font-weight:400;color:var(--muted);">cm</span></th>
             <th style="padding:0.4rem;">As<br><span style="font-weight:400;color:var(--muted);">mm²/m</span></th>
             <th style="padding:0.4rem;">2a ≤ ${max_2a}</th>
             <th style="padding:0.4rem;">q ≤ ${max_q}</th>
@@ -2218,8 +2379,174 @@ function runOptimization() {
   }, 200);
 }
 
+
+/* ========== Validation ========== */
+function validateInputs(inp) {
+  const fa = currentLang === "fa", t = (f, e) => fa ? f : e;
+  const errs = [], warns = [];
+  if (!(inp.ra > inp.ri)) errs.push(t("ra باید بزرگ‌تر از ri باشد", "ra must be greater than ri"));
+  if (!(inp.rs > inp.ri && inp.rs < inp.ra)) errs.push(t("rs باید بین ri و ra باشد", "rs must lie between ri and ra"));
+  ["Ec", "Er", "Es", "Kr", "Kc", "Bz", "Bw", "s", "ds"].forEach(k => { if (!(inp[k] > 0)) errs.push(t(`${k} باید مثبت باشد`, `${k} must be positive`)); });
+  if (!(inp.vc >= 0 && inp.vc < 0.5) || !(inp.vr >= 0 && inp.vr < 0.5)) errs.push(t("ضریب پواسون باید بین ۰ و ۰٫۵ باشد", "Poisson ratio must be between 0 and 0.5"));
+  if (!(inp.R_over_ra > 1)) errs.push(t("R/ra (ترک‌نخورده) باید بزرگ‌تر از ۱ باشد", "R/ra (uncracked) must be greater than 1"));
+  if (inp.ds * 10 < inp.s) warns.push(t("ds (cm) خیلی کوچک است؛ میلگردها روی هم می‌افتند. ds را به سانتی‌متر وارد کنید (مثلاً ۲۰ = ۲۰ cm).", "ds looks too small (bars would overlap). Enter ds in centimetres (e.g. 20 = 20 cm)."));
+  if (inp.ds > 100) warns.push(t("ds بیش از ۱۰۰ cm است. اگر میلی‌متر وارد کرده‌اید، تقسیم بر ۱۰ کنید.", "ds is above 100 cm. If you entered millimetres, divide by 10."));
+  const mode = resolveStructMode(inp), Pgw = 9.81 * (inp.b || 0) / 100;
+  if (mode === "below" || mode === "shaft") {
+    if (!(inp.b > 0)) errs.push(t("برای این نوع سازه b باید بزرگ‌تر از صفر باشد", "b must be greater than zero for this structure type"));
+    else {
+      if (mode === "below" && inp.b <= inp.ra) errs.push(t("برای تونل زیر GWL باید b > ra باشد", "For a tunnel below GWL, b must exceed ra"));
+      if (!(inp.Pi > Pgw)) errs.push(t(`Pi (مطلق) باید از فشار هیدرواستاتیک ρgb = ${Pgw.toFixed(2)} bar بیشتر باشد`, `Absolute Pi must exceed the hydrostatic pressure ρgb = ${Pgw.toFixed(2)} bar`));
+    }
+  } else if (inp.b > 0) warns.push(t("b>0 ولی نوع سازه «بالای GWL» است؛ نوع را روی «خودکار» یا «زیر GWL» بگذارید.", "b>0 but structure type is 'above GWL'; use 'Auto' or 'below GWL'."));
+  return { errs, warns };
+}
+function showValidation(v) {
+  const box = document.getElementById("validationBox"); if (!box) return;
+  box.innerHTML = v.errs.map(m => `<div class="val-err">⛔ ${m}</div>`).join("") + v.warns.map(m => `<div class="val-warn">⚠️ ${m}</div>`).join("");
+}
+
+/* ========== Spreadsheet cross-check (ABOGWL, first-crack column) ========== */
+function buildExcelCheck(inp, uncr) {
+  if (resolveStructMode(inp) !== "above") return "";
+  const fa = currentLang === "fa", Pc = uncr.Pi_crit;
+  const fc = computeCrackedExcel({ ...inp, Pi: Pc }, Pc, 0, null);
+  const Rt = fc.R_used || fc.R_calc;
+  const x = computeCrackedExcel({ ...inp, Pi: Pc, __probe: { Pa: fc.Pa_cracked, R: Rt } }, Pc, 0, fc.d);
+  const rows = [["d", "52 → 53", fc.d, x.d_calc, "m"], ["Pa", "59 → 60", fc.Pa_cracked, x.Pa_new, "bar"], ["R", "64 → 65", Rt, x.R_calc, "m"]];
+  const rel = (a, b) => Math.abs(b / a - 1);
+  const ok = rows.every(r => rel(r[2], r[3]) < 2e-3);
+  const f6 = v => (+v).toPrecision(6);
+  const why = x.R_calc <= inp.ra
+    ? (fa ? "R کوچک‌تر از ra است؛ معادلات اکسل در این حالت نقطه‌ی ثابت ندارد و اپ R را حداقل 1.05·ra نگه می‌دارد."
+          : "R is smaller than ra; the spreadsheet equations have no fixed point here and the app keeps R ≥ 1.05·ra.")
+    : (fa ? "تعداد ترک n=INT(…) عدد صحیح است و جهش آن اجازه‌ی تطابق کامل را نمی‌دهد."
+          : "The crack count n = INT(…) is an integer and its jump prevents an exact match.");
+  return `<div class="sum-card ${ok ? "" : "info"}"><b>${ok ? "✅" : "ℹ️"} ${fa ? "کنترل با اکسل ABOGWL (ستون اول)" : "Cross-check with ABOGWL spreadsheet (first column)"}</b>
+    <div style="font-size:.8rem;">${fa ? "این مقدارها را در ردیف‌های ۵۲، ۵۹ و ۶۴ اکسل تایپ کنید و ردیف‌های ۵۳، ۶۰ و ۶۵ را ببینید." : "Type these values in Excel rows 52, 59 and 64 and compare with rows 53, 60 and 65."}</div>
+    <table><tr><td></td><td>${fa ? "ردیف" : "rows"}</td><td>${fa ? "تایپ کنید" : "type"}</td><td>${fa ? "اکسل نشان می‌دهد" : "Excel shows"}</td><td>%</td></tr>
+    ${rows.map(r => `<tr><td>${r[0]} (${r[4]})</td><td>${r[1]}</td><td>${f6(r[2])}</td><td>${f6(r[3])}</td><td>${(rel(r[2], r[3]) * 100).toFixed(3)}</td></tr>`).join("")}</table>
+    ${ok ? "" : `<div style="font-size:.78rem;margin-top:.3rem;">${why}</div>`}</div>`;
+}
+
+/* ========== Result summary ========== */
+function buildSummary(c, inp, uncr) {
+  const fa = currentLang === "fa";
+  if (c.uncrackedState) {
+    return `<div class="sum-card info"><b>${fa ? "پوشش در این فشار ترک نمی‌خورد" : "The lining stays uncracked at this pressure"}</b><br>Pi = ${(+inp.Pi).toFixed(3)} bar &lt; Pi_crit = ${uncr.Pi_crit.toFixed(3)} bar</div>`;
+  }
+  const v = id => +document.getElementById(id).value;
+  const rows = [
+    ["2a", c.two_a, v("max_2a"), "mm", 4], ["σs2", c.ss2, v("max_ss"), "MPa", 1],
+    ["q", c.q, v("max_q"), "m³/s/m", -2], ["R", c.R_calc, v("max_R"), "m", 1]
+  ];
+  const fmt = (x, d) => d < 0 ? x.toExponential(2) : x.toFixed(d);
+  const allOk = rows.every(r => r[1] <= r[2]);
+  return `<div class="sum-card ${allOk ? "" : "bad"}"><b>${allOk ? "✅" : "❌"} ${fa ? "خلاصه‌ی کنترل طراحی" : "Design check summary"}</b>
+    — ${fa ? "سری ترک" : "crack series"} ${c.currentSeries}, Pi = ${(+inp.Pi).toFixed(2)} bar (Pi_crit = ${uncr.Pi_crit.toFixed(3)})
+    <table>${rows.map(r => `<tr><td>${r[0]}</td><td>${fmt(r[1], r[4])} ${r[3]}</td><td>≤ ${r[2]}</td><td>${r[1] <= r[2] ? "✓" : "✗"}</td></tr>`).join("")}</table>
+    <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">${fa ? "حدود از بخش «محدودیت‌های طراح» خوانده می‌شوند." : "Limits are read from the 'Designer constraints' section."}</div></div>`;
+}
+
+/* ========== Project files: New / Open / Save / Save As ========== */
+const PROJECT_FIELDS = ["ri","ra","rs","Ec","Er","Es","vc","vr","Kr","Kc","Bz","Bw","Pi","b","R_over_ra","Rra_cracked","struct_mode","bel_consistent",
+  "s","ds","n_layers","max_2a","max_q","max_Pi","max_R","max_ss","Pi_hist_max","s_candidates","ds_candidates"];
+let projectName = "untitled", fileHandle = null, dirty = false;
+const FILE_TYPES = [{ description: "Schleiss project (.json)", accept: { "application/json": [".json"] } }];
+const pfa = () => currentLang === "fa";
+
+function setDirty(v) {
+  dirty = v;
+  const el = document.getElementById("projName");
+  if (el) el.textContent = projectName + (dirty ? " •" : "");
+}
+function collectProject() {
+  const fields = {};
+  PROJECT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.type === "checkbox" ? el.checked : el.value; });
+  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.2", name: projectName,
+    saved: new Date().toISOString(), lang: currentLang, theme: document.documentElement.getAttribute("data-theme") || "light", fields };
+}
+function applyProject(p) {
+  if (!p || p.app !== "schleiss-pressure-tunnel" || !p.fields) throw new Error(pfa() ? "این فایل پروژه‌ی معتبر این برنامه نیست." : "This is not a valid project file for this app.");
+  Object.entries(p.fields).forEach(([id, val]) => {
+    const el = document.getElementById(id); if (!el) return;
+    if (el.type === "checkbox") el.checked = !!val; else el.value = val;
+  });
+}
+function statusMsg(t) { const st = document.getElementById("status"); if (st) st.textContent = t; }
+function downloadJson(json, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+async function saveProject(asNew) {
+  const fileBase = n => n.replace(/\.schleiss\.json$|\.json$/i, "");
+  if (window.showSaveFilePicker) {
+    try {
+      if (asNew || !fileHandle) fileHandle = await window.showSaveFilePicker({ suggestedName: projectName + ".schleiss.json", types: FILE_TYPES });
+      projectName = fileBase(fileHandle.name);
+      const w = await fileHandle.createWritable();
+      await w.write(JSON.stringify(collectProject(), null, 2)); await w.close();
+      setDirty(false); statusMsg((pfa() ? "ذخیره شد: " : "Saved: ") + fileHandle.name); return;
+    } catch (e) { if (e && e.name === "AbortError") return; console.warn(e); }
+  }
+  let name = projectName;
+  if (asNew || projectName === "untitled") {
+    const r = prompt(pfa() ? "نام فایل پروژه:" : "Project file name:", projectName);
+    if (!r) return; name = fileBase(r.trim()) || "project";
+  }
+  projectName = name;
+  downloadJson(JSON.stringify(collectProject(), null, 2), projectName + ".schleiss.json");
+  setDirty(false); statusMsg((pfa() ? "فایل دانلود شد: " : "File downloaded: ") + projectName + ".schleiss.json");
+}
+function loadProjectText(text, name) {
+  try { applyProject(JSON.parse(text)); }
+  catch (e) { alert((pfa() ? "خطا در باز کردن فایل: " : "Could not open file: ") + e.message); return; }
+  projectName = name.replace(/\.schleiss\.json$|\.json$/i, "");
+  setDirty(false); runCalculation();
+}
+async function openProject() {
+  if (dirty && !confirm(pfa() ? "تغییرات ذخیره‌نشده از بین می‌رود. ادامه می‌دهید؟" : "Unsaved changes will be lost. Continue?")) return;
+  if (window.showOpenFilePicker) {
+    try {
+      const [h] = await window.showOpenFilePicker({ types: FILE_TYPES });
+      fileHandle = h; const f = await h.getFile(); loadProjectText(await f.text(), f.name); return;
+    } catch (e) { if (e && e.name === "AbortError") return; console.warn(e); }
+  }
+  document.getElementById("fileInput").click();
+}
+function newProject() {
+  if (dirty && !confirm(pfa() ? "تغییرات ذخیره‌نشده از بین می‌رود. ادامه می‌دهید؟" : "Unsaved changes will be lost. Continue?")) return;
+  loadSample("ABOGWL"); projectName = "untitled"; fileHandle = null; setDirty(false);
+  document.getElementById("results").innerHTML = ""; showValidation({ errs: [], warns: [] });
+}
+document.getElementById("btnNew").addEventListener("click", newProject);
+document.getElementById("btnOpen").addEventListener("click", openProject);
+document.getElementById("btnSave").addEventListener("click", () => saveProject(false));
+document.getElementById("btnSaveAs").addEventListener("click", () => saveProject(true));
+document.getElementById("fileInput").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return; fileHandle = null;
+  const r = new FileReader(); r.onload = () => loadProjectText(String(r.result), f.name); r.readAsText(f); e.target.value = "";
+});
+document.addEventListener("input", e => { if (e.target.closest && e.target.closest("main")) setDirty(true); });
+document.addEventListener("change", e => { if (e.target.closest && e.target.closest("main")) setDirty(true); });
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+document.addEventListener("keydown", e => {
+  if (!(e.ctrlKey || e.metaKey)) return;
+  const k = e.key.toLowerCase();
+  if (k === "s") { e.preventDefault(); saveProject(e.shiftKey); }
+  else if (k === "o") { e.preventDefault(); openProject(); }
+});
+(function () {
+  const qs = document.getElementById("quickStart");
+  try { if (localStorage.getItem("tunnelQsHidden") === "1") qs.style.display = "none"; } catch (e) {}
+  document.getElementById("qsClose").addEventListener("click", () => { qs.style.display = "none"; try { localStorage.setItem("tunnelQsHidden", "1"); } catch (e) {} });
+})();
+
 // Init
 setLanguage("fa");
+setDirty(false);
 </script>
 </body>
 </html>

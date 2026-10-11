@@ -3,10 +3,10 @@
 **Short name:** Schleiss Pressure Tunnel Design  
 **فارسی:** طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)  
 **Developer:** Mostafa Shahmoradi / مصطفی شاهمرادی  
-**Version:** 1.1.0
+**Version:** 2.0.2
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue)](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/)
-[![Version](https://img.shields.io/badge/version-1.1.0-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
+[![Version](https://img.shields.io/badge/version-2.0.2-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
 [![License: proprietary](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)](LICENSE)
 
 Online calculator for **permeable pressure tunnels and vertical shafts** with **reinforced concrete linings** under **internal pressure**, based on **Schleiss theory** (Section 7.4).
@@ -34,18 +34,21 @@ Calculation logic is implemented in client-side JavaScript and checked against t
 - Charts with crack-series markers
 - Reinforcement optimization under designer constraints
 - Multi-layer reinforcement, CSV export, sensitivity analysis
+- **Save / Open projects** (New, Open, Save, Save As; Ctrl+S / Ctrl+O) as `.schleiss.json` files
+- **Design-check summary card** (pass/fail for 2a, σs2, q, R) and input validation with plain-language messages
 - Bilingual UI (Persian / English), light / dark themes
 - Printable calculation notebook and full user manual (Help)
 
 ## Validation
-See **[VALIDATION.md](VALIDATION.md)** for side-by-side numeric checks (typical relative error **&lt; 0.5%** on key parameters for the three sample regimes).
+See **[VALIDATION.md](VALIDATION.md)**. Run `node tests/validate.js` to re-check the engine against the ABOGWL / BELGWL / VSHAFT spreadsheets (all checks within 0.03%).
 
 ## How to use
 1. Open the [live demo](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/) or open `index.html` locally.
 2. Load a sample or enter geometry, materials and groundwater data.
-3. Click **Calculate** / **محاسبه**.
-4. Optionally run optimization, CSV export or sensitivity tools.
-5. Open **Help** for theory, usage and worked examples.
+3. Click **Calculate** / **محاسبه**. Units: `s` in **mm**, `ds` in **cm**, pressures in **bar**.
+4. Use **Save** / **Save As** to keep the project and **Open** to restore it later.
+5. Optionally run optimization, CSV export or sensitivity tools.
+6. Open **Help** for theory, usage and worked examples.
 
 ## Repository layout
 | File | Role |
@@ -53,6 +56,7 @@ See **[VALIDATION.md](VALIDATION.md)** for side-by-side numeric checks (typical 
 | `index.html` | Main calculator |
 | `help.html` | User manual (FA/EN) |
 | `report.html` | Printable calculation notebook |
+| `tests/validate.js` | Regression test vs. spreadsheets |
 | `VALIDATION.md` | Numeric checks vs Excel references |
 | `CHANGELOG.md` | Version history |
 | `LICENSE` | © 2026 Mostafa Shahmoradi |
