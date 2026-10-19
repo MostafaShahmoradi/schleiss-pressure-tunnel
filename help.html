@@ -302,11 +302,11 @@
           <thead><tr><th>پارامتر</th><th>مقدار</th><th>واحد</th></tr></thead>
           <tbody>
             <tr><td>P<sub>i,crit</sub></td><td class="num">۲.۸۲۷</td><td>bar</td></tr>
-            <tr><td>P<sub>a</sub> (ترک‌خورده در crit)</td><td class="num">۰.۸۴۵</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub> (ترک‌خورده در crit)</td><td class="num">۰.۸۳۸</td><td>bar</td></tr>
             <tr><td>σ<sub>s2</sub></td><td class="num">۴۲.۵</td><td>MPa</td></tr>
             <tr><td>2a</td><td class="num">۰.۰۲۴۲</td><td>mm</td></tr>
-            <tr><td>R</td><td class="num">≈ ۸.۲</td><td>m</td></tr>
-            <tr><td>n (تعداد ترک)</td><td class="num">۹۵</td><td>—</td></tr>
+            <tr><td>R</td><td class="num">≈ ۸.۱۶</td><td>m</td></tr>
+            <tr><td>n (تعداد ترک)</td><td class="num">۹۴</td><td>—</td></tr>
           </tbody>
         </table>
         <p>در صفحه اصلی روی <strong>نمونه بالای GWL</strong> سپس <strong>محاسبه</strong> بزنید.</p>
@@ -358,6 +358,71 @@
         <li>© ۲۰۲۶ مصطفی شاهمرادی — تکثیر با نام دیگران بدون مجوز ممنوع است.</li>
       </ul>
 
+      <h2 id="fa-ch8">۱۲. فصل ۸ — فشار آب خارجی هنگام تخلیه و افت ناگهانی تراز آب</h2>
+      <p>تب «فصل ۸» فشار آب خارجی مؤثر <code>p<sub>a</sub></code> را روی پوشش بتنی تونل یا شفت هنگام تخلیه حساب می‌کند. نشت از سنگ به داخل تونل باعث افت فشار در توده سنگ می‌شود و بار روی پوشش از ارتفاع کامل آب زیرزمینی <code>b</code> کمتر است. سپس تنش فشاری بتن کنترل می‌شود (مرجع: Schleiss، فصل ۸ و فلوچارت آن).</p>
+      <h3>۱۲.۱ روش محاسبه</h3>
+      <ol>
+        <li>رسانایی ورودی از سنگ: تونل افقی <code>C<sub>1</sub></code> (۸.۱)، شفت قائم <code>C<sub>2</sub></code> (۸.۲).</li>
+        <li>ناحیه سست‌شده/تزریق‌شده (اختیاری): <code>C<sub>3</sub> = 2πK<sub>g</sub>/ln(r<sub>g</sub>/r<sub>a</sub>)</code> (۸.۳).</li>
+        <li>رسانایی پوشش: <code>C<sub>4</sub> = C<sub>41</sub> + C<sub>42</sub>(یا C<sub>43</sub>) + C<sub>44</sub>(یا C<sub>45</sub>)</code> (۸.۴ تا ۸.۹): بتن سالم، ترک‌های طولی، ترک‌های عمود بر محور.</li>
+        <li>پیوستگی <code>q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub></code> و فشار بیرونی: (۸.۱۰) تونل با ناحیه، (۸.۱۱) شفت با ناحیه، (۸.۱۲) تونل بدون ناحیه، (۸.۱۳) شفت بدون ناحیه؛ فشار لبه ناحیه <code>p<sub>g</sub></code> از (۸.۱۴).</li>
+        <li>تنش فشاری بیشینه در سطح داخلی: گرادیان خطی (۸.۱۵) یا لگاریتمی (۸.۱۶)؛ کنترل <code>σ<sub>t,max</sub> ≤ β<sub>w</sub>/SF</code> (۸.۱۷).</li>
+      </ol>
+      <h3>۱۲.۲ ورودی‌ها و واحدها</h3>
+      <table>
+        <thead><tr><th>پارامتر</th><th>واحد</th><th>توضیح</th></tr></thead>
+        <tbody>
+          <tr><td><code>r<sub>i</sub></code>، <code>r<sub>a</sub></code></td><td>m</td><td>شعاع داخلی و خارجی پوشش</td></tr>
+          <tr><td><code>b</code></td><td>m</td><td>عمق محور (یا نقطه شفت) زیر سطح آب زیرزمینی</td></tr>
+          <tr><td><code>R/r<sub>a</sub></code></td><td>—</td><td>فقط شفت؛ کتاب: ۱۰ (سنگ آب‌بند) تا ۱۰۰ (بسیار نفوذپذیر)؛ گزینه «خودکار» از Kr و Kc تخمین می‌زند</td></tr>
+          <tr><td><code>K<sub>r</sub></code>، <code>K<sub>c</sub></code>، <code>K<sub>g</sub></code></td><td>m/s</td><td>نفوذپذیری سنگ، بتن ترک‌نخورده، ناحیه. کتاب: سست‌شده <code>K<sub>g</sub> = max(10K<sub>r</sub>, 10<sup>−5</sup>)</code>؛ تزریق‌شده ≈ <code>10<sup>−7</sup></code></td></tr>
+          <tr><td><code>r<sub>g</sub></code></td><td>m</td><td>شعاع خارجی ناحیه سست/تزریق‌شده</td></tr>
+          <tr><td><code>2a<sub>I</sub></code>، <code>n</code></td><td>mm، —</td><td>عرض و تعداد ترک‌های طولی (ناشی از فشار داخلی)</td></tr>
+          <tr><td><code>2a<sub>II</sub></code>، <code>d</code></td><td>mm، m</td><td>عرض و فاصله ترک‌های عمود بر محور (انقباض/درز اجرایی)</td></tr>
+          <tr><td><code>ε</code></td><td>mm</td><td>زبری ترک؛ فقط با گزینه «زبری» و برای ترک زیر ۰٫۲ mm (۸.۶ و ۸.۸)</td></tr>
+          <tr><td><code>ν<sub>w</sub></code></td><td>m²/s</td><td>ویسکوزیته سینماتیک آب (۱e-6)</td></tr>
+          <tr><td><code>ν<sub>c</sub></code>، <code>β<sub>w</sub></code>، SF</td><td>—، MPa، —</td><td>پواسون و مقاومت فشاری بتن، ضریب اطمینان (۱٫۸ مسلح تا ۲٫۵ غیرمسلح؛ تخلیه کوتاه ۱٫۲۵–۱٫۵)</td></tr>
+        </tbody>
+      </table>
+      <h3>۱۲.۳ نوارهای لغزان عرض ترک (جدول ۸.۱)</h3>
+      <p>با انتخاب نوع پوشش، محدوده هر نوار از جدول ۸.۱ کتاب تعیین می‌شود. با کشیدن نوار به چپ یا راست مقدار وارد می‌شود (کنار هر نوار یک کادر عددی هم هست).</p>
+      <table>
+        <thead><tr><th>پوشش</th><th>ترک عمود بر محور: عرض / فاصله</th><th>ترک طولی: عرض</th></tr></thead>
+        <tbody>
+          <tr><td>غیرمسلح</td><td class="num">۰٫۵–۱٫۰ mm / ۶–۱۲ m</td><td class="num">۰٫۲–۰٫۵ mm (حداقل ۲ ترک)</td></tr>
+          <tr><td>مسلح</td><td class="num">۰٫۱–۰٫۳ mm / ۰٫۳–۰٫۶ m</td><td class="num">۰–۰٫۱ mm (چند ترک با فاصله ۰٫۳–۰٫۶ m)</td></tr>
+          <tr><td>ترک‌نخورده / دلخواه</td><td colspan="2">مورد A کتاب / مقدار آزاد (مثلاً Case C کتاب)</td></tr>
+        </tbody>
+      </table>
+      <h3>۱۲.۴ خروجی‌ها و نمودارها</h3>
+      <ul>
+        <li>فشار و هد مؤثر <code>p<sub>a</sub></code>، فشار <code>p<sub>g</sub></code>، درصد کاهش نسبت به فشار کامل <code>ρ<sub>w</sub>g b</code>، دبی نشت <code>q</code>، همه ضرایب <code>C</code>.</li>
+        <li>تنش‌های (۸.۱۵) و (۸.۱۶)، تنش مجاز، ضریب اطمینان واقعی، هد مجاز، لاغری <code>r<sub>a</sub>/(r<sub>a</sub>−r<sub>i</sub>)</code> (کمانش لازم نیست اگر &lt; ۴۰)، و توصیه به زهکشی/تزریق.</li>
+        <li>نمودارهای مشابه شکل‌های ۸.۵ (بدون ناحیه)، ۸.۶ (سست‌شده) و ۸.۷ (تزریق‌شده): هد روی پوشش بر حسب <code>K<sub>r</sub></code> برای Case A، B، C و پوشش فعلی، به‌همراه خط هد مجاز و نقطه طراحی. خروجی CSV منحنی‌ها و دفترچه محاسبات چاپی هم هست.</li>
+      </ul>
+      <h3>۱۲.۵ مثال کتاب (بخش ۸.۵) — تونل افقی</h3>
+      <div class="example">
+        <p><code>r<sub>i</sub>=5</code>، <code>r<sub>a</sub>=5.5</code> m، <code>b=300</code> m، <code>K<sub>c</sub>=10<sup>−8</sup></code> m/s، <code>β<sub>w</sub>=30</code> MPa، SF=2. نمونه‌ها را با دکمه‌های Case A / B / C بارگذاری کنید.</p>
+        <table>
+          <thead><tr><th>هد روی پوشش (m)</th><th>K<sub>r</sub>=10<sup>−7</sup></th><th>10<sup>−6</sup></th><th>10<sup>−5</sup></th><th>10<sup>−4</sup></th></tr></thead>
+          <tbody>
+            <tr><td>A — ترک‌نخورده</td><td class="num">۵۰٫۷</td><td class="num">۲۰۱</td><td class="num">۲۸۶</td><td class="num">۲۹۸٫۵</td></tr>
+            <tr><td>B — مسلح (2a<sub>II</sub>=0.1 mm، d=3 m)</td><td class="num">۲٫۲</td><td class="num">۲۱</td><td class="num">۱۲۹</td><td class="num">۲۶۵</td></tr>
+            <tr><td>C — غیرمسلح (2a<sub>II</sub>=0.3 mm، d=6 m؛ فقط ترک عمودی، مطابق شکل ۸.۵)</td><td class="num">۰٫۲</td><td class="num">۱٫۷</td><td class="num">۱۶٫۴</td><td class="num">۱۱۰</td></tr>
+            <tr><td>A با تزریق (r<sub>g</sub>=8.5، K<sub>g</sub>=10<sup>−7</sup>)</td><td class="num">۵۰٫۷</td><td class="num">۱۵۸</td><td class="num">۲۰۰</td><td class="num">۲۰۵</td></tr>
+          </tbody>
+        </table>
+        <p>هد مجاز با SF=2: ≈ ۱۳۷ m (مطابق کتاب). در <code>K<sub>r</sub>=10<sup>−5</sup></code> مورد B: <code>p<sub>a</sub> ≈ 12.64</code> bar، <code>σ<sub>t,max</sub> ≈ 14.1</code> MPa ≤ ۱۵ MPa ✓.</p>
+      </div>
+      <h3>۱۲.۶ نکات مهم</h3>
+      <ul>
+        <li>در کتاب، فرمول‌های (۸.۷) و (۸.۸) ضریب فاصله ترک‌ها <code>d</code> را ندارند؛ برای تطابق با مثال خود کتاب، رسانایی ترک‌های عمودی بر <code>d</code> تقسیم می‌شود (جزئیات در VALIDATION.md).</li>
+        <li>منحنی Case C در شکل ۸.۵ با ترک‌های عمود بر محور به‌تنهایی بازتولید می‌شود (۱۱۰ m در برابر ≈۱۰۸ m). گزینه «ترک‌های طولی در Case C» (در بخش نمودارها) و دکمه‌ی نمونه‌ی Case C متن بخش ۸.۵.۱ را کامل اعمال می‌کنند (۲aI=0.3 mm، n=3): در Kr=1e-4 مقدار ۸۱ m و در Kr=1e-5 مقدار ۱۰٫۶ m.</li>
+        <li>ترک‌های طولی ناشی از فشار داخلی ممکن است هنگام تخلیه زیر فشار فشاری بسته شوند؛ برای پوشش مسلح کتاب <code>2a<sub>I</sub>=0</code> می‌گیرد.</li>
+        <li><strong>اصلاح فصل ۷ (نسخه ۲٫۱٫۰):</strong> اگر در محاسبه اول شعاع نشت <code>R</code> از <code>r<sub>a</sub></code> کمتر شد، <code>R = 2·r<sub>a</sub></code> گرفته می‌شود.</li>
+        <li>فایل پروژه فصل ۷ و ۸ یکی است (<code>.schleiss.json</code>) و تب فعال هم ذخیره می‌شود.</li>
+      </ul>
+
       <footer class="dev">
         <div>راهنمای کاربری — طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)</div>
         <div style="margin-top:0.35rem;"><strong>توسعه‌دهنده: مصطفی شاهمرادی / Mostafa Shahmoradi</strong></div>
@@ -371,7 +436,7 @@
 
       <h2 id="en-intro">1. Introduction</h2>
       <p>This web application designs <strong>reinforced concrete linings for pressure tunnels and shafts</strong> based on:</p>
-      <p><em>Anton J. Schleiss — Design of Pressure Tunnels and Shafts for Hydropower Plants, Section 7.4 – Reinforced Concrete Linings</em></p>
+      <p><em>Anton J. Schleiss — Design of Pressure Tunnels and Shafts for Hydropower Plants, Section 7.4 – Reinforced Concrete Linings</em> and <em>Chapter 8 – Design of Concrete Linings for External Water Pressure during Dewatering and Down-Surges</em></p>
       <p>Main capabilities:</p>
       <ul>
         <li>Uncracked phase: critical pressure <code>P<sub>i,crit</sub></code>, outer pressure <code>P<sub>a</sub></code>, maximum tangential stress</li>
@@ -466,11 +531,11 @@
           <thead><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr></thead>
           <tbody>
             <tr><td>P<sub>i,crit</sub></td><td class="num">2.827</td><td>bar</td></tr>
-            <tr><td>P<sub>a</sub> (cracked at crit)</td><td class="num">0.845</td><td>bar</td></tr>
+            <tr><td>P<sub>a</sub> (cracked at crit)</td><td class="num">0.838</td><td>bar</td></tr>
             <tr><td>σ<sub>s2</sub></td><td class="num">42.5</td><td>MPa</td></tr>
             <tr><td>2a</td><td class="num">0.0242</td><td>mm</td></tr>
-            <tr><td>R</td><td class="num">≈ 8.2</td><td>m</td></tr>
-            <tr><td>n</td><td class="num">95</td><td>—</td></tr>
+            <tr><td>R</td><td class="num">≈ 8.16</td><td>m</td></tr>
+            <tr><td>n</td><td class="num">94</td><td>—</td></tr>
           </tbody>
         </table>
         <p>On the main page click <strong>Sample above GWL</strong> then <strong>Calculate</strong>.</p>
@@ -522,6 +587,71 @@
         <li>© 2026 Mostafa Shahmoradi — Redistribution or rebranding without permission is prohibited.</li>
       </ul>
 
+      <h2 id="en-ch8">12. Chapter 8 — External water pressure during dewatering and down-surges</h2>
+      <p>The "Chapter 8" tab computes the effective external water pressure <code>p<sub>a</sub></code> acting on the concrete lining of a tunnel or shaft while it is emptied. Seepage from the rock into the opening reduces the pore pressure in the rock mass, so the lining is loaded by less than the full groundwater head <code>b</code>. The compressive stress in the concrete is then checked (reference: Schleiss, Chapter 8 and its flow chart).</p>
+      <h3>12.1 Calculation steps</h3>
+      <ol>
+        <li>Rock inflow conductivity: horizontal tunnel <code>C<sub>1</sub></code> (8.1), vertical shaft <code>C<sub>2</sub></code> (8.2).</li>
+        <li>Grouted / loosened zone (optional): <code>C<sub>3</sub> = 2πK<sub>g</sub>/ln(r<sub>g</sub>/r<sub>a</sub>)</code> (8.3).</li>
+        <li>Lining conductivity: <code>C<sub>4</sub> = C<sub>41</sub> + C<sub>42</sub>(or C<sub>43</sub>) + C<sub>44</sub>(or C<sub>45</sub>)</code> (8.4 – 8.9): intact concrete, longitudinal cracks, cracks perpendicular to the axis.</li>
+        <li>Continuity <code>q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub></code> and outer pressure: (8.10) tunnel with zone, (8.11) shaft with zone, (8.12) tunnel without zone, (8.13) shaft without zone; pressure at the zone edge <code>p<sub>g</sub></code> from (8.14).</li>
+        <li>Maximum compressive stress at the inner face: linear (8.15) or logarithmic (8.16) pore-pressure gradient; check <code>σ<sub>t,max</sub> ≤ β<sub>w</sub>/SF</code> (8.17).</li>
+      </ol>
+      <h3>12.2 Inputs and units</h3>
+      <table>
+        <thead><tr><th>Parameter</th><th>Unit</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>r<sub>i</sub></code>, <code>r<sub>a</sub></code></td><td>m</td><td>Inner and outer radius of the lining</td></tr>
+          <tr><td><code>b</code></td><td>m</td><td>Depth of tunnel axis (or shaft point) below the groundwater table</td></tr>
+          <tr><td><code>R/r<sub>a</sub></code></td><td>—</td><td>Shaft only; book: 10 (tight rock) to 100 (very pervious); "Auto" estimates it from K<sub>r</sub> and K<sub>c</sub></td></tr>
+          <tr><td><code>K<sub>r</sub></code>, <code>K<sub>c</sub></code>, <code>K<sub>g</sub></code></td><td>m/s</td><td>Permeability of rock, uncracked concrete, zone. Book: loosened <code>K<sub>g</sub> = max(10K<sub>r</sub>, 10<sup>−5</sup>)</code>; grouted ≈ <code>10<sup>−7</sup></code></td></tr>
+          <tr><td><code>r<sub>g</sub></code></td><td>m</td><td>Outer radius of the loosened / grouted zone</td></tr>
+          <tr><td><code>2a<sub>I</sub></code>, <code>n</code></td><td>mm, —</td><td>Width and number of longitudinal cracks (internal pressure)</td></tr>
+          <tr><td><code>2a<sub>II</sub></code>, <code>d</code></td><td>mm, m</td><td>Width and spacing of cracks perpendicular to the axis (shrinkage / joints)</td></tr>
+          <tr><td><code>ε</code></td><td>mm</td><td>Crack roughness; only with the "roughness" option and cracks below 0.2 mm (8.6, 8.8)</td></tr>
+          <tr><td><code>ν<sub>w</sub></code></td><td>m²/s</td><td>Kinematic viscosity of water (1e-6)</td></tr>
+          <tr><td><code>ν<sub>c</sub></code>, <code>β<sub>w</sub></code>, SF</td><td>—, MPa, —</td><td>Poisson ratio and compressive strength of concrete, safety factor (1.8 reinforced to 2.5 unreinforced; 1.25–1.5 for brief dewatering)</td></tr>
+        </tbody>
+      </table>
+      <h3>12.3 Crack-width sliders (Table 8.1)</h3>
+      <p>The lining type sets the range of each slider from Table 8.1 of the book. Drag the slider left or right to enter the value (a number box next to each slider also works).</p>
+      <table>
+        <thead><tr><th>Lining</th><th>Perpendicular cracks: width / spacing</th><th>Longitudinal cracks: width</th></tr></thead>
+        <tbody>
+          <tr><td>Unreinforced</td><td class="num">0.5–1.0 mm / 6–12 m</td><td class="num">0.2–0.5 mm (at least 2 cracks)</td></tr>
+          <tr><td>Reinforced</td><td class="num">0.1–0.3 mm / 0.3–0.6 m</td><td class="num">0–0.1 mm (several cracks at 0.3–0.6 m)</td></tr>
+          <tr><td>Uncracked / custom</td><td colspan="2">Case A of the book / free values (e.g. Case C of the book)</td></tr>
+        </tbody>
+      </table>
+      <h3>12.4 Outputs and charts</h3>
+      <ul>
+        <li>Effective pressure and head <code>p<sub>a</sub></code>, pressure <code>p<sub>g</sub></code>, reduction versus the full pressure <code>ρ<sub>w</sub>g b</code>, seepage rate <code>q</code>, all <code>C</code> values.</li>
+        <li>Stresses (8.15) and (8.16), allowable stress, actual safety factor, allowable head, slenderness <code>r<sub>a</sub>/(r<sub>a</sub>−r<sub>i</sub>)</code> (no buckling check if &lt; 40), and a drainage / grouting recommendation.</li>
+        <li>Charts similar to Figures 8.5 (no zone), 8.6 (loosened) and 8.7 (grouted): head on the lining versus <code>K<sub>r</sub></code> for Cases A, B, C and the current lining, with the allowable-head line and the design point. CSV export of the curves and a printable calculation notebook are included.</li>
+      </ul>
+      <h3>12.5 Book example (Section 8.5) — horizontal tunnel</h3>
+      <div class="example">
+        <p><code>r<sub>i</sub>=5</code>, <code>r<sub>a</sub>=5.5</code> m, <code>b=300</code> m, <code>K<sub>c</sub>=10<sup>−8</sup></code> m/s, <code>β<sub>w</sub>=30</code> MPa, SF=2. Load the samples with the Case A / B / C buttons.</p>
+        <table>
+          <thead><tr><th>Head on lining (m)</th><th>K<sub>r</sub>=10<sup>−7</sup></th><th>10<sup>−6</sup></th><th>10<sup>−5</sup></th><th>10<sup>−4</sup></th></tr></thead>
+          <tbody>
+            <tr><td>A — uncracked</td><td class="num">50.7</td><td class="num">201</td><td class="num">286</td><td class="num">298.5</td></tr>
+            <tr><td>B — reinforced (2a<sub>II</sub>=0.1 mm, d=3 m)</td><td class="num">2.2</td><td class="num">21</td><td class="num">129</td><td class="num">265</td></tr>
+            <tr><td>C — unreinforced (2a<sub>II</sub>=0.3 mm, d=6 m; perpendicular cracks only, as in Fig. 8.5)</td><td class="num">0.2</td><td class="num">1.7</td><td class="num">16.4</td><td class="num">110</td></tr>
+            <tr><td>A with grouting (r<sub>g</sub>=8.5, K<sub>g</sub>=10<sup>−7</sup>)</td><td class="num">50.7</td><td class="num">158</td><td class="num">200</td><td class="num">205</td></tr>
+          </tbody>
+        </table>
+        <p>Allowable head with SF=2: ≈ 137 m (as in the book). For Case B at <code>K<sub>r</sub>=10<sup>−5</sup></code>: <code>p<sub>a</sub> ≈ 12.64</code> bar, <code>σ<sub>t,max</sub> ≈ 14.1</code> MPa ≤ 15 MPa ✓.</p>
+      </div>
+      <h3>12.6 Important notes</h3>
+      <ul>
+        <li>In the book, Eqs. (8.7) and (8.8) do not contain the crack spacing <code>d</code>. To reproduce the book's own example, the conductivity of the perpendicular cracks is divided by <code>d</code> (details in VALIDATION.md).</li>
+        <li>The Case C curve of Figure 8.5 is reproduced with the perpendicular cracks alone (110 m vs ≈108 m). The chart option "longitudinal cracks in Case C" and the Case C sample button apply the full text of Section 8.5.1 (2aI=0.3 mm, n=3): 81 m at Kr=1e-4 and 10.6 m at Kr=1e-5.</li>
+        <li>Longitudinal cracks from internal pressure may close under external compression; the book takes <code>2a<sub>I</sub>=0</code> for the reinforced lining.</li>
+        <li><strong>Chapter 7 change (version 2.1.0):</strong> if the first seepage reach <code>R</code> comes out smaller than <code>r<sub>a</sub></code>, <code>R = 2·r<sub>a</sub></code> is used.</li>
+        <li>One project file format (<code>.schleiss.json</code>) holds both chapters; the active tab is saved too.</li>
+      </ul>
+
       <footer class="dev">
         <div>User manual — Schleiss Pressure Tunnel Design</div>
         <div style="margin-top:0.35rem;"><strong>Developer: Mostafa Shahmoradi / مصطفی شاهمرادی</strong></div>
@@ -543,7 +673,8 @@ const tocFa = [
   ["fa-ex2", "۸. مثال BELGWL"],
   ["fa-ex3", "۹. مثال VSHAFT"],
   ["fa-opt", "۱۰. بهینه‌سازی"],
-  ["fa-notes", "۱۱. نکات"]
+  ["fa-notes", "۱۱. نکات"],
+  ["fa-ch8", "۱۲. فصل ۸"]
 ];
 const tocEn = [
   ["en-intro", "1. Introduction"],
@@ -556,7 +687,8 @@ const tocEn = [
   ["en-ex2", "8. Example BELGWL"],
   ["en-ex3", "9. Example VSHAFT"],
   ["en-opt", "10. Optimization"],
-  ["en-notes", "11. Notes"]
+  ["en-notes", "11. Notes"],
+  ["en-ch8", "12. Chapter 8"]
 ];
 
 function renderToc() {
@@ -597,6 +729,7 @@ try {
   if (stored === "en" || stored === "fa") lang = stored;
 } catch (e) {}
 setLang(lang);
+if (location.hash === "#ch8") { var _t = document.getElementById(lang + "-ch8"); if (_t) _t.scrollIntoView(); }
 </script>
 </body>
 </html>

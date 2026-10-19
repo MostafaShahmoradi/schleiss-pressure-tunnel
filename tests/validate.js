@@ -52,5 +52,14 @@ const unc = E.calculateCrackedPhase({ ...cases.ABOGWL, Pi: 1 }, U.ABOGWL.Pi_crit
 line(unc.uncrackedState === true && unc.two_a === 0, "Pi < Pi_crit -> reported as uncracked (no crack quantities)");
 const sw = E.calculateCrackedPhase({ ...cases.ABOGWL, Pi: 25.8 }, U.ABOGWL.Pi_crit);
 line(sw.currentSeries === 1, "series switch only when sigma_c1 >= Bz (Pi=25.8 still series 1)");
+// v2.1.0: if the first seepage reach R comes out smaller than ra, R is taken as 2*ra
+{
+  const w = { ri: 1.9, ra: 2.4, rs: 2.15, Ec: 25740, Er: 15000, Es: 200000, vc: .2, vr: .29, Kr: 2e-6, Kc: 1e-8, Bz: 1, Bw: 30,
+    s: 16, ds: 15, n_layers: 2, R_over_ra: 2, Rra_cracked: 10, b: 0, struct_mode: "above" };
+  const uw = E.calculateUncracked(w);
+  const rw = E.computeCrackedExcel({ ...w, Pi: uw.Pi_crit }, uw.Pi_crit, 0, null);
+  line(Math.abs(rw.R_calc - 2 * w.ra) < 1e-6 && rw.R_rule === true, `R < ra -> R = 2*ra (R=${rw.R_calc.toFixed(3)}, 2ra=${(2 * w.ra).toFixed(3)})`);
+  line(Math.abs(U.ABOGWL.Pi_crit - 2.827408) < 1e-3 && D.ABOGWL > 0, "ABOGWL sample unaffected by the R rule");
+}
 console.log(fail ? `\n${fail} check(s) FAILED` : "\nAll checks passed");
 process.exit(fail ? 1 : 0);

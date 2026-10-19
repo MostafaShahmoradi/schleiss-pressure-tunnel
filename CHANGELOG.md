@@ -2,6 +2,20 @@
 
 All notable changes to **Schleiss Pressure Tunnel Design** are documented in this file.
 
+## [2.1.0] – 2026-10-19
+### Added
+- **Chapter 8 tab** (Schleiss, Design of Concrete Linings for External Water Pressure during Dewatering and Down-Surges): effective external water pressure `pa`/`pg`, seepage rate `q`, conductivities C1–C4 (Eq. 8.1–8.9), pressure formulas 8.10–8.14, compressive-stress check 8.15–8.17, buckling slenderness, drainage / grouting advice.
+- Horizontal tunnel **and** vertical shaft; optional loosened / grouted rock zone; optional crack roughness (Eq. 8.6 / 8.8).
+- **Crack-width sliders** limited to the ranges of Table 8.1 (unreinforced / reinforced / custom, with number boxes).
+- Charts similar to Figures 8.5, 8.6 and 8.7 (Cases A, B, C, current lining, allowable head, design point), CSV export of the curves.
+- Chapter-8 calculation notebook (`report.html?ch=8`), chapter-8 section in the help manual (FA/EN), `tests/validate-ch8.js`.
+- Project files store the chapter-8 inputs and the active tab; the help button opens the chapter-8 section when that tab is active.
+
+### Changed
+- **Chapter 7 (ABOGWL):** if the first value of the seepage reach `R` is smaller than `ra`, `R = 2·ra` is used (previously `R` was held at 1.05·`ra`). Samples with a valid solution are unaffected.
+- Eq. 8.7 / 8.8: the conductivity of cracks perpendicular to the axis is divided by the crack spacing `d` (missing in the printed equations; required to reproduce the book's example, see VALIDATION.md).
+- Page title, meta tags and structured data now describe both chapters.
+
 ## [2.0.2] – 2026-10-11
 ### Changed
 - **ABOGWL first column now converges in the spreadsheet itself.** The app solves d, Pa and R together (Newton on the spreadsheet equations, integer crack count n respected). The values shown in the new "Cross-check with ABOGWL spreadsheet" card can be typed into rows 52, 59 and 64; rows 53, 60 and 65 then return the same numbers (sample: Pa and R exact, d within 0.02%, limited only by the INT() jump of n).

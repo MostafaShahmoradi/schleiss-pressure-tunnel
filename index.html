@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس) | مصطفی شاهمرادی</title>
   <meta name="description" content="طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس). ماشین‌حساب آنلاین حالت‌های ABOGWL، BELGWL و VSHAFT، بهینه‌سازی آرماتور، نمودار و دفترچه محاسبات. توسعه‌دهنده: مصطفی شاهمرادی." />
-  <meta name="keywords" content="permeable pressure tunnels, reinforced concrete linings, internal pressure, Schleiss theory, pressure tunnel design, shaft lining, ABOGWL, BELGWL, VSHAFT, hydropower, طراحی تونل تحت فشار, پوشش بتن مسلح, اشلایس, مصطفی شاهمرادی, Mostafa Shahmoradi" />
+  <meta name="keywords" content="permeable pressure tunnels, reinforced concrete linings, internal pressure, Schleiss theory, pressure tunnel design, shaft lining, ABOGWL, BELGWL, VSHAFT, hydropower, external water pressure, dewatering, Chapter 8, طراحی تونل تحت فشار, فشار آب خارجی, پوشش بتن مسلح, اشلایس, مصطفی شاهمرادی, Mostafa Shahmoradi" />
   <meta name="author" content="Mostafa Shahmoradi / مصطفی شاهمرادی" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/" />
   <meta property="og:title" content="Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory" />
-  <meta property="og:description" content="Online calculator for reinforced concrete linings of pressure tunnels and shafts per Schleiss §7.4 (ABOGWL, BELGWL, VSHAFT)." />
+  <meta property="og:description" content="Online calculator for reinforced concrete linings of pressure tunnels and shafts per Schleiss §7.4 (ABOGWL, BELGWL, VSHAFT) and effective external water pressure during dewatering per Chapter 8." />
   <meta property="og:locale" content="fa_IR" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta name="twitter:card" content="summary" />
@@ -486,6 +486,24 @@
     .sum-card table{width:100%;border-collapse:collapse;margin-top:.4rem;} .sum-card td{padding:.2rem .3rem;border-bottom:1px solid var(--border);}
     .val-err,.val-warn{border-radius:8px;padding:.5rem .75rem;margin:.5rem 0;font-size:.85rem;}
     .val-err{background:rgba(220,53,69,.12);border:1px solid #dc3545;} .val-warn{background:rgba(255,193,7,.15);border:1px solid #e0a800;}
+    /* ===== v2.1: tabs + chapter 8 ===== */
+    .tabs{flex-basis:100%;display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.15rem;}
+    .tab-btn{flex:1;min-width:14rem;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:.55rem .9rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;}
+    .tab-btn:hover{border-color:var(--primary);}
+    .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+    .tab-hidden{display:none !important;}
+    .slider-row{display:flex;gap:.6rem;align-items:center;}
+    .slider-row input[type=range]{flex:1;padding:0;accent-color:var(--primary);height:1.6rem;cursor:pointer;}
+    .slider-row input.slider-num{width:5.6rem;flex:none;text-align:center;}
+    .slider-row input:disabled{opacity:.45;cursor:not-allowed;}
+    .slider-range{font-size:.74rem;color:var(--muted);margin-top:.1rem;}
+    .chk-group label{cursor:pointer;} .chk-group input[type=checkbox]{width:auto;}
+    .charts-col{display:grid;grid-template-columns:1fr;gap:1.25rem;}
+    .chart-box.tall{height:360px;}
+    .note8{font-size:.82rem;color:var(--muted);margin:.4rem 0 .2rem;}
+    .eq{font-size:.72rem;color:var(--muted);font-weight:500;margin-inline-start:.3rem;}
+    .rec{margin:.5rem 0;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);border-inline-start:4px solid #fd7e14;background:var(--bg);font-size:.86rem;}
+    .rec ul{margin:.3rem 0 0;padding-inline-start:1.2rem;}
   </style>
 </head>
 <!-- Copyright (c) 2026 Mostafa Shahmoradi / مصطفی شاهمرادی. All rights reserved. See LICENSE. -->
@@ -506,9 +524,13 @@
     <button class="ctrl" id="btnLang">EN</button>
     <button class="ctrl" id="btnTheme">🌙</button>
   </div>
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab-btn active" id="tabBtn7" data-tab="7" data-i18n="tab7">فصل ۷</button>
+    <button type="button" class="tab-btn" id="tabBtn8" data-tab="8" data-i18n="tab8">فصل ۸</button>
+  </div>
 </header>
 
-<main>
+<main id="tab7">
   <section class="card">
     <div class="qs" id="quickStart">
       <button type="button" id="qsClose" aria-label="close">×</button>
@@ -779,6 +801,46 @@
   </section>
 </main>
 
+<main id="tab8" class="tab-hidden">
+  <section class="card">
+    <div class="qs" id="quickStart8">
+      <b data-i18n="c8_qs_title">هدف و روش کار</b>
+      <ol><li data-i18n="c8_qs1"></li><li data-i18n="c8_qs2"></li><li data-i18n="c8_qs3"></li></ol>
+    </div>
+    <h2 data-i18n="inputs_title">پارامترهای ورودی</h2>
+    <div id="c8form"></div>
+    <div class="actions-bar">
+      <button class="btn-primary" id="btnCalc8" data-i18n="calc">محاسبه</button>
+      <button class="btn-primary btn-purple" id="btnReport8" data-i18n="report">دفترچه محاسبات</button>
+      <button class="btn-primary" id="btnCSV8" data-i18n="c8_csv" style="background:#495057;">CSV</button>
+    </div>
+    <div class="samples-row">
+      <button type="button" class="btn-sample abo" id="btnS8A" data-i18n="c8_sA">Case A</button>
+      <button type="button" class="btn-sample bel" id="btnS8B" data-i18n="c8_sB">Case B</button>
+      <button type="button" class="btn-sample shaft" id="btnS8C" data-i18n="c8_sC">Case C</button>
+      <button type="button" class="btn-sample" id="btnS8S" data-i18n="c8_sS" style="border-color:#6f42c1;color:#6f42c1;">Shaft</button>
+    </div>
+    <div id="c8Validation"></div>
+    <div class="status" id="status8" data-i18n="ready">آماده برای محاسبه</div>
+  </section>
+  <section class="card">
+    <h2 data-i18n="results_title">نتایج محاسبات (جزئی هر فرمول)</h2>
+    <div class="results-list" id="results8">
+      <div class="result-item"><span class="name">—</span><span class="value" data-i18n="no_calc">هنوز محاسبه‌ای انجام نشده</span></div>
+    </div>
+  </section>
+  <section class="card full-width">
+    <h2 data-i18n="c8_charts">نمودارها — مشابه شکل‌های ۸٫۵ تا ۸٫۷ کتاب</h2>
+    <p class="note8" data-i18n="c8_charts_note"></p>
+    <div class="charts-col">
+      <div class="chart-box tall"><canvas id="c8fig85"></canvas></div>
+      <div class="chart-box tall"><canvas id="c8fig86"></canvas></div>
+      <div class="chart-box tall"><canvas id="c8fig87"></canvas></div>
+    </div>
+  </section>
+</main>
+
+
 <footer>
   <div class="dev-name">
     <span data-i18n="footer_dev">توسعه‌دهنده:</span>
@@ -960,6 +1022,7 @@ function setLanguage(lang) {
   document.getElementById("btnLang").textContent = lang === "fa" ? "EN" : "FA";
   const fn = document.getElementById("footerName");
   if (fn) fn.textContent = lang === "fa" ? "مصطفی شاهمرادی" : "Mostafa Shahmoradi";
+  if (typeof rerender8 === "function") rerender8();
   try { localStorage.setItem("tunnelAppLang", lang); } catch (e) {}
 }
 
@@ -968,6 +1031,7 @@ function toggleTheme() {
   const isDark = html.getAttribute("data-theme") === "dark";
   html.setAttribute("data-theme", isDark ? "light" : "dark");
   document.getElementById("btnTheme").textContent = isDark ? "🌙" : "☀️";
+  if (typeof rerender8 === "function") rerender8();
 }
 
 /* ========== Structure mode: ABOGWL / BELGWL / VSHAFT ========== */
@@ -1364,13 +1428,23 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
       }
       Pa = (lo + hi) / 2;
       st = stateAtPaR(Pa, R_ass);
-      const newR = Math.max(st.R_calc || R_ass, ra * 1.05);
+      // v2.1.0 rule: if the calculated seepage reach R is smaller than ra (physically meaningless),
+      // the value used for R is at least 2·ra.
+      const rawR = st.R_calc || R_ass;
+      const ruleR = rawR < ra;
+      const newR = ruleR ? 2 * ra : rawR;
       if (Math.abs(newR - R_ass) < 1e-6 && Math.abs(PaFromQc_Bouvard(st.q) - Pa) < 1e-7) {
         R_ass = newR;
         st = stateAtPaR(Pa, R_ass);
+        if (ruleR) st = { ...st, R_calc: R_ass, R_used: R_ass, R_rule: true };
         break;
       }
       R_ass = 0.5 * R_ass + 0.5 * newR;
+    }
+    // Loop ended without the strict stop test (e.g. integer jump of n): still honour the R >= 2·ra rule.
+    if (st && !(st.R_calc >= ra)) {
+      R_ass = 2 * ra;
+      st = { ...stateAtPaR(Pa, R_ass), R_calc: R_ass, R_used: R_ass, R_rule: true };
     }
   }
 
@@ -2418,8 +2492,8 @@ function buildExcelCheck(inp, uncr) {
   const ok = rows.every(r => rel(r[2], r[3]) < 2e-3);
   const f6 = v => (+v).toPrecision(6);
   const why = x.R_calc <= inp.ra
-    ? (fa ? "R کوچک‌تر از ra است؛ معادلات اکسل در این حالت نقطه‌ی ثابت ندارد و اپ R را حداقل 1.05·ra نگه می‌دارد."
-          : "R is smaller than ra; the spreadsheet equations have no fixed point here and the app keeps R ≥ 1.05·ra.")
+    ? (fa ? "R کوچک‌تر از ra است؛ معادلات اکسل در این حالت نقطه‌ی ثابت ندارد و طبق قاعده‌ی نسخه ۲٫۱ اپ R را برابر 2·ra می‌گیرد."
+          : "R is smaller than ra; the spreadsheet equations have no fixed point here and, by the v2.1 rule, the app takes R = 2·ra.")
     : (fa ? "تعداد ترک n=INT(…) عدد صحیح است و جهش آن اجازه‌ی تطابق کامل را نمی‌دهد."
           : "The crack count n = INT(…) is an integer and its jump prevents an exact match.");
   return `<div class="sum-card ${ok ? "" : "info"}"><b>${ok ? "✅" : "ℹ️"} ${fa ? "کنترل با اکسل ABOGWL (ستون اول)" : "Cross-check with ABOGWL spreadsheet (first column)"}</b>
@@ -2463,17 +2537,20 @@ function setDirty(v) {
 function collectProject() {
   const fields = {};
   PROJECT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.type === "checkbox" ? el.checked : el.value; });
-  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.2", name: projectName,
+  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.1.0", name: projectName, tab: currentTab,
     saved: new Date().toISOString(), lang: currentLang, theme: document.documentElement.getAttribute("data-theme") || "light", fields };
 }
 function applyProject(p) {
   if (!p || p.app !== "schleiss-pressure-tunnel" || !p.fields) throw new Error(pfa() ? "این فایل پروژه‌ی معتبر این برنامه نیست." : "This is not a valid project file for this app.");
+  prep8(p.fields);
   Object.entries(p.fields).forEach(([id, val]) => {
     const el = document.getElementById(id); if (!el) return;
     if (el.type === "checkbox") el.checked = !!val; else el.value = val;
   });
+  sync8();
+  if (p.tab === "7" || p.tab === "8") showTab(p.tab);
 }
-function statusMsg(t) { const st = document.getElementById("status"); if (st) st.textContent = t; }
+function statusMsg(t) { const st = document.getElementById(currentTab === "8" ? "status8" : "status"); if (st) st.textContent = t; }
 function downloadJson(json, name) {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
@@ -2504,7 +2581,8 @@ function loadProjectText(text, name) {
   try { applyProject(JSON.parse(text)); }
   catch (e) { alert((pfa() ? "خطا در باز کردن فایل: " : "Could not open file: ") + e.message); return; }
   projectName = name.replace(/\.schleiss\.json$|\.json$/i, "");
-  setDirty(false); runCalculation();
+  setDirty(false);
+  if (currentTab === "8") runCalculation8(); else runCalculation();
 }
 async function openProject() {
   if (dirty && !confirm(pfa() ? "تغییرات ذخیره‌نشده از بین می‌رود. ادامه می‌دهید؟" : "Unsaved changes will be lost. Continue?")) return;
@@ -2520,6 +2598,9 @@ function newProject() {
   if (dirty && !confirm(pfa() ? "تغییرات ذخیره‌نشده از بین می‌رود. ادامه می‌دهید؟" : "Unsaved changes will be lost. Continue?")) return;
   loadSample("ABOGWL"); projectName = "untitled"; fileHandle = null; setDirty(false);
   document.getElementById("results").innerHTML = ""; showValidation({ errs: [], warns: [] });
+  loadSample8("B"); C8.last = null; Object.values(C8.charts).forEach(c => c && c.destroy()); C8.charts = {};
+  document.getElementById("results8").innerHTML = ""; document.getElementById("c8Validation").innerHTML = "";
+  document.getElementById("status8").textContent = i18n[currentLang].ready;
 }
 document.getElementById("btnNew").addEventListener("click", newProject);
 document.getElementById("btnOpen").addEventListener("click", openProject);
@@ -2543,6 +2624,503 @@ document.addEventListener("keydown", e => {
   try { if (localStorage.getItem("tunnelQsHidden") === "1") qs.style.display = "none"; } catch (e) {}
   document.getElementById("qsClose").addEventListener("click", () => { qs.style.display = "none"; try { localStorage.setItem("tunnelQsHidden", "1"); } catch (e) {} });
 })();
+
+
+/* ===== CH8 ENGINE START ===== (Schleiss, Chapter 8: external water pressure during dewatering / down-surges) */
+const CH8 = (function () {
+  const G = 9.81, RHO = 1000;
+  const PI2 = 2 * Math.PI;
+
+  /** Table 8.1 – typical crack widths / spacings (UI slider ranges). */
+  const TABLE81 = {
+    unreinforced: { a2: [0.5, 1.0], d: [6, 12], a1: [0.2, 0.5], n: [2, 12] },
+    reinforced:   { a2: [0.1, 0.3], d: [0.3, 0.6], a1: [0, 0.1], sL: [0.3, 0.6] },
+    custom:       { a2: [0, 2], d: [0.1, 20], a1: [0, 2], n: [0, 200] }
+  };
+
+  /** Cases A, B, C of the worked example, Section 8.5.1 (crack widths in mm, d in m). */
+  const BOOK_CASES = {
+    A: { key: "A", a1: 0, n: 0, a2: 0, d: 3 },
+    B: { key: "B", a1: 0, n: 0, a2: 0.1, d: 3 },
+    C: { key: "C", a1: 0.3, n: 3, a2: 0.3, d: 6 }
+  };
+
+  /** Reach of seepage flow (shaft): R = 10·ra for Kr <= Kc ... 100·ra for Kr >= 100·Kc, log-interpolated in between. */
+  function autoRra(Kr, Kc) {
+    if (Kr <= Kc) return 10;
+    if (Kr >= 100 * Kc) return 100;
+    return Math.pow(10, 1 + Math.log10(Kr / Kc) / 2);
+  }
+  /** Kg for the loosened zone: 10·Kr but at least 1e-5; grouted zone: 1e-7 m/s (about 1 Lugeon). */
+  function autoKg(zone, Kr) {
+    if (zone === "loosened") return Math.max(10 * Kr, 1e-5);
+    if (zone === "grouted") return 1e-7;
+    return null;
+  }
+  /** Eq. 8.6 / 8.8 roughness factor for small cracks (< 0.2 mm): 1 + 8.8 (eps / (2·2a))^1.5 ; widths in metres. */
+  function roughFactor(w, eps, useRough) {
+    if (!useRough || !(eps > 0) || !(w > 0) || w >= 0.2e-3) return 1;
+    return 1 + 8.8 * Math.pow(eps / (2 * w), 1.5);
+  }
+
+  function validate(i) {
+    const e = [], w = [];
+    const rg = i.zone === "none" ? i.ra : i.rg;
+    if (!(i.ra > i.ri && i.ri > 0)) e.push(["ra باید بزرگ‌تر از ri و هر دو مثبت باشند", "ra must be greater than ri (both positive)"]);
+    if (!(i.b > 0)) e.push(["b باید مثبت باشد", "b must be positive"]);
+    if (i.zone !== "none" && !(i.rg > i.ra)) e.push(["rg باید بزرگ‌تر از ra باشد", "rg must be greater than ra"]);
+    if (i.type === "tunnel" && !(i.b > rg)) e.push(["برای تونل باید b > rg باشد (محور تونل زیر سطح آب)", "For a tunnel b must exceed rg (axis below the water table)"]);
+    if (i.type === "shaft" && !(i.R > rg)) e.push(["برای شفت باید R > rg باشد", "For a shaft R must exceed rg"]);
+    ["Kr", "Kc", "nu_w", "bw", "SF"].forEach(k => { if (!(i[k] > 0)) e.push([k + " باید مثبت باشد", k + " must be positive"]); });
+    if (i.zone !== "none" && !(i.Kg > 0)) e.push(["Kg باید مثبت باشد", "Kg must be positive"]);
+    if (!(i.vc >= 0 && i.vc < 0.5)) e.push(["ضریب پواسون بتن باید بین ۰ و ۰٫۵ باشد", "Poisson ratio of concrete must be between 0 and 0.5"]);
+    if (i.type === "tunnel" && i.zone === "loosened" && i.Kg < i.Kr) w.push(["Kg ناحیه سست‌شده کمتر از Kr است؛ معمولاً Kg ≥ Kr", "Kg of the loosened zone is below Kr; normally Kg ≥ Kr"]);
+    if (i.zone === "grouted" && i.Kg > i.Kr) w.push(["Kg ناحیه تزریق‌شده بیشتر از Kr است؛ تزریق معمولاً نفوذپذیری را کم می‌کند", "Kg of the grouted zone exceeds Kr; grouting normally lowers permeability"]);
+    if (i.Kc >= 1e-7) w.push(["Kc بتن سالم معمولاً کمتر از 1e-8 m/s است", "Uncracked concrete is normally below 1e-8 m/s"]);
+    return { errs: e, warns: w };
+  }
+
+  /** Full calculation path of the flow chart (steps 1-10). Widths a1_mm, a2_mm, eps_mm in mm; b, R, r*, d in m. */
+  function compute(i) {
+    const rgEff = i.zone === "none" ? i.ra : i.rg;
+    const Kg = i.zone === "none" ? null : i.Kg;
+    const w1 = (i.a1_mm || 0) / 1000, w2 = (i.a2_mm || 0) / 1000, eps = (i.eps_mm || 0) / 1000;
+    const n = Math.max(0, i.n || 0), d = i.d > 0 ? i.d : 1;
+    const t = i.ra - i.ri;
+    const R = i.type === "shaft" ? i.R : null;
+
+    // Step 2: rock inflow conductivity
+    const C_rock = i.type === "tunnel"
+      ? PI2 * i.Kr / Math.log((i.b / rgEff) * (1 + Math.sqrt(Math.max(1 - (rgEff / i.b) ** 2, 0))))   // Eq. 8.1
+      : PI2 * i.Kr / Math.log(R / rgEff);                                                             // Eq. 8.2
+    // Step 3: grouted / loosened zone (Eq. 8.3)
+    const C3 = i.zone === "none" ? null : PI2 * Kg / Math.log(rgEff / i.ra);
+    // Step 4: lining conductivities (Eqs. 8.4 - 8.9)
+    const f1 = roughFactor(w1, eps, i.useRough), f2 = roughFactor(w2, eps, i.useRough);
+    const C41 = PI2 * i.Kc / Math.log(i.ra / i.ri);
+    const C42 = (w1 > 0 && n > 0) ? G * Math.pow(w1, 3) * n / (12 * i.nu_w * f1 * t) : 0;               // 8.5 / 8.6
+    const C44 = w2 > 0 ? G * Math.pow(w2, 3) * PI2 * i.ri / (d * 12 * i.nu_w * f2 * t) : 0;             // 8.7 / 8.8 (with 1/d)
+    const C4 = C41 + C42 + C44;
+
+    // Steps 5-6: continuity q_r = q_g = q_c  ->  head at the outside of the lining (Eqs. 8.10 - 8.13)
+    const b = i.b;
+    let ha;
+    if (i.zone === "none") ha = C_rock * b / (C_rock + C4);                                          // 8.12 / 8.13
+    else ha = C_rock * b / (((C3 + C4) / C3) * (C_rock + C3) - C3);                                    // 8.10 / 8.11
+    // Step 7: head at the outer edge of the grouted / loosened zone (Eq. 8.14)
+    const hg = i.zone === "none" ? ha : ha * (C3 + C4) / C3;
+    const q = ha * C4, q_r = (b - hg) * C_rock, q_g = i.zone === "none" ? q : (hg - ha) * C3;
+    const toBar = h => h * RHO * G / 1e5;
+    const pa = toBar(ha), pg = toBar(hg), p_full = toBar(b);
+
+    // Step 8: max. compressive stress at the inner face (Eqs. 8.15 / 8.16), per unit pa (MPa/bar)
+    const ri = i.ri, ra = i.ra, vc = i.vc;
+    const geo = ri * ri / (ra * ra - ri * ri) * (1 + ra * ra / (ri * ri));
+    const K_lin = (2 - vc) / (3 * (1 - vc)) * (geo + (1 - ri * (1 + vc) / (ra * (2 - vc))) / (1 - ri / ra));
+    const lnr = Math.log(ra / ri);
+    const K_log = 1 / (2 * (1 - vc)) * (geo + (lnr + 1 - 2 * vc) / lnr);
+    const sig_lin = K_lin * pa / 10, sig_log = K_log * pa / 10;   // bar -> MPa
+    const K_sel = i.gradient === "log" ? K_log : K_lin;
+    const sigma = i.gradient === "log" ? sig_log : sig_lin;
+    // Step 9: criterion (Eq. 8.17)
+    const sig_allow = i.bw / i.SF;
+    const SF_act = sigma > 0 ? i.bw / sigma : Infinity;
+    const ha_allow = sig_allow * 10 / K_sel * 1e5 / (RHO * G);            // head [m] at which sigma = bw/SF
+    const ok_sigma = sigma <= sig_allow;
+    const slender = ra / (ra - ri), ok_buck = slender < 40;
+
+    return {
+      type: i.type, zone: i.zone, rgEff, Kg, R, Rra: R ? R / rgEff : null, n, d, w1, w2, eps, f1, f2,
+      C_rock, C3, C41, C42, C44, C4, ha, hg, pa, pg, p_full, b, q, q_r, q_g, ratio: ha / b, reduction: 1 - ha / b,
+      K_lin, K_log, sig_lin, sig_log, sigma, sig_allow, SF_act, ha_allow, ok_sigma, slender, ok_buck,
+      rough1: f1 > 1, rough2: f2 > 1, eq: { rock: i.type === "tunnel" ? "8.1" : "8.2", pa: (i.zone === "none" ? (i.type === "tunnel" ? "8.12" : "8.13") : (i.type === "tunnel" ? "8.10" : "8.11")), c42: f1 > 1 ? "8.6" : "8.5", c44: f2 > 1 ? "8.8" : "8.7", sig: i.gradient === "log" ? "8.16" : "8.15" }
+    };
+  }
+
+  /** Head at the outer side of the lining versus Kr for one set of inputs (figure curves). Returns metres. */
+  function headVsKr(base, over, KrList) {
+    return KrList.map(Kr => {
+      const inp = Object.assign({}, base, over, { Kr });
+      if (inp.zone !== "none" && inp.KgAuto) inp.Kg = autoKg(inp.zone, Kr);
+      if (inp.type === "shaft" && inp.RAuto) inp.R = autoRra(Kr, inp.Kc) * inp.ra;
+      return compute(inp).ha;
+    });
+  }
+  /** Log-spaced Kr grid 1e-8 ... 1e-4 that also contains the nine points of the book figures. */
+  function krGrid(nPerDecade) {
+    const set = new Set([1e-8, 5e-8, 1e-7, 5e-7, 1e-6, 5e-6, 1e-5, 5e-5, 1e-4]);
+    for (let k = 0; k <= 4 * nPerDecade; k++) set.add(+Math.pow(10, -8 + k / nPerDecade).toPrecision(6));
+    return [...set].sort((a, b) => a - b);
+  }
+  return { compute, validate, headVsKr, krGrid, autoRra, autoKg, TABLE81, BOOK_CASES, G, RHO };
+})();
+/* ===== CH8 ENGINE END ===== */
+
+/* ========== Tabs ========== */
+let currentTab = "7";
+function showTab(t) {
+  currentTab = t === "8" ? "8" : "7";
+  document.getElementById("tab7").classList.toggle("tab-hidden", currentTab !== "7");
+  document.getElementById("tab8").classList.toggle("tab-hidden", currentTab !== "8");
+  document.getElementById("tabBtn7").classList.toggle("active", currentTab === "7");
+  document.getElementById("tabBtn8").classList.toggle("active", currentTab === "8");
+  try { localStorage.setItem("tunnelAppTab", currentTab); } catch (e) {}
+  const hb = document.getElementById("btnHelp"); if (hb) hb.setAttribute("href", currentTab === "8" ? "help.html#ch8" : "help.html");
+  if (currentTab === "8" && C8.last) { if (!C8.charts.fig85) drawCharts8(); else Object.values(C8.charts).forEach(ch => ch && ch.resize()); }
+}
+document.getElementById("tabBtn7").addEventListener("click", () => showTab("7"));
+document.getElementById("tabBtn8").addEventListener("click", () => showTab("8"));
+
+/* ========== Chapter 8 UI ========== */
+const C8 = { last: null, charts: {} };
+const t8 = (fa, en) => currentLang === "fa" ? fa : en;
+const $8 = id => document.getElementById("c8_" + id);
+const F8 = (v, d) => (v == null || !isFinite(v)) ? "—" : (+v).toFixed(d == null ? 3 : d);
+const E8 = v => (v == null || !isFinite(v)) ? "—" : (+v).toExponential(3);
+
+Object.assign(i18n.fa, {
+  tab7: "فصل ۷ — پوشش بتن مسلح تحت فشار داخلی", tab8: "فصل ۸ — فشار آب خارجی هنگام تخلیه و افت ناگهانی",
+  c8_qs_title: "هدف و روش کار",
+  c8_qs1: "هدف: محاسبهٔ فشار مؤثر آب خارجی روی پوشش هنگام تخلیهٔ تونل یا شفت (جریان نشت از سنگ به داخل) و کنترل تنش فشاری بتن، مطابق فصل ۸ کتاب اشلایس و فلوچارت آن.",
+  c8_qs2: "نوع سازه (تونل افقی یا شفت)، هندسه و نفوذپذیری‌ها را وارد کنید؛ عرض و فاصلهٔ ترک‌ها را با نوار لغزان (در محدودهٔ جدول ۸٫۱) تنظیم کنید.",
+  c8_qs3: "«محاسبه» را بزنید: فشار p_a، تنش σ، ضریب اطمینان و نمودارهای مشابه شکل‌های ۸٫۵ تا ۸٫۷ نمایش داده می‌شود. نمونه‌های A/B/C مثال کتاب (بخش ۸٫۵) هستند.",
+  c8_csv: "خروجی CSV منحنی‌ها", c8_sA: "مثال کتاب: Case A (بدون ترک)", c8_sB: "مثال کتاب: Case B (مسلح)", c8_sC: "مثال کتاب: Case C (غیرمسلح)", c8_sS: "نمونه شفت قائم",
+  c8_charts: "نمودارها — مشابه شکل‌های ۸٫۵ تا ۸٫۷ کتاب",
+  c8_charts_note: "هد فشار آب روی سطح خارجی پوشش بر حسب نفوذپذیری سنگ. منحنی‌های A (بدون ترک)، B (مسلح) و C (غیرمسلح) طبق تعریف بخش ۸٫۵٫۱ کتاب‌اند؛ منحنی خط‌چین، پوشش فعلی شما با همان شرایط ناحیه است و خط قرمز، هد مجاز (βw/SF) را نشان می‌دهد.",
+  c8_sec_struct: "نوع سازه و هندسه", c8_sec_rock: "نفوذپذیری و ناحیهٔ اطراف پوشش", c8_sec_crack: "ترک‌های پوشش (جدول ۸٫۱)", c8_sec_crit: "بتن و معیار طراحی", c8_sec_chart: "پارامترهای نمودارها (شکل‌های ۸٫۵ تا ۸٫۷)",
+  c8_o_tunnel: "تونل افقی (محور تقریباً موازی سطح آب)", c8_o_shaft: "شفت قائم (محور تقریباً عمود بر سطح آب)",
+  c8_o_none: "بدون ناحیهٔ سست‌شده/تزریق‌شده", c8_o_loosened: "ناحیهٔ سست‌شده (آتشباری)", c8_o_grouted: "ناحیهٔ تزریق‌شده (تزریق تحکیمی)",
+  c8_o_uncracked: "بدون ترک (Case A)", c8_o_unreinforced: "بتن غیرمسلح (محدودهٔ جدول ۸٫۱)", c8_o_reinforced: "بتن مسلح (محدودهٔ جدول ۸٫۱)", c8_o_custom: "دلخواه (خارج از جدول)",
+  c8_o_linear: "گرادیان خطی فشار منفذی (۸٫۱۵)", c8_o_log: "گرادیان لگاریتمی فشار منفذی (۸٫۱۶)"
+});
+Object.assign(i18n.en, {
+  tab7: "Ch. 7 — RC lining under internal pressure", tab8: "Ch. 8 — External water pressure (dewatering / down-surges)",
+  c8_qs_title: "Purpose and workflow",
+  c8_qs1: "Purpose: compute the effective external water pressure on the lining while the tunnel or shaft is emptied (seepage from the rock into the opening) and check the compressive stress in the concrete, following Chapter 8 of Schleiss and its flow chart.",
+  c8_qs2: "Select the structure (horizontal tunnel or shaft), enter geometry and permeabilities, and set crack widths/spacings with the sliders (limited to the Table 8.1 ranges).",
+  c8_qs3: "Press Calculate: pressure p_a, stress σ, safety factor and charts similar to Figures 8.5–8.7 are shown. Samples A/B/C are the book example (Section 8.5).",
+  c8_csv: "Export curves CSV", c8_sA: "Book example: Case A (uncracked)", c8_sB: "Book example: Case B (reinforced)", c8_sC: "Book example: Case C (unreinforced)", c8_sS: "Vertical shaft sample",
+  c8_charts: "Charts — similar to Figures 8.5–8.7 of the book",
+  c8_charts_note: "Pressure head at the outer side of the lining versus rock mass permeability. Curves A (uncracked), B (reinforced) and C (unreinforced) follow the definitions of Section 8.5.1; the dashed curve is your current lining under the same zone condition, and the red line is the allowable head (βw/SF).",
+  c8_sec_struct: "Structure type & geometry", c8_sec_rock: "Permeability & surrounding zone", c8_sec_crack: "Lining cracks (Table 8.1)", c8_sec_crit: "Concrete & design criterion", c8_sec_chart: "Chart parameters (Figs 8.5–8.7)",
+  c8_o_tunnel: "Horizontal tunnel (axis ≈ parallel to water table)", c8_o_shaft: "Vertical shaft (axis ≈ perpendicular to water table)",
+  c8_o_none: "No loosened / grouted zone", c8_o_loosened: "Loosened rock zone (blasting)", c8_o_grouted: "Grouted zone (consolidation grouting)",
+  c8_o_uncracked: "Uncracked (Case A)", c8_o_unreinforced: "Unreinforced concrete (Table 8.1 range)", c8_o_reinforced: "Reinforced concrete (Table 8.1 range)", c8_o_custom: "Custom (outside the table)",
+  c8_o_linear: "Linear pore-pressure gradient (8.15)", c8_o_log: "Logarithmic pore-pressure gradient (8.16)"
+});
+
+/* ---- form generator ---- */
+function reg8(k, fa, en) { i18n.fa[k] = fa; i18n.en[k] = en; return k; }
+function tip8(fa, en) { return fa ? `<span class="tooltip-icon" data-tip-fa="${fa}" data-tip-en="${en}">?</span>` : ""; }
+function lab8(id, fa, en, tfa, ten) { return `<label><span data-i18n="${reg8("c8_l_" + id, fa, en)}">${fa}</span>${tip8(tfa, ten)}</label>`; }
+function num8(id, fa, en, tfa, ten, v, step, cls, type) {
+  return `<div class="form-group ${cls || ""}" id="g8_${id}">${lab8(id, fa, en, tfa, ten)}<input type="${type || "number"}" id="c8_${id}" value="${v}" ${step ? `step="${step}"` : ""}></div>`;
+}
+function sel8(id, fa, en, tfa, ten, opts, cls) {
+  return `<div class="form-group ${cls || ""}" id="g8_${id}">${lab8(id, fa, en, tfa, ten)}<select id="c8_${id}">${opts.map(o => `<option value="${o}" data-i18n-option="c8_o_${o}"></option>`).join("")}</select></div>`;
+}
+function chk8(id, fa, en, tfa, ten, on, cls) {
+  return `<div class="form-group chk-group ${cls || ""}" id="g8_${id}" style="grid-column:1 / -1;"><label style="color:var(--text);"><input type="checkbox" id="c8_${id}" ${on ? "checked" : ""}><span data-i18n="${reg8("c8_l_" + id, fa, en)}">${fa}</span>${tip8(tfa, ten)}</label></div>`;
+}
+function sld8(id, fa, en, tfa, ten, unit, cls) {
+  return `<div class="form-group ${cls || ""}" id="g8_${id}">${lab8(id, fa, en, tfa, ten)}
+    <div class="slider-row"><input type="range" id="c8_${id}" min="0" max="1" step="0.01" value="0"><input type="number" class="slider-num" id="c8_${id}_n" step="0.01"></div>
+    <div class="slider-range" id="c8_${id}_r"></div></div>`;
+}
+function sec8(key, fa, en, body) { return `<div class="section-block"><div class="section-title" data-i18n="${key}">${fa}</div><div class="form-grid">${body}</div></div>`; }
+
+(function buildForm8() {
+  let h = "";
+  h += sec8("c8_sec_struct", "", "",
+    sel8("type", "نوع سازه", "Structure type", "تونل افقی: معادلهٔ ۸٫۱ — شفت قائم: معادلهٔ ۸٫۲ (چاه نقطه‌ای)", "Horizontal tunnel: Eq. 8.1 — vertical shaft: Eq. 8.2 (point well)", ["tunnel", "shaft"]) +
+    num8("b", "عمق زیر سطح آب b (m)", "Depth below water table b (m)", "تونل: عمق محور زیر سطح آب زیرزمینی؛ شفت: ارتفاع آب زیرزمینی بالای نقطهٔ مورد نظر", "Tunnel: depth of the axis below the groundwater table; shaft: groundwater head above the point considered", 300, "1") +
+    num8("ri", "شعاع داخلی ri (m)", "Inner radius ri (m)", "شعاع داخلی پوشش بتنی", "Inner radius of the concrete lining", 5, "0.01") +
+    num8("ra", "شعاع خارجی ra (m)", "Outer radius ra (m)", "شعاع خارجی پوشش بتنی یا شعاع حفاری", "Outer radius of the lining or excavation radius", 5.5, "0.01"));
+  h += sec8("c8_sec_rock", "", "",
+    num8("Kr", "نفوذپذیری توده سنگ Kr (m/s)", "Rock mass permeability Kr (m/s)", "از 1e-8 تا 1e-4 m/s (شکل‌های ۸٫۵ تا ۸٫۷)", "From 1e-8 to 1e-4 m/s (Figures 8.5–8.7)", "1e-5", null, "", "text") +
+    num8("Kc", "نفوذپذیری بتن سالم Kc (m/s)", "Uncracked concrete permeability Kc (m/s)", "معمولاً کمتر از 1e-8 m/s", "Normally below 1e-8 m/s", "1e-8", null, "", "text") +
+    num8("nu_w", "لزجت سینماتیکی آب νw (m²/s)", "Kinematic viscosity of water νw (m²/s)", "برای آب حدود 1e-6 m²/s", "About 1e-6 m²/s for water", "1e-6", null, "", "text") +
+    sel8("zone", "ناحیهٔ اطراف پوشش", "Zone around the lining", "ناحیهٔ سست‌شده بر اثر آتشباری یا ناحیهٔ بهسازی‌شده با تزریق تحکیمی (شکل ۸٫۳)", "Zone loosened by blasting or improved by consolidation grouting (Figure 8.3)", ["none", "loosened", "grouted"]) +
+    num8("rg", "شعاع خارجی ناحیه rg (m)", "Outer radius of the zone rg (m)", "مثال کتاب: ۶٫۵ m (سست‌شده) یا ۸٫۵ m (تزریق‌شده)", "Book example: 6.5 m (loosened) or 8.5 m (grouted)", 6.5, "0.1", "v8-zone") +
+    chk8("Kgauto", "Kg خودکار (سست‌شده: max(10·Kr, 1e-5) — تزریق‌شده: 1e-7)", "Automatic Kg (loosened: max(10·Kr, 1e-5) — grouted: 1e-7)", "طبق بخش ۸٫۵٫۱: ۱ لوژان ≈ 1e-7 m/s بهترین نتیجهٔ عملی تزریق است", "Section 8.5.1: about 1 Lugeon = 1e-7 m/s is the best practical grouting result", true, "v8-zone") +
+    num8("Kg", "نفوذپذیری ناحیه Kg (m/s)", "Zone permeability Kg (m/s)", "نفوذپذیری ناحیهٔ سست‌شده/تزریق‌شده", "Permeability of the loosened / grouted zone", "1e-5", null, "v8-zone", "text") +
+    chk8("Rauto", "R خودکار (۱۰·ra برای سنگ آب‌بند تا ۱۰۰·ra برای سنگ بسیار نفوذپذیر)", "Automatic R (10·ra for tight rock to 100·ra for very pervious rock)", "بخش ۸٫۳٫۲: Kr ≤ Kc → ۱۰·ra ؛ Kr ≥ 100·Kc → ۱۰۰·ra ؛ بین این دو درون‌یابی لگاریتمی", "Section 8.3.2: Kr ≤ Kc → 10·ra; Kr ≥ 100·Kc → 100·ra; log interpolation between", true, "v8-shaft") +
+    num8("Rra", "نسبت R/ra (برد جریان نشت در شفت)", "Ratio R/ra (reach of seepage flow, shaft)", "برد جریان نشت هنگام تخلیه، بر حسب مضربی از ra", "Reach of the seepage flow during emptying as a multiple of ra", 10, "1", "v8-shaft"));
+  h += sec8("c8_sec_crack", "", "",
+    sel8("lining", "نوع پوشش و ترک‌ها", "Lining and crack type", "با انتخاب نوع پوشش، محدودهٔ نوارهای لغزان مطابق جدول ۸٫۱ تغییر می‌کند. مقادیر خارج از جدول (مثل Case C کتاب) را با «دلخواه» وارد کنید.", "The slider ranges follow Table 8.1 for the chosen lining. Use Custom for values outside the table (e.g. Case C of the book).", ["uncracked", "unreinforced", "reinforced", "custom"]) +
+    sld8("a2", "عرض ترک‌های عمود بر محور 2aII (mm)", "Width of cracks perpendicular to the axis 2aII (mm)", "ترک‌های حاصل از جمع‌شدگی و درزهای اجرایی (جدول ۸٫۱ — ستون چپ)", "Cracks from shrinkage and construction joints (Table 8.1, left columns)", "mm") +
+    sld8("d", "فاصلهٔ ترک‌های عمود بر محور d (m)", "Spacing of cracks perpendicular to the axis d (m)", "فاصلهٔ متوسط ترک‌ها در امتداد محور تونل (جدول ۸٫۱)", "Mean crack spacing along the axis (Table 8.1)", "m") +
+    sld8("a1", "عرض ترک‌های طولی 2aI (mm)", "Width of longitudinal cracks 2aI (mm)", "ترک‌های موازی محور ناشی از فشار داخلی؛ هنگام تخلیه ممکن است نیمه یا کاملاً بسته شوند (جدول ۸٫۱ — ستون راست)", "Cracks along the axis due to internal pressure; they may partly or fully close during dewatering (Table 8.1, right columns)", "mm") +
+    sld8("n", "تعداد ترک‌های طولی n (در محیط پوشش)", "Number of longitudinal cracks n (around the lining)", "بتن غیرمسلح: حداقل دو ترک", "Unreinforced concrete: minimum two cracks", "", "v8-nL") +
+    sld8("sL", "فاصلهٔ ترک‌های طولی در پوشش مسلح (m)", "Spacing of longitudinal cracks, reinforced lining (m)", "چند ترک با فاصلهٔ ۰٫۳ تا ۰٫۶ m؛ تعداد: n = 2π·ra / فاصله", "Several cracks at 0.3–0.6 m; number n = 2π·ra / spacing", "m", "v8-rein") +
+    num8("eps", "زبری مطلق ترک ε (mm)", "Absolute roughness of the crack ε (mm)", "معمولاً ۰٫۱ تا ۰٫۵ mm", "Typically 0.1–0.5 mm", 0.3, "0.05") +
+    chk8("rough", "اعمال ضریب زبری برای ترک‌های کوچک‌تر از 0.2 mm (معادلات ۸٫۶ و ۸٫۸)", "Apply roughness factor to cracks < 0.2 mm (Eqs. 8.6 and 8.8)", "مثال کتاب (Case B) بدون ضریب زبری حل شده است؛ فعال‌کردن آن فشار را کمتر می‌کند", "The book example (Case B) is solved without roughness; activating it gives a lower pressure", false));
+  h += sec8("c8_sec_crit", "", "",
+    num8("vc", "ضریب پواسون بتن νc", "Poisson ratio of concrete νc", "", "", 0.2, "0.01") +
+    num8("bw", "مقاومت فشاری بتن βw (MPa)", "Compressive strength of concrete βw (MPa)", "مقاومت نهایی فشاری بتن", "Ultimate compressive strength of concrete", 30, "1") +
+    num8("SF", "ضریب اطمینان SF", "Safety factor SF", "۱٫۸ برای بتن مسلح تا ۲٫۵ برای بتن غیرمسلح؛ برای تخلیهٔ کوتاه‌مدت ۱٫۲۵ تا ۱٫۵", "1.8 for reinforced to 2.5 for unreinforced concrete; 1.25–1.5 for short dewatering periods", 2, "0.05") +
+    sel8("grad", "گرادیان فشار منفذی در پوشش", "Pore-pressure gradient in the lining", "خطی: معادلهٔ ۸٫۱۵ — لگاریتمی: معادلهٔ ۸٫۱۶", "Linear: Eq. 8.15 — logarithmic: Eq. 8.16", ["linear", "log"]));
+  h += sec8("c8_sec_chart", "", "",
+    num8("rgL", "rg ناحیهٔ سست‌شده در شکل ۸٫۶ (m)", "rg of the loosened zone in Fig. 8.6 (m)", "مثال کتاب: ۶٫۵ m (Kg = max(10·Kr, 1e-5))", "Book example: 6.5 m (Kg = max(10·Kr, 1e-5))", 6.5, "0.1") +
+    num8("rgG", "rg ناحیهٔ تزریق‌شده در شکل ۸٫۷ (m)", "rg of the grouted zone in Fig. 8.7 (m)", "مثال کتاب: ۸٫۵ m", "Book example: 8.5 m", 8.5, "0.1") +
+    num8("KgG", "Kg ناحیهٔ تزریق‌شده در شکل ۸٫۷ (m/s)", "Kg of the grouted zone in Fig. 8.7 (m/s)", "مثال کتاب: 1e-7 m/s", "Book example: 1e-7 m/s", "1e-7", null, "", "text") +
+    chk8("cinC", "ترک‌های طولی (n=3, 2aI=0.3 mm) در Case C منظور شود", "Include the longitudinal cracks (n=3, 2aI=0.3 mm) in Case C", "منحنی Case C چاپ‌شده در شکل ۸٫۵ فقط با ترک‌های عمود بر محور بازتولید می‌شود (VALIDATION.md)؛ با فعال‌کردن این گزینه، متن بخش ۸٫۵٫۱ اعمال می‌شود", "The printed Case C curve of Fig. 8.5 is reproduced with transverse cracks only (see VALIDATION.md); activating this applies the text of Section 8.5.1", false));
+  document.getElementById("c8form").innerHTML = h;
+})();
+
+/* ---- sliders (Table 8.1) ---- */
+const DEF8 = { unreinforced: { a2: 0.75, d: 9, a1: 0.35, n: 3 }, reinforced: { a2: 0.2, d: 0.45, a1: 0.05, sL: 0.45 }, custom: { a2: 0.1, d: 3, a1: 0, n: 0 } };
+const SLID8 = { a2: ["mm", 0.01], a1: ["mm", 0.01], d: ["m", 0.05], n: ["", 1], sL: ["m", 0.05] };
+function clamp8(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+function onLining8(keep) {
+  const L = $8("lining").value, T = CH8.TABLE81[L] || CH8.TABLE81.custom, un = L === "uncracked";
+  Object.keys(SLID8).forEach(id => {
+    const r = $8(id), nb = $8(id + "_n"), rng = T[id] || CH8.TABLE81.custom[id] || [0, 1];
+    const step = id === "d" ? (L === "unreinforced" ? 0.5 : L === "reinforced" ? 0.05 : 0.1) : SLID8[id][1];
+    r.min = rng[0]; r.max = rng[1]; r.step = step; nb.step = step;
+    if (!keep) { const dv = (DEF8[L] || DEF8.custom)[id]; r.value = un ? 0 : (dv != null ? dv : rng[0]); }
+    if (un) r.value = r.min;
+    r.disabled = nb.disabled = un;
+    nb.value = r.value;
+    $8(id + "_r").textContent = un ? "" : ((L === "custom" ? t8("محدودهٔ آزاد", "free range") : t8("محدودهٔ جدول ۸٫۱", "Table 8.1 range")) + ": " + rng[0] + " – " + rng[1] + (SLID8[id][0] ? " " + SLID8[id][0] : ""));
+  });
+  updateVis8();
+}
+Object.keys(SLID8).forEach(id => {
+  const r = $8(id), nb = $8(id + "_n");
+  r.addEventListener("input", () => { nb.value = r.value; updateVis8(); });
+  nb.addEventListener("input", () => { if (nb.value !== "" && isFinite(+nb.value)) { r.value = nb.value; updateVis8(); } });
+  nb.addEventListener("change", () => { nb.value = r.value; });
+});
+function updateVis8() {
+  const type = $8("type").value, zone = $8("zone").value, L = $8("lining").value;
+  const show = (cls, on) => document.querySelectorAll("#tab8 ." + cls).forEach(el => el.style.display = on ? "" : "none");
+  show("v8-zone", zone !== "none"); show("v8-shaft", type === "shaft");
+  show("v8-rein", L === "reinforced"); show("v8-nL", L !== "reinforced");
+  const Kr = +$8("Kr").value, Kc = +$8("Kc").value;
+  const ka = $8("Kgauto").checked; $8("Kg").disabled = ka;
+  if (ka && zone !== "none" && Kr > 0) $8("Kg").value = String(+CH8.autoKg(zone, Kr).toPrecision(4));
+  const ra = $8("Rauto").checked; $8("Rra").disabled = ra;
+  if (ra && Kr > 0 && Kc > 0) $8("Rra").value = String(+CH8.autoRra(Kr, Kc).toPrecision(4));
+  const hint = document.getElementById("c8_sL_r");
+  if (hint && L === "reinforced") hint.textContent = (t8("محدودهٔ جدول ۸٫۱", "Table 8.1 range") + ": 0.3 – 0.6 m  →  n ≈ " + Math.max(1, Math.round(2 * Math.PI * (+$8("ra").value || 0) / (+$8("sL").value || 1))));
+}
+["type", "zone", "Kgauto", "Rauto", "Kr", "Kc", "ra"].forEach(id => $8(id).addEventListener("input", updateVis8));
+$8("lining").addEventListener("change", () => onLining8(false));
+["type", "zone"].forEach(id => $8(id).addEventListener("change", updateVis8));
+
+/* ---- collect / validate / calculate ---- */
+function collect8() {
+  const v = id => +$8(id).value, g = id => $8(id).value, c = id => $8(id).checked;
+  const type = g("type"), zone = g("zone"), lining = g("lining"), Kr = +g("Kr"), Kc = +g("Kc"), ra = v("ra");
+  const un = lining === "uncracked";
+  const n = un ? 0 : (lining === "reinforced" ? Math.max(1, Math.round(2 * Math.PI * ra / v("sL"))) : v("n"));
+  const inp = {
+    type, zone, lining, ri: v("ri"), ra, b: v("b"), Kr, Kc, nu_w: +g("nu_w"), rg: v("rg"),
+    KgAuto: c("Kgauto"), RAuto: c("Rauto"), vc: v("vc"), bw: v("bw"), SF: v("SF"), gradient: g("grad"),
+    a1_mm: un ? 0 : v("a1"), n, a2_mm: un ? 0 : v("a2"), d: v("d"), eps_mm: v("eps"), useRough: c("rough")
+  };
+  inp.Kg = zone === "none" ? null : (inp.KgAuto ? CH8.autoKg(zone, Kr) : +g("Kg"));
+  inp.R = type === "shaft" ? (inp.RAuto ? CH8.autoRra(Kr, Kc) : v("Rra")) * ra : null;
+  inp.rgL = v("rgL"); inp.rgG = v("rgG"); inp.KgG = +g("KgG"); inp.cinC = c("cinC");
+  return inp;
+}
+function showVal8(v) {
+  const k = currentLang === "fa" ? 0 : 1;
+  document.getElementById("c8Validation").innerHTML = v.errs.map(m => `<div class="val-err">⛔ ${m[k]}</div>`).join("") + v.warns.map(m => `<div class="val-warn">⚠️ ${m[k]}</div>`).join("");
+}
+function runCalculation8() {
+  const st = document.getElementById("status8");
+  updateVis8();
+  const inp = collect8(), vres = CH8.validate(inp);
+  showVal8(vres);
+  if (vres.errs.length) { st.textContent = t8("⚠ ورودی‌ها را اصلاح کنید", "⚠ Please fix the inputs"); return; }
+  const res = CH8.compute(inp);
+  C8.last = { inp, res, figs: buildFigs8(inp, res) };
+  render8();
+  drawCharts8();
+  st.textContent = i18n[currentLang].done;
+  saveReportData8();
+}
+
+/* ---- figure data (Figs 8.5 - 8.7) ---- */
+function buildFigs8(inp, res) {
+  const grid = CH8.krGrid(6), book = new Set([1e-8, 5e-8, 1e-7, 5e-7, 1e-6, 5e-6, 1e-5, 5e-5, 1e-4]);
+  const base = { type: inp.type, ri: inp.ri, ra: inp.ra, b: inp.b, Kc: inp.Kc, nu_w: inp.nu_w, vc: inp.vc, bw: inp.bw, SF: inp.SF, gradient: inp.gradient,
+    eps_mm: inp.eps_mm, useRough: inp.useRough, RAuto: inp.RAuto, R: inp.R, KgAuto: true };
+  const BC = CH8.BOOK_CASES;
+  const cases = [
+    { key: "A", label: "Case A", over: { a1_mm: 0, n: 0, a2_mm: 0, d: BC.A.d }, color: "#212529", fill: "#212529", style: "rect" },
+    { key: "B", label: "Case B", over: { a1_mm: 0, n: 0, a2_mm: BC.B.a2, d: BC.B.d }, color: "#0d6efd", fill: "#ffffff", style: "rect" },
+    { key: "C", label: "Case C", over: { a1_mm: inp.cinC ? BC.C.a1 : 0, n: inp.cinC ? BC.C.n : 0, a2_mm: BC.C.a2, d: BC.C.d }, color: "#198754", fill: "#198754", style: "rectRot" },
+    { key: "U", label: t8("پوشش فعلی (طراحی)", "Current lining (design)"), over: { a1_mm: inp.a1_mm, n: inp.n, a2_mm: inp.a2_mm, d: inp.d }, color: "#6f42c1", fill: "#6f42c1", style: "circle", dash: true }
+  ];
+  const zones = [
+    { id: "fig85", zone: "none", over: { zone: "none" }, fa: "شکل ۸٫۵ — بدون ناحیهٔ سست‌شده/تزریق‌شده", en: "Figure 8.5 — no loosened or grouted zone" },
+    { id: "fig86", zone: "loosened", over: { zone: "loosened", rg: inp.rgL, KgAuto: true }, fa: `شکل ۸٫۶ — ناحیهٔ سست‌شده (rg = ${inp.rgL} m)`, en: `Figure 8.6 — loosened rock zone (rg = ${inp.rgL} m)` },
+    { id: "fig87", zone: "grouted", over: { zone: "grouted", rg: inp.rgG, KgAuto: false, Kg: inp.KgG }, fa: `شکل ۸٫۷ — ناحیهٔ تزریق‌شده (rg = ${inp.rgG} m, Kg = ${inp.KgG})`, en: `Figure 8.7 — grouted zone (rg = ${inp.rgG} m, Kg = ${inp.KgG})` }
+  ];
+  return zones.map(Z => ({
+    id: Z.id, zone: Z.zone, fa: Z.fa, en: Z.en,
+    curves: cases.map(C => {
+      const heads = CH8.headVsKr(base, Object.assign({}, C.over, Z.over), grid);
+      return { key: C.key, label: C.label, color: C.color, fill: C.fill, style: C.style, dash: !!C.dash, pts: grid.map((k, i) => ({ x: k, y: heads[i], k: book.has(k) ? 1 : 0 })).filter(p => isFinite(p.y)) };
+    })
+  }));
+}
+function drawCharts8() {
+  if (!C8.last || typeof Chart === "undefined") return;
+  Object.values(C8.charts).forEach(c => c && c.destroy()); C8.charts = {};
+  const { inp, res, figs } = C8.last;
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  const tx = dark ? "#e9ecef" : "#212529", gr = dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
+  const fa = currentLang === "fa";
+  figs.forEach(F => {
+    const el = document.getElementById("c8" + F.id); if (!el) return;
+    const ds = F.curves.map(c => ({
+      label: c.label, data: c.pts, showLine: true, borderColor: c.color, backgroundColor: c.fill, borderWidth: c.dash ? 2.2 : 1.8,
+      borderDash: c.dash ? [6, 4] : [], pointStyle: c.style, pointRadius: ctx => ctx.raw && ctx.raw.k ? 4.5 : 0, pointBorderColor: c.color, pointBackgroundColor: c.fill, tension: 0, order: 3
+    }));
+    ds.push({ label: t8("هد مجاز (βw/SF)", "Allowable head (βw/SF)"), data: [{ x: 1e-8, y: res.ha_allow }, { x: 1e-4, y: res.ha_allow }], showLine: true, borderColor: "#dc3545", borderDash: [8, 5], borderWidth: 1.6, pointRadius: 0, order: 2 });
+    if (F.zone === inp.zone) ds.push({ label: t8("نقطهٔ طراحی", "Design point"), data: [{ x: inp.Kr, y: res.ha }], showLine: false, pointStyle: "star", pointRadius: 10, borderColor: "#fd7e14", backgroundColor: "#fd7e14", order: 1 });
+    C8.charts[F.id] = new Chart(el, {
+      type: "scatter", data: { datasets: ds },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          title: { display: true, text: fa ? F.fa : F.en, color: tx, font: { size: 13 } },
+          legend: { labels: { color: tx, font: { size: 11 } } },
+          tooltip: { callbacks: { label: c => `${c.dataset.label}: Kr=${c.parsed.x.toExponential(2)} m/s, h=${c.parsed.y.toFixed(1)} m` } }
+        },
+        scales: {
+          x: { type: "logarithmic", min: 1e-8, max: 1e-4, title: { display: true, text: t8("نفوذپذیری سنگ Kr (m/s)", "Rock mass permeability Kr (m/s)"), color: tx }, ticks: { color: tx, callback: v => { const l = Math.log10(v); return Math.abs(l - Math.round(l)) < 1e-9 ? "1E" + (Math.round(l) < 0 ? "-" : "+") + String(Math.abs(Math.round(l))).padStart(2, "0") : ""; } }, grid: { color: gr } },
+          y: { min: 0, max: inp.b, title: { display: true, text: t8("هد فشار آب روی سطح خارجی پوشش (m)", "Water pressure head at the outer side of the lining (m)"), color: tx }, ticks: { color: tx }, grid: { color: gr } }
+        }
+      }
+    });
+  });
+}
+
+/* ---- results (flow-chart order) ---- */
+function render8() {
+  if (!C8.last) return;
+  const { inp, res: r } = C8.last, fa = currentLang === "fa";
+  const eq = n => `<span class="eq">(${t8("معادلهٔ", "Eq.")} ${n})</span>`;
+  const row = (name, val, unit, tFa, tEn) => `<div class="result-item"><span class="name">${name}${tFa ? `<span class="tooltip-icon" data-tip="${fa ? tFa : tEn}">?</span>` : ""}</span><span class="value">${val}${unit ? " " + unit : ""}</span></div>`;
+  const sec = s => `<div class="section-label">${s}</div>`;
+  const allOk = r.ok_sigma;
+  let h = `<div class="sum-card ${allOk ? "" : "bad"}"><b>${allOk ? "✅" : "❌"} ${t8("خلاصهٔ کنترل طراحی (فصل ۸)", "Design check summary (Chapter 8)")}</b>
+    — ${inp.type === "tunnel" ? t8("تونل افقی", "horizontal tunnel") : t8("شفت قائم", "vertical shaft")}, b = ${inp.b} m
+    <table>
+      <tr><td>p<sub>a</sub></td><td>${F8(r.pa, 3)} bar (${F8(r.ha, 1)} m)</td><td>${t8("از کل هد", "of full head")} ${F8(r.ratio * 100, 1)}%</td><td></td></tr>
+      <tr><td>σ<sub>t,max</sub>(r<sub>i</sub>)</td><td>${F8(r.sigma, 2)} MPa</td><td>≤ β<sub>w</sub>/SF = ${F8(r.sig_allow, 2)} MPa</td><td>${r.ok_sigma ? "✓" : "✗"}</td></tr>
+      <tr><td>SF</td><td>${r.SF_act === Infinity ? "∞" : F8(r.SF_act, 2)}</td><td>≥ ${F8(inp.SF, 2)}</td><td>${r.SF_act >= inp.SF ? "✓" : "✗"}</td></tr>
+      <tr><td>r<sub>a</sub>/(r<sub>a</sub>−r<sub>i</sub>)</td><td>${F8(r.slender, 1)}</td><td>&lt; 40</td><td>${r.ok_buck ? "✓" : "⚠"}</td></tr>
+    </table></div>`;
+  h += sec(t8("★ فشار آب خارجی مؤثر", "★ Effective external water pressure"));
+  h += row(`p<sub>a</sub> ${eq(r.eq.pa)}`, F8(r.pa, 4), "bar", "فشار آب روی سطح خارجی پوشش بتنی", "Water pressure at the outer side of the concrete lining");
+  h += row(`p<sub>a</sub>/(ρ<sub>w</sub>g)`, F8(r.ha, 2), "m", "هد معادل فشار خارجی", "Equivalent pressure head");
+  h += row(t8("فشار کامل آب زیرزمینی ρ<sub>w</sub>g·b", "Full groundwater pressure ρ<sub>w</sub>g·b"), F8(r.p_full, 3), "bar");
+  h += row(t8("کاهش فشار نسبت به فشار کامل", "Reduction versus full pressure"), F8(r.reduction * 100, 1), "%");
+  h += sec(t8("۱ — ورودی‌های مشتق‌شده", "1 — Derived inputs"));
+  h += row("r<sub>g</sub>", F8(r.rgEff, 3), "m", "بدون ناحیهٔ ویژه: rg = ra", "No special zone: rg = ra");
+  if (r.R) h += row("R", F8(r.R, 2) + ` (R/r<sub>a</sub> = ${F8(r.Rra, 1)})`, "m", "برد جریان نشت (شفت)", "Reach of seepage flow (shaft)");
+  if (r.Kg) h += row("K<sub>g</sub>", E8(r.Kg), "m/s");
+  h += row("n / d", `${r.n} / ${F8(r.d, 2)} m`, "", "تعداد ترک‌های طولی / فاصلهٔ ترک‌های عرضی", "Number of longitudinal cracks / spacing of transverse cracks");
+  h += sec(t8("۲ — رسانایی جریان ورودی از سنگ", "2 — Rock inflow conductivity"));
+  h += row(`${r.type === "tunnel" ? "C<sub>1</sub>" : "C<sub>2</sub>"} ${eq(r.eq.rock)}`, E8(r.C_rock), "m/s");
+  if (r.C3 != null) { h += sec(t8("۳ — ناحیهٔ سست‌شده / تزریق‌شده", "3 — Loosened / grouted zone")); h += row(`C<sub>3</sub> ${eq("8.3")}`, E8(r.C3), "m/s"); }
+  h += sec(t8("۴ — رسانایی پوشش بتنی", "4 — Concrete lining conductivity"));
+  h += row(`C<sub>41</sub> ${eq("8.4")}`, E8(r.C41), "m/s", "بتن سالم بین ترک‌ها", "Intact concrete between cracks");
+  h += row(`C<sub>42</sub> ${eq(r.eq.c42)}`, E8(r.C42), "m/s", "ترک‌های طولی (موازی محور)", "Longitudinal cracks");
+  h += row(`C<sub>44</sub> ${eq(r.eq.c44)}`, E8(r.C44), "m/s", "ترک‌های عرضی (عمود بر محور)، با تقسیم بر d", "Transverse cracks, including 1/d");
+  h += row(`C<sub>4</sub> ${eq("8.9")}`, E8(r.C4), "m/s");
+  h += sec(t8("۵ — پیوستگی جریان q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub>", "5 — Continuity q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub>"));
+  h += row("q", E8(r.q), "m³/s/m", "دبی نشت در واحد طول", "Seepage per unit length");
+  h += row("q<sub>r</sub> / q<sub>g</sub> / q<sub>c</sub>", `${E8(r.q_r)} / ${E8(r.q_g)} / ${E8(r.q)}`, "", "باید برابر باشند (کنترل پیوستگی)", "Must be equal (continuity check)");
+  if (r.zone !== "none") { h += sec(t8("۷ — فشار روی لبهٔ بیرونی ناحیه", "7 — Pressure at the outer edge of the zone")); h += row(`p<sub>g</sub> ${eq("8.14")}`, `${F8(r.pg, 4)} bar (${F8(r.hg, 1)} m)`, ""); }
+  h += sec(t8("۸ — حداکثر تنش فشاری در بتن", "8 — Maximum compressive stress in the concrete"));
+  h += row(`σ<sub>t,max</sub>(r<sub>i</sub>) ${t8("خطی", "linear")} ${eq("8.15")}`, F8(r.sig_lin, 3), "MPa");
+  h += row(`σ<sub>t,max</sub>(r<sub>i</sub>) ${t8("لگاریتمی", "logarithmic")} ${eq("8.16")}`, F8(r.sig_log, 3), "MPa");
+  h += sec(t8("۹ — معیار طراحی", "9 — Design criterion") + " (8.17)");
+  h += row(`σ<sub>t,max</sub> ≤ β<sub>w</sub>/SF`, `${F8(r.sigma, 3)} ≤ ${F8(r.sig_allow, 3)} → ${r.ok_sigma ? t8("قابل قبول", "OK") : t8("رد", "Fail")}`, "MPa");
+  h += row(t8("هد مجاز روی پوشش", "Allowable head on the lining"), `${F8(r.ha_allow, 1)} m (${F8(r.ha_allow * CH8.RHO * CH8.G / 1e5, 2)} bar)`, "");
+  h += sec(t8("۱۰ — ارزیابی و توصیه‌ها", "10 — Assessment & recommendations"));
+  const recs = [];
+  if (!r.ok_sigma) recs.push(t8(`تنش فشاری از حد مجاز بیشتر است (هد مؤثر ${F8(r.ha, 1)} m در برابر هد مجاز ${F8(r.ha_allow, 1)} m). راهکارها: تزریق تحکیمی سنگ اطراف (Kg ≈ 1e-7 m/s)، بازبینی نفوذپذیری و ترک‌ها، افزایش ضخامت پوشش، یا ضریب اطمینان کمتر (۱٫۲۵ تا ۱٫۵) فقط برای تخلیهٔ کوتاه‌مدت.`, `Compressive stress exceeds the limit (effective head ${F8(r.ha, 1)} m vs allowable ${F8(r.ha_allow, 1)} m). Options: consolidation grouting of the rock (Kg ≈ 1e-7 m/s), re-check permeabilities and cracks, thicker lining, or a lower SF (1.25–1.5) only for short dewatering periods.`));
+  if (r.zone === "loosened") recs.push(t8("ناحیهٔ سست‌شده فشار مؤثر را اندکی افزایش می‌دهد؛ تزریق تحکیمی توصیه می‌شود (بخش‌های ۸٫۵٫۳ و ۸٫۵٫۴).", "A loosened zone raises the effective pressure; consolidation grouting is recommended (Sections 8.5.3–8.5.4)."));
+  if (!r.ok_buck) recs.push(t8("ra/(ra−ri) ≥ 40: پایداری کمانشی پوشش باید جداگانه کنترل شود (بخش ۸٫۴).", "ra/(ra−ri) ≥ 40: buckling stability of the lining must be checked separately (Section 8.4)."));
+  if (r.ok_sigma && r.ratio > 0.5) recs.push(t8("با وجود قبول‌بودن تنش، بخش بزرگی از هد آب زیرزمینی روی پوشش اثر می‌کند؛ حساسیت نسبت به Kr و ترک‌ها را با نمودارها بررسی کنید.", "Although the stress check passes, a large part of the groundwater head still acts on the lining; check the sensitivity to Kr and cracks in the charts."));
+  recs.push(t8("زهکش در پوشش فقط وقتی مجاز است که سنگ نسبتاً آب‌بند باشد، نشت از تونل به سنگ تحت فشار داخلی قابل قبول باشد و خطر شستشوی ریزدانه‌ها وجود نداشته باشد (بخش ۸٫۵٫۵).", "Drainage holes in the lining are acceptable only if the rock is rather tight, leakage into the rock under internal pressure is acceptable and there is no risk of erosion of fines (Section 8.5.5)."));
+  h += `<div class="rec"><ul>${recs.map(x => `<li>${x}</li>`).join("")}</ul></div>`;
+  document.getElementById("results8").innerHTML = h;
+}
+function rerender8() { if (C8.last) { render8(); drawCharts8(); } onLining8(true); }
+
+/* ---- samples ---- */
+const S8_COMMON = { type: "tunnel", ri: 5, ra: 5.5, b: 300, Kr: "1e-5", Kc: "1e-8", nu_w: "1e-6", zone: "none", rg: 6.5, Kgauto: true, Kg: "1e-5", Rauto: true, Rra: 10,
+  eps: 0.3, rough: false, vc: 0.2, bw: 30, SF: 2, grad: "linear", rgL: 6.5, rgG: 8.5, KgG: "1e-7", cinC: false };
+const S8 = {
+  A: { lining: "uncracked" },
+  B: { lining: "custom", a2: 0.1, d: 3, a1: 0, n: 0 },
+  C: { lining: "custom", a2: 0.3, d: 6, a1: 0.3, n: 3 },
+  S: { type: "shaft", ri: 3, ra: 3.5, b: 150, Kr: "1e-6", zone: "grouted", rg: 5, lining: "reinforced", a2: 0.2, d: 0.45, a1: 0.05, sL: 0.45 }
+};
+function setVals8(o) {
+  Object.entries(o).forEach(([k, v]) => { const el = $8(k); if (!el) return; if (el.type === "checkbox") el.checked = !!v; else el.value = v; });
+}
+function loadSample8(name) {
+  const o = Object.assign({}, S8_COMMON, S8[name]);
+  setVals8({ lining: o.lining, type: o.type, zone: o.zone });
+  onLining8(true);
+  setVals8(o);
+  Object.keys(SLID8).forEach(id => { $8(id + "_n").value = $8(id).value; });
+  onLining8(true);
+  const names = { A: "Case A", B: "Case B", C: "Case C", S: t8("شفت قائم", "Vertical shaft") };
+  document.getElementById("status8").textContent = t8(`نمونهٔ ${names[name]} بارگذاری شد — دکمهٔ محاسبه را بزنید`, `${names[name]} sample loaded — press Calculate`);
+}
+document.getElementById("btnS8A").addEventListener("click", () => loadSample8("A"));
+document.getElementById("btnS8B").addEventListener("click", () => loadSample8("B"));
+document.getElementById("btnS8C").addEventListener("click", () => loadSample8("C"));
+document.getElementById("btnS8S").addEventListener("click", () => loadSample8("S"));
+document.getElementById("btnCalc8").addEventListener("click", runCalculation8);
+
+/* ---- CSV, report data, project hooks ---- */
+function exportCSV8() {
+  if (!C8.last) { alert(t8("ابتدا یک محاسبه انجام دهید.", "Please run a calculation first.")); return; }
+  const rows = ["figure,case,Kr_m_s,head_m,pressure_bar"];
+  C8.last.figs.forEach(F => F.curves.forEach(c => c.pts.forEach(p => rows.push([F.id, c.key, p.x, p.y.toFixed(3), (p.y * CH8.RHO * CH8.G / 1e5).toFixed(4)].join(",")))));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + rows.join("\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = "chapter8-curves.csv"; a.click(); URL.revokeObjectURL(a.href);
+}
+document.getElementById("btnCSV8").addEventListener("click", exportCSV8);
+function saveReportData8() {
+  if (!C8.last) return;
+  try {
+    const { inp, res, figs } = C8.last;
+    const s = JSON.stringify({ inputs: inp, result: res, figs, timestamp: new Date().toISOString() }, (k, v) => v === Infinity ? "Infinity" : v);
+    sessionStorage.setItem("tunnelCalcReport8", s);
+    try { localStorage.setItem("tunnelCalcReport8", s); } catch (_) {}
+  } catch (e) { console.warn(e); }
+}
+document.getElementById("btnReport8").addEventListener("click", () => {
+  if (!C8.last) { alert(t8("ابتدا یک محاسبه انجام دهید.", "Please run Calculate first.")); return; }
+  window.open("report.html?ch=8", "_blank");
+});
+const C8_FIELDS = ["type", "b", "ri", "ra", "Kr", "Kc", "nu_w", "zone", "rg", "Kgauto", "Kg", "Rauto", "Rra", "lining", "a2", "d", "a1", "n", "sL", "eps", "rough", "vc", "bw", "SF", "grad", "rgL", "rgG", "KgG", "cinC"];
+function prep8(fields) {            // set the selects first so slider ranges are right before values are assigned
+  if (!fields) return;
+  ["type", "zone", "lining"].forEach(k => { if (fields["c8_" + k] != null) $8(k).value = fields["c8_" + k]; });
+  onLining8(true);
+}
+function sync8() { Object.keys(SLID8).forEach(id => { $8(id + "_n").value = $8(id).value; }); onLining8(true); }
+$8("Kr").addEventListener("change", updateVis8);
+onLining8(false);
+loadSample8("B"); document.getElementById("status8").textContent = i18n[currentLang].ready;
+try { showTab(localStorage.getItem("tunnelAppTab") === "8" ? "8" : "7"); } catch (e) {}
+
+C8_FIELDS.forEach(k => PROJECT_FIELDS.push("c8_" + k));
 
 // Init
 setLanguage("fa");
