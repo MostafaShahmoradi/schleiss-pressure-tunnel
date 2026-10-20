@@ -27,6 +27,7 @@
 * تحلیل فشار داخلی و حالت تخلیه تونل (Internal Pressure and Emptying States)
 * فصول ۷ و ۸ کتاب اشلایس (Schleiss Book Chapters 7 & 8)
 * طراحی سازه‌های آبی و انتقال آب
+
 # Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory
 
 **Chapter 7:** reinforced concrete linings under internal pressure · **Chapter 8:** external water pressure during dewatering and down-surges
@@ -34,10 +35,10 @@
 **Short name:** Schleiss Pressure Tunnel Design  
 **فارسی:** طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس) — فصل ۷ و فصل ۸  
 **Developer:** Mostafa Shahmoradi / مصطفی شاهمرادی  
-**Version:** 2.1.0
+**Version:** 2.0.3
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue)](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/)
-[![Version](https://img.shields.io/badge/version-2.1.0-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
+[![Version](https://img.shields.io/badge/version-2.0.3-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
 [![License: proprietary](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)](LICENSE)
 
 Online calculator for **permeable pressure tunnels and vertical shafts**, based on **Schleiss theory**. Two tabs:
@@ -62,7 +63,7 @@ The original brief mentioned frameworks such as Streamlit or React. For this too
 Calculation logic is implemented in client-side JavaScript and checked against the ABOGWL / BELGWL / VSHAFT reference spreadsheets (chapter 7) and against the worked example and figures of Section 8.5 (chapter 8); see [VALIDATION.md](VALIDATION.md).
 
 ## Features
-### Chapter 8 (new in 2.1.0)
+### Chapter 8 (new in 2.0.3)
 - Horizontal tunnel (Eq. 8.1, 8.10, 8.12) and vertical shaft (Eq. 8.2, 8.11, 8.13)
 - Optional loosened / grouted rock zone (Eq. 8.3, 8.14)
 - Lining conductivity from intact concrete, longitudinal and perpendicular cracks (Eq. 8.4–8.9, roughness 8.6 / 8.8 → C43 / C45 selectable: off / auto / on)
@@ -104,7 +105,7 @@ See **[VALIDATION.md](VALIDATION.md)**. Run `node tests/validate.js` (chapter 7,
 | `tests/validate-ch8.js` | Chapter 8 regression test vs. the book's example and figures |
 | `VALIDATION.md` | Numeric checks vs Excel references |
 | `CHANGELOG.md` | Version history |
-| `RELEASE_v2.1.0.md` | Release notes of this version |
+| `RELEASE_v2.0.3.md` | Release notes of this version |
 | `LICENSE` | © 2026 Mostafa Shahmoradi |
 | `.nojekyll` | GitHub Pages |
 

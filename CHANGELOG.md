@@ -2,8 +2,10 @@
 
 All notable changes to **Schleiss Pressure Tunnel Design** are documented in this file.
 
-## [2.1.0] – 2026-10-19
+## [2.0.3] – 2026-10-20
 ### Added
+- **Import from Chapter 7:** a button in the Chapter 8 tab copies ri, ra, Kr, Kc, νc, βw, structure type, b (if above ra), R/ra (shaft) and, from the last Chapter 7 calculation, the crack width 2a and number n (as 2aI and n; lining type is set to "custom"). Imported cells are shown in a separate colour with a ⇩ mark until edited. If Chapter 7 has not been calculated, or its inputs changed after the calculation, only the inputs are imported and a warning is shown.
+- **Colour-coded interface:** file buttons (green), help (purple), language (amber), theme (grey) and the chapter tabs (blue for Chapter 7, teal for Chapter 8).
 - **Chapter 8 tab** (Schleiss, Design of Concrete Linings for External Water Pressure during Dewatering and Down-Surges): effective external water pressure `pa`/`pg`, seepage rate `q`, conductivities C1–C4 (Eq. 8.1–8.9), pressure formulas 8.10–8.14, compressive-stress check 8.15–8.17, buckling slenderness, drainage / grouting advice.
 - Horizontal tunnel **and** vertical shaft; optional loosened / grouted rock zone; optional crack roughness (Eq. 8.6 / 8.8).
 - **Crack-width sliders** limited to the ranges of Table 8.1 (unreinforced / reinforced / custom, with number boxes).

@@ -486,11 +486,35 @@
     .sum-card table{width:100%;border-collapse:collapse;margin-top:.4rem;} .sum-card td{padding:.2rem .3rem;border-bottom:1px solid var(--border);}
     .val-err,.val-warn{border-radius:8px;padding:.5rem .75rem;margin:.5rem 0;font-size:.85rem;}
     .val-err{background:rgba(220,53,69,.12);border:1px solid #dc3545;} .val-warn{background:rgba(255,193,7,.15);border:1px solid #e0a800;}
-    /* ===== v2.1: tabs + chapter 8 ===== */
+    /* ===== v2.0.3: tabs + chapter 8 ===== */
     .tabs{flex-basis:100%;display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.15rem;}
     .tab-btn{flex:1;min-width:14rem;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:.55rem .9rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;}
     .tab-btn:hover{border-color:var(--primary);}
     .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+    /* v2.0.3: distinct colours for header buttons, tabs and values imported from chapter 7 */
+    :root{--imp:#d6336c;}
+    [data-theme="dark"]{--imp:#ff8fb3;}
+    .controls .ctrl{color:#fff;border:1px solid transparent;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.18);padding:.4rem .9rem;border-radius:6px;font-size:.9rem;line-height:1.5;}
+    .controls .ctrl:hover{filter:brightness(1.12);border-color:rgba(255,255,255,.55);}
+    .controls .ctrl.c-file{background:#15803d;}
+    .controls .ctrl.c-help{background:#7e22ce;}
+    .controls .ctrl.c-lang{background:#d97706;}
+    .controls .ctrl.c-theme{background:#475569;}
+    .tab-btn{border-width:2px;font-size:1rem;}
+    #tabBtn7{border-color:#1d4ed8;color:#1d4ed8;background:rgba(29,78,216,.08);}
+    #tabBtn8{border-color:#0e7490;color:#0e7490;background:rgba(14,116,144,.08);}
+    [data-theme="dark"] #tabBtn7{color:#8fb3ff;border-color:#4d7cf0;} [data-theme="dark"] #tabBtn8{color:#67d4ee;border-color:#2aa6c4;}
+    #tabBtn7.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;box-shadow:0 3px 0 #1e3a8a;}
+    #tabBtn8.active{background:#0e7490;color:#fff;border-color:#0e7490;box-shadow:0 3px 0 #164e63;}
+    .btn-import{width:100%;margin:.2rem 0 .5rem;background:var(--imp);color:#fff;border:0;border-radius:10px;padding:.65rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit;}
+    .btn-import:hover{filter:brightness(1.08);}
+    .imp-info{font-size:.82rem;margin:.2rem 0 .7rem;}
+    .imp-info .box{border:1px solid var(--imp);border-radius:8px;padding:.45rem .7rem;margin-top:.4rem;}
+    .imp-info .box.warn{border-color:#e0a800;background:rgba(255,193,7,.13);}
+    .imp-sample{color:var(--imp);font-weight:700;}
+    .form-group.imp input,.form-group.imp select{color:var(--imp);font-weight:700;border-color:var(--imp);}
+    .form-group.imp>label::after{content:"⇩";color:var(--imp);font-weight:700;margin-inline-start:.25rem;}
     .tab-hidden{display:none !important;}
     .slider-row{display:flex;gap:.6rem;align-items:center;}
     .slider-row input[type=range]{flex:1;padding:0;accent-color:var(--primary);height:1.6rem;cursor:pointer;}
@@ -515,14 +539,14 @@
   </div>
   <div class="controls">
     <span id="projName" class="proj-name" title="Project"></span>
-    <button class="ctrl" id="btnNew" data-i18n="file_new">New</button>
-    <button class="ctrl" id="btnOpen" data-i18n="file_open">Open</button>
-    <button class="ctrl" id="btnSave" data-i18n="file_save">Save</button>
-    <button class="ctrl" id="btnSaveAs" data-i18n="file_saveas">Save As</button>
+    <button class="ctrl c-file" id="btnNew" data-i18n="file_new">New</button>
+    <button class="ctrl c-file" id="btnOpen" data-i18n="file_open">Open</button>
+    <button class="ctrl c-file" id="btnSave" data-i18n="file_save">Save</button>
+    <button class="ctrl c-file" id="btnSaveAs" data-i18n="file_saveas">Save As</button>
     <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
-    <a class="ctrl" id="btnHelp" href="help.html" target="_blank" rel="noopener" data-i18n="help" style="text-decoration:none;display:inline-flex;align-items:center;">راهنما</a>
-    <button class="ctrl" id="btnLang">EN</button>
-    <button class="ctrl" id="btnTheme">🌙</button>
+    <a class="ctrl c-help" id="btnHelp" href="help.html" target="_blank" rel="noopener" data-i18n="help" style="text-decoration:none;display:inline-flex;align-items:center;">راهنما</a>
+    <button class="ctrl c-lang" id="btnLang">EN</button>
+    <button class="ctrl c-theme" id="btnTheme">🌙</button>
   </div>
   <div class="tabs" role="tablist">
     <button type="button" class="tab-btn active" id="tabBtn7" data-tab="7" data-i18n="tab7">فصل ۷</button>
@@ -808,6 +832,8 @@
       <ol><li data-i18n="c8_qs1"></li><li data-i18n="c8_qs2"></li><li data-i18n="c8_qs3"></li></ol>
     </div>
     <h2 data-i18n="inputs_title">پارامترهای ورودی</h2>
+    <button type="button" class="btn-import" id="btnImp8" data-i18n="c8_imp_btn"></button>
+    <div class="imp-info" id="c8ImpInfo"><span data-i18n="c8_imp_hint"></span></div>
     <div id="c8form"></div>
     <div class="actions-bar">
       <button class="btn-primary" id="btnCalc8" data-i18n="calc">محاسبه</button>
@@ -1428,7 +1454,7 @@ function computeCrackedExcel(inp, Pi, sIdx, dFixed) {
       }
       Pa = (lo + hi) / 2;
       st = stateAtPaR(Pa, R_ass);
-      // v2.1.0 rule: if the calculated seepage reach R is smaller than ra (physically meaningless),
+      // v2.0.3 rule: if the calculated seepage reach R is smaller than ra (physically meaningless),
       // the value used for R is at least 2·ra.
       const rawR = st.R_calc || R_ass;
       const ruleR = rawR < ra;
@@ -1728,6 +1754,7 @@ function runCalculation() {
 
     // Save for calculation notebook (English report page)
     // Reuse Pa_at_maxPi / maxPiVal already computed above
+    window.C7LAST = { inputs: { ...inp }, uncracked: uncr, cracked: crack };
     saveReportData({
       inputs: inp,
       uncracked: uncr,
@@ -2493,7 +2520,7 @@ function buildExcelCheck(inp, uncr) {
   const f6 = v => (+v).toPrecision(6);
   const why = x.R_calc <= inp.ra
     ? (fa ? "R کوچک‌تر از ra است؛ معادلات اکسل در این حالت نقطه‌ی ثابت ندارد و طبق قاعده‌ی نسخه ۲٫۱ اپ R را برابر 2·ra می‌گیرد."
-          : "R is smaller than ra; the spreadsheet equations have no fixed point here and, by the v2.1 rule, the app takes R = 2·ra.")
+          : "R is smaller than ra; the spreadsheet equations have no fixed point here and, by the v2.0.3 rule, the app takes R = 2·ra.")
     : (fa ? "تعداد ترک n=INT(…) عدد صحیح است و جهش آن اجازه‌ی تطابق کامل را نمی‌دهد."
           : "The crack count n = INT(…) is an integer and its jump prevents an exact match.");
   return `<div class="sum-card ${ok ? "" : "info"}"><b>${ok ? "✅" : "ℹ️"} ${fa ? "کنترل با اکسل ABOGWL (ستون اول)" : "Cross-check with ABOGWL spreadsheet (first column)"}</b>
@@ -2537,7 +2564,7 @@ function setDirty(v) {
 function collectProject() {
   const fields = {};
   PROJECT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.type === "checkbox" ? el.checked : el.value; });
-  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.1.0", name: projectName, tab: currentTab,
+  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.3", name: projectName, tab: currentTab,
     saved: new Date().toISOString(), lang: currentLang, theme: document.documentElement.getAttribute("data-theme") || "light", fields };
 }
 function applyProject(p) {
@@ -2637,7 +2664,7 @@ const CH8 = (function () {
   const TABLE81 = {
     unreinforced: { a2: [0.5, 1.0], d: [6, 12], a1: [0.2, 0.5], n: [2, 12] },
     reinforced:   { a2: [0.1, 0.3], d: [0.3, 0.6], a1: [0, 0.1], sL: [0.3, 0.6] },
-    custom:       { a2: [0, 2], d: [0.1, 20], a1: [0, 2], n: [0, 200] }
+    custom:       { a2: [0, 2], d: [0.1, 20], a1: [0, 2], n: [0, 1000] }
   };
 
   /** Cases A, B, C of the worked example, Section 8.5.1 (crack widths in mm, d in m). */
@@ -2817,6 +2844,14 @@ Object.assign(i18n.en, {
 });
 
 /* ---- form generator ---- */
+Object.assign(i18n.fa, {
+  c8_imp_btn: "⇩ بازخوانی پارامترها و نتایج از فصل ۷",
+  c8_imp_hint: "پس از «محاسبه» در تب فصل ۷، با این دکمه ri، ra، Kr، Kc، νc، βw، نوع سازه، b، R/ra و عرض و تعداد ترک‌های فصل ۷ به اینجا منتقل می‌شوند. سلول‌های بازخوانی‌شده با رنگ صورتی و نشان ⇩ مشخص می‌شوند."
+});
+Object.assign(i18n.en, {
+  c8_imp_btn: "⇩ Import parameters and results from Chapter 7",
+  c8_imp_hint: "After pressing Calculate in the Chapter 7 tab, this button copies ri, ra, Kr, Kc, νc, βw, structure type, b, R/ra and the crack width and number of Chapter 7 to this tab. Imported cells are shown in pink with a ⇩ mark."
+});
 function reg8(k, fa, en) { i18n.fa[k] = fa; i18n.en[k] = en; return k; }
 function tip8(fa, en) { return fa ? `<span class="tooltip-icon" data-tip-fa="${fa}" data-tip-en="${en}">?</span>` : ""; }
 function lab8(id, fa, en, tfa, ten) { return `<label><span data-i18n="${reg8("c8_l_" + id, fa, en)}">${fa}</span>${tip8(tfa, ten)}</label>`; }
@@ -3077,7 +3112,56 @@ const S8 = {
 function setVals8(o) {
   Object.entries(o).forEach(([k, v]) => { const el = $8(k); if (!el) return; if (el.type === "checkbox") el.checked = !!v; else el.value = v; });
 }
+/* ---- import from chapter 7 (v2.0.3) ---- */
+const C8IMP = new Set();
+function markImp8(id) { C8IMP.add(id); const g = document.getElementById("g8_" + id); if (g) g.classList.add("imp"); }
+function clearImp8(id) { if (!C8IMP.delete(id)) return; const g = document.getElementById("g8_" + id); if (g) g.classList.remove("imp"); }
+function clearAllImp8() { [...C8IMP].forEach(clearImp8); const el = document.getElementById("c8ImpInfo"); if (el && C8LASTIMP) { el.innerHTML = '<span data-i18n="c8_imp_hint"></span>'; el.firstChild.textContent = i18n[currentLang].c8_imp_hint; C8LASTIMP = false; } }
+let C8LASTIMP = false;
+document.getElementById("c8form").addEventListener("input", e => { const m = /^c8_(.+?)(_n)?$/.exec(e.target.id || ""); if (m) clearImp8(m[1]); });
+document.getElementById("c8form").addEventListener("change", e => { const m = /^c8_(.+?)(_n)?$/.exec(e.target.id || ""); if (m) clearImp8(m[1]); });
+function importFrom7() {
+  const g7 = id => document.getElementById(id), n7 = id => +g7(id).value;
+  const done = [], skipped = [], warns = [];
+  const inp7 = { struct_mode: g7("struct_mode").value, b: n7("b") };
+  const nums = ["ri", "ra", "vc", "Kr", "Kc", "Bw", "b"];
+  if (nums.some(k => !isFinite(n7(k)))) { warns.push(t8("ورودی‌های فصل ۷ کامل نیست.", "Chapter 7 inputs are incomplete.")); }
+  const setV = (id, val, label) => { const el = $8(id); if (el.type === "checkbox") el.checked = !!val; else el.value = val; markImp8(id); done.push(label || id); };
+  setV("ri", n7("ri"), "ri"); setV("ra", n7("ra"), "ra");
+  setV("Kr", g7("Kr").value, "Kr"); setV("Kc", g7("Kc").value, "Kc");
+  setV("vc", n7("vc"), "νc"); setV("bw", n7("Bw"), "βw");
+  const mode7 = resolveStructMode(inp7), shaft = mode7 === "shaft";
+  setV("type", shaft ? "shaft" : "tunnel", t8("نوع سازه", "structure type"));
+  if (n7("b") > n7("ra")) setV("b", n7("b"), "b");
+  else skipped.push(t8("b (در فصل ۷ b=0 یا کمتر از ra است؛ ارتفاع کل آب زیرزمینی را در فصل ۸ وارد کنید)", "b (Chapter 7 has b=0 or below ra; enter the total groundwater head in Chapter 8)"));
+  if (shaft) { setV("Rauto", false, ""); done.pop(); setV("Rra", n7("Rra_cracked"), "R/ra"); }
+  // results of chapter 7: cracks along the axis (2a, n) at the design pressure of chapter 7
+  const last = window.C7LAST, keys = ["ri", "ra", "rs", "Ec", "Er", "Es", "vc", "vr", "Kr", "Kc", "Bz", "Bw", "Pi", "b", "R_over_ra", "Rra_cracked", "s", "ds", "n_layers"];
+  let a1 = null, nC = null;
+  if (!last || !last.cracked) warns.push(t8("هنوز در فصل ۷ محاسبه‌ای انجام نشده؛ فقط ورودی‌ها منتقل شد. عرض و تعداد ترک را پس از «محاسبه» در فصل ۷ دوباره بازخوانی کنید.", "No Chapter 7 calculation yet; only the inputs were imported. Calculate in Chapter 7 and import again to get the crack width and number."));
+  else if (keys.some(k => +last.inputs[k] !== n7(k)) || last.inputs.struct_mode !== g7("struct_mode").value) warns.push(t8("نتایج ذخیره‌شدهٔ فصل ۷ با ورودی‌های فعلی آن تب یکی نیست؛ عرض و تعداد ترک منتقل نشد. ابتدا در فصل ۷ دوباره «محاسبه» را بزنید.", "The stored Chapter 7 results do not match the current Chapter 7 inputs; crack width and number were not imported. Press Calculate in Chapter 7 first."));
+  else { const c = last.cracked; a1 = c.uncrackedState ? 0 : +c.two_a; nC = c.uncrackedState ? 0 : +c.n; }
+  if (a1 != null) {
+    $8("lining").value = "custom"; onLining8(true);
+    $8("a1").step = $8("a1_n").step = 0.0001;
+    $8("a1").value = a1.toFixed(4); $8("a1_n").value = $8("a1").value;
+    $8("n").value = nC; $8("n_n").value = nC;
+    markImp8("lining"); markImp8("a1"); markImp8("n"); done.push("2aI", "n", t8("نوع پوشش: دلخواه", "lining: custom"));
+  }
+  Object.keys(SLID8).forEach(id => { $8(id + "_n").value = $8(id).value; });
+  updateVis8();
+  C8LASTIMP = true;
+  const info = document.getElementById("c8ImpInfo");
+  info.innerHTML = `<div class="box"><span class="imp-sample">⇩ ${t8("بازخوانی‌شده از فصل ۷", "Imported from Chapter 7")}:</span> ${done.filter(Boolean).join("، ")}` +
+    (a1 != null ? `<br><small>${t8("2aI و n همان عرض و تعداد ترک‌های طولی فصل ۷ در فشار طراحی Pi هستند. ترک‌های طولی ممکن است هنگام تخلیه زیر فشار فشاری بسته شوند؛ برای پوشش مسلح کتاب 2aI=0 می‌گیرد، در صورت نیاز آن را دستی تغییر دهید. d و 2aII (ترک‌های عمود بر محور) در فصل ۷ وجود ندارند و همان مقدار قبلی ماندند.", "2aI and n are the longitudinal crack width and number from Chapter 7 at its design pressure Pi. Longitudinal cracks may close under external compression; the book takes 2aI=0 for the reinforced lining, so change it manually if needed. d and 2aII (cracks perpendicular to the axis) do not exist in Chapter 7 and keep their previous values.")}</small>` : "") + `</div>` +
+    (skipped.length ? `<div class="box warn">${t8("منتقل نشد", "Not imported")}: ${skipped.join("؛ ")}</div>` : "") +
+    warns.map(w => `<div class="box warn">⚠️ ${w}</div>`).join("");
+  document.getElementById("status8").textContent = t8("پارامترهای فصل ۷ بازخوانی شد — دکمهٔ محاسبه را بزنید", "Chapter 7 values imported — press Calculate");
+}
+document.getElementById("btnImp8").addEventListener("click", importFrom7);
+
 function loadSample8(name) {
+  clearAllImp8();
   const o = Object.assign({}, S8_COMMON, S8[name]);
   setVals8({ lining: o.lining, type: o.type, zone: o.zone });
   onLining8(true);
@@ -3122,7 +3206,7 @@ function prep8(fields) {            // set the selects first so slider ranges ar
   ["type", "zone", "lining"].forEach(k => { if (fields["c8_" + k] != null) $8(k).value = fields["c8_" + k]; });
   onLining8(true);
 }
-function sync8() { Object.keys(SLID8).forEach(id => { $8(id + "_n").value = $8(id).value; }); onLining8(true); }
+function sync8() { clearAllImp8(); Object.keys(SLID8).forEach(id => { $8(id + "_n").value = $8(id).value; }); onLining8(true); }
 $8("Kr").addEventListener("change", updateVis8);
 onLining8(false);
 loadSample8("B"); document.getElementById("status8").textContent = i18n[currentLang].ready;

@@ -3,7 +3,7 @@
 ## Chapter 7
 
 Engine: client-side JavaScript in `index.html`. Reference: ABOGWL.xls, BELGWL.xls, VSHAFT.xls (Schleiss-style worksheets).  
-Re-run at any time: `node tests/validate.js` (33 checks, all passing for v2.1.0, including the R ≥ 2·ra rule).
+Re-run at any time: `node tests/validate.js` (33 checks, all passing for v2.0.3, including the R ≥ 2·ra rule).
 
 Inputs (all cases): ri=5.075, ra=5.675, rs=5.175 m (VSHAFT: 10.5 / 11 / 10.6), Ec=20000, Er=5000, Es=200000 MPa, ν=0.2, Kr=1e-6, Kc=1e-8 m/s, βz=1, βw=30 MPa, s=20 mm, **ds=20 cm**, R/ra=2 (uncracked), b=0 / 100 / 100 m, (R/ra)cr=10 for the shaft.
 
@@ -19,7 +19,7 @@ Inputs (all cases): ri=5.075, ra=5.675, rs=5.175 m (VSHAFT: 10.5 / 11 / 10.6), E
 
 ## Notes and limits
 - **Spreadsheet convergence (v2.0.2):** for the ABOGWL sample the app returns d = 0.342268 m, Pa = 0.838357 bar, R = 8.15568 m. Typed in rows 52 / 59 / 64, the spreadsheet logic returns d = 0.342201, Pa = 0.838357, R = 8.15568. The residual 0.02% in d is unavoidable because n = INT(2π·rs/d) jumps between 94 and 95 exactly at this d. The first-column values therefore differ slightly from the hand-iterated sheet (Pa 0.8424, R 8.15, n = 95).
-- **No solution when R < ra (rule since v2.1.0):** with ri = 1.9, ra = 2.4, rs = 2.15, Ec = 25740, Er = 15000, νr = 0.29, Kr = 2e-6, s = 16, ds = 15, 2 layers, the spreadsheet's first column has no fixed point at all (best attainable residual about 10%, R = 1.7 m < ra). Since v2.1.0 the app then takes R = 2·ra (4.8 m here) and says so in the cross-check card; solutions with ra < R < 2·ra are kept as calculated.
+- **No solution when R < ra (rule since v2.0.3):** with ri = 1.9, ra = 2.4, rs = 2.15, Ec = 25740, Er = 15000, νr = 0.29, Kr = 2e-6, s = 16, ds = 15, 2 layers, the spreadsheet's first column has no fixed point at all (best attainable residual about 10%, R = 1.7 m < ra). Since v2.0.3 the app then takes R = 2·ra (4.8 m here) and says so in the cross-check card; solutions with ra < R < 2·ra are kept as calculated.
 - The spreadsheets fix some trial values by hand (e.g. R = 8.15 m, Pa = 0.8424 bar at Pi_crit for ABOGWL). The app iterates Pa and R to full convergence with d locked at 0.342 m (R = 8.21 m, Pa = 0.845 bar, σs2 = 42.51 MPa, 2a = 0.02423 mm), so the first column differs from the spreadsheet by about 0.3% in R and 0.3% in Pa (0.13% in σs2 and 2a). Feeding the spreadsheet's own R = 8.15 m / Pa = 0.8424 bar into the app reproduces the spreadsheet column exactly; iterating the spreadsheet by hand to convergence gives the app's values.
 - **BELGWL, uncracked phase:** the spreadsheet inserts ΔPi together with the absolute hydrostatic Pa (Pf(ra) = −7.99 bar). The default reproduces the spreadsheet. The option "consistent uncracked formulation" measures both pressures relative to hydrostatic and gives Pi_crit ≈ 12.64 bar instead of 12.35 bar. Please verify against the book before relying on either.
 - Crack width, spacing and bond use the spreadsheet formulation (τ with exponent 0.25; concrete area for σc1 = full lining thickness).
