@@ -386,7 +386,7 @@ function buildReport8(data) {
   h += row("n", "Number of longitudinal cracks", "Input", String(i.n != null ? i.n : "—"), "—");
   h += row("2a<sub>II</sub>", "Width of cracks perpendicular to axis", "Table 8.1", fmt(i.a2_mm, 3), "mm");
   h += row("d", "Spacing of perpendicular cracks", "Input", fmt(i.d, 3), "m");
-  h += row("ε", "Crack roughness (only if used)", i.useRough ? "Eqs. 8.6 / 8.8 active" : "not used", fmt(i.eps_mm, 2), "mm");
+  h += row("ε", "Crack roughness (only if used)", (i.useRough === "on" ? "On: Eqs. 8.6 / 8.8 for all cracks" : (i.useRough === "auto" || i.useRough === true) ? "Auto: Eqs. 8.6 / 8.8 for cracks < 0.2 mm" : "Off: not used"), fmt(i.eps_mm, 2), "mm");
   h += row("ν<sub>w</sub>", "Kinematic viscosity of water", "Input", fmtExp(i.nu_w), "m²/s");
   h += row("ν<sub>c</sub>", "Poisson ratio of concrete", "Input", fmt(i.vc, 2), "—");
   h += row("β<sub>w</sub>", "Compressive strength of concrete", "Input", fmt(i.bw, 1), "MPa");
@@ -396,10 +396,10 @@ function buildReport8(data) {
   h += row(shaft ? "C<sub>2</sub>" : "C<sub>1</sub>", "Inflow from rock mass", shaft ? "2π K<sub>r</sub> / ln(R/r<sub>g</sub>)  (8.2)" : "2π K<sub>r</sub> / ln[(b/r<sub>g</sub>)(1+√(1−r<sub>g</sub>²/b²))]  (8.1)", fmtExp(r.C_rock), "m/s");
   if (zone) h += row("C<sub>3</sub>", "Grouted / loosened zone", "2π K<sub>g</sub> / ln(r<sub>g</sub>/r<sub>a</sub>)  (8.3)", fmtExp(r.C3), "m/s");
   h += row("C<sub>41</sub>", "Uncracked concrete", "2π K<sub>c</sub> / ln(r<sub>a</sub>/r<sub>i</sub>)  (8.4)", fmtExp(r.C41), "m/s");
-  h += row("C<sub>42</sub>", "Longitudinal cracks", r.rough1 ? "g(2a<sub>I</sub>)³ n / [12ν<sub>w</sub>(1+8.8(ε/2·2a<sub>I</sub>)<sup>1.5</sup>)(r<sub>a</sub>−r<sub>i</sub>)]  (8.6)" : "g(2a<sub>I</sub>)³ n / [12ν<sub>w</sub>(r<sub>a</sub>−r<sub>i</sub>)]  (8.5)", fmtExp(r.C42), "m/s");
-  h += row("C<sub>44</sub>", "Perpendicular cracks", (r.rough2 ? "(8.8)" : "(8.7)") + " g(2a<sub>II</sub>)³·2π r<sub>i</sub> / [d·12ν<sub>w</sub>(r<sub>a</sub>−r<sub>i</sub>)]", fmtExp(r.C44), "m/s");
-  h += row("C<sub>4</sub>", "Total lining conductivity", "C<sub>41</sub> + C<sub>42</sub> + C<sub>44</sub>  (8.9)", fmtExp(r.C4), "m/s");
-  h += "</tbody></table><p class=\"note\">Note: the printed Eqs. 8.7 / 8.8 omit the crack spacing d; the factor 1/d (number of cracks per metre of tunnel) is required to reproduce the worked example of Section 8.5 (see VALIDATION.md).</p>";
+  h += row(r.rough1 ? "C<sub>43</sub>" : "C<sub>42</sub>", r.rough1 ? "Longitudinal cracks, with roughness (reduction factor " + fmt(r.f1, 2) + ")" : "Longitudinal cracks", r.rough1 ? "g(2a<sub>I</sub>)³ n / [12ν<sub>w</sub>(1+8.8(ε/2·2a<sub>I</sub>)<sup>1.5</sup>)(r<sub>a</sub>−r<sub>i</sub>)]  (8.6)" : "g(2a<sub>I</sub>)³ n / [12ν<sub>w</sub>(r<sub>a</sub>−r<sub>i</sub>)]  (8.5)", fmtExp(r.C42), "m/s");
+  h += row(r.rough2 ? "C<sub>45</sub>" : "C<sub>44</sub>", r.rough2 ? "Perpendicular cracks, with roughness (reduction factor " + fmt(r.f2, 2) + ")" : "Perpendicular cracks", (r.rough2 ? "(8.8)" : "(8.7)") + " g(2a<sub>II</sub>)³·2π r<sub>i</sub> / [d·12ν<sub>w</sub>(r<sub>a</sub>−r<sub>i</sub>)]", fmtExp(r.C44), "m/s");
+  h += row("C<sub>4</sub>", "Total lining conductivity", "C<sub>41</sub> + C<sub>42</sub> (or C<sub>43</sub>) + C<sub>44</sub> (or C<sub>45</sub>)  (8.9)", fmtExp(r.C4), "m/s");
+  h += "</tbody></table><p class=\"note\">Roughness (C<sub>43</sub>, C<sub>45</sub>, Eqs. 8.6 / 8.8) setting: " + (i.useRough === "on" ? "On (all cracks)" : (i.useRough === "auto" || i.useRough === true) ? "Auto (cracks < 0.2 mm)" : "Off") + " — " + ((r.rough1 || r.rough2) ? "applied." : (i.useRough === "on" || i.useRough === "auto" || i.useRough === true) ? "no crack qualifies, so the factor is 1 (C<sub>42</sub>, C<sub>44</sub>)." : "parallel-plate flow is used (C<sub>42</sub>, C<sub>44</sub>); choose Auto or On for cracks below 0.2 mm.") + "</p><p class=\"note\">Note: the printed Eqs. 8.7 / 8.8 omit the crack spacing d; the factor 1/d (number of cracks per metre of tunnel) is required to reproduce the worked example of Section 8.5 (see VALIDATION.md).</p>";
   h += "<h2>C. External water pressure</h2><table>" + th;
   h += row("p<sub>a</sub>/(ρ<sub>w</sub>g)", "Head at the outer side of the lining", "Eq. " + (r.eq ? r.eq.pa : "8.10–8.13") + " (continuity q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub>)", fmt(r.ha, 2), "m");
   h += row("p<sub>a</sub>", "Water pressure at outer side of lining", "ρ<sub>w</sub>g · head", fmt(r.pa, 4), "bar");

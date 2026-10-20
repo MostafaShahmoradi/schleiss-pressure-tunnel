@@ -2543,6 +2543,8 @@ function collectProject() {
 function applyProject(p) {
   if (!p || p.app !== "schleiss-pressure-tunnel" || !p.fields) throw new Error(pfa() ? "این فایل پروژه‌ی معتبر این برنامه نیست." : "This is not a valid project file for this app.");
   prep8(p.fields);
+  if (p.fields.c8_rough === true || p.fields.c8_rough === "true") p.fields.c8_rough = "auto";
+  else if (p.fields.c8_rough === false || p.fields.c8_rough === "false" || p.fields.c8_rough == null) p.fields.c8_rough = "off";
   Object.entries(p.fields).forEach(([id, val]) => {
     const el = document.getElementById(id); if (!el) return;
     if (el.type === "checkbox") el.checked = !!val; else el.value = val;
@@ -2658,8 +2660,13 @@ const CH8 = (function () {
     return null;
   }
   /** Eq. 8.6 / 8.8 roughness factor for small cracks (< 0.2 mm): 1 + 8.8 (eps / (2·2a))^1.5 ; widths in metres. */
-  function roughFactor(w, eps, useRough) {
-    if (!useRough || !(eps > 0) || !(w > 0) || w >= 0.2e-3) return 1;
+  /** mode: "off" (parallel flow, factor 1) | "auto" (roughness only for cracks < 0.2 mm, as in the book) | "on" (all cracks).
+   *  true -> "auto", false/undefined -> "off" (older project files). */
+  function roughMode(m) { return m === true || m === "auto" ? "auto" : m === "on" ? "on" : "off"; }
+  function roughFactor(w, eps, mode) {
+    const m = roughMode(mode);
+    if (m === "off" || !(eps > 0) || !(w > 0)) return 1;
+    if (m === "auto" && w >= 0.2e-3) return 1;
     return 1 + 8.8 * Math.pow(eps / (2 * w), 1.5);
   }
 
@@ -2733,7 +2740,7 @@ const CH8 = (function () {
       type: i.type, zone: i.zone, rgEff, Kg, R, Rra: R ? R / rgEff : null, n, d, w1, w2, eps, f1, f2,
       C_rock, C3, C41, C42, C44, C4, ha, hg, pa, pg, p_full, b, q, q_r, q_g, ratio: ha / b, reduction: 1 - ha / b,
       K_lin, K_log, sig_lin, sig_log, sigma, sig_allow, SF_act, ha_allow, ok_sigma, slender, ok_buck,
-      rough1: f1 > 1, rough2: f2 > 1, eq: { rock: i.type === "tunnel" ? "8.1" : "8.2", pa: (i.zone === "none" ? (i.type === "tunnel" ? "8.12" : "8.13") : (i.type === "tunnel" ? "8.10" : "8.11")), c42: f1 > 1 ? "8.6" : "8.5", c44: f2 > 1 ? "8.8" : "8.7", sig: i.gradient === "log" ? "8.16" : "8.15" }
+      rough1: f1 > 1, rough2: f2 > 1, f1, f2, roughMode: roughMode(i.useRough), eq: { rock: i.type === "tunnel" ? "8.1" : "8.2", pa: (i.zone === "none" ? (i.type === "tunnel" ? "8.12" : "8.13") : (i.type === "tunnel" ? "8.10" : "8.11")), c42: f1 > 1 ? "8.6" : "8.5", c44: f2 > 1 ? "8.8" : "8.7", sig: i.gradient === "log" ? "8.16" : "8.15" }
     };
   }
 
@@ -2791,7 +2798,7 @@ Object.assign(i18n.fa, {
   c8_o_tunnel: "تونل افقی (محور تقریباً موازی سطح آب)", c8_o_shaft: "شفت قائم (محور تقریباً عمود بر سطح آب)",
   c8_o_none: "بدون ناحیهٔ سست‌شده/تزریق‌شده", c8_o_loosened: "ناحیهٔ سست‌شده (آتشباری)", c8_o_grouted: "ناحیهٔ تزریق‌شده (تزریق تحکیمی)",
   c8_o_uncracked: "بدون ترک (Case A)", c8_o_unreinforced: "بتن غیرمسلح (محدودهٔ جدول ۸٫۱)", c8_o_reinforced: "بتن مسلح (محدودهٔ جدول ۸٫۱)", c8_o_custom: "دلخواه (خارج از جدول)",
-  c8_o_linear: "گرادیان خطی فشار منفذی (۸٫۱۵)", c8_o_log: "گرادیان لگاریتمی فشار منفذی (۸٫۱۶)"
+  c8_o_off: "غیرفعال (جریان موازی)", c8_o_auto: "خودکار (زبری برای ترک < ۰٫۲ mm)", c8_o_on: "فعال (زبری برای همهٔ ترک‌ها)", c8_o_linear: "گرادیان خطی فشار منفذی (۸٫۱۵)", c8_o_log: "گرادیان لگاریتمی فشار منفذی (۸٫۱۶)"
 });
 Object.assign(i18n.en, {
   tab7: "Ch. 7 — RC lining under internal pressure", tab8: "Ch. 8 — External water pressure (dewatering / down-surges)",
@@ -2806,7 +2813,7 @@ Object.assign(i18n.en, {
   c8_o_tunnel: "Horizontal tunnel (axis ≈ parallel to water table)", c8_o_shaft: "Vertical shaft (axis ≈ perpendicular to water table)",
   c8_o_none: "No loosened / grouted zone", c8_o_loosened: "Loosened rock zone (blasting)", c8_o_grouted: "Grouted zone (consolidation grouting)",
   c8_o_uncracked: "Uncracked (Case A)", c8_o_unreinforced: "Unreinforced concrete (Table 8.1 range)", c8_o_reinforced: "Reinforced concrete (Table 8.1 range)", c8_o_custom: "Custom (outside the table)",
-  c8_o_linear: "Linear pore-pressure gradient (8.15)", c8_o_log: "Logarithmic pore-pressure gradient (8.16)"
+  c8_o_off: "Off (parallel flow)", c8_o_auto: "Auto (roughness for cracks < 0.2 mm)", c8_o_on: "On (roughness for all cracks)", c8_o_linear: "Linear pore-pressure gradient (8.15)", c8_o_log: "Logarithmic pore-pressure gradient (8.16)"
 });
 
 /* ---- form generator ---- */
@@ -2854,7 +2861,7 @@ function sec8(key, fa, en, body) { return `<div class="section-block"><div class
     sld8("n", "تعداد ترک‌های طولی n (در محیط پوشش)", "Number of longitudinal cracks n (around the lining)", "بتن غیرمسلح: حداقل دو ترک", "Unreinforced concrete: minimum two cracks", "", "v8-nL") +
     sld8("sL", "فاصلهٔ ترک‌های طولی در پوشش مسلح (m)", "Spacing of longitudinal cracks, reinforced lining (m)", "چند ترک با فاصلهٔ ۰٫۳ تا ۰٫۶ m؛ تعداد: n = 2π·ra / فاصله", "Several cracks at 0.3–0.6 m; number n = 2π·ra / spacing", "m", "v8-rein") +
     num8("eps", "زبری مطلق ترک ε (mm)", "Absolute roughness of the crack ε (mm)", "معمولاً ۰٫۱ تا ۰٫۵ mm", "Typically 0.1–0.5 mm", 0.3, "0.05") +
-    chk8("rough", "اعمال ضریب زبری برای ترک‌های کوچک‌تر از 0.2 mm (معادلات ۸٫۶ و ۸٫۸)", "Apply roughness factor to cracks < 0.2 mm (Eqs. 8.6 and 8.8)", "مثال کتاب (Case B) بدون ضریب زبری حل شده است؛ فعال‌کردن آن فشار را کمتر می‌کند", "The book example (Case B) is solved without roughness; activating it gives a lower pressure", false));
+    sel8("rough", "اثر زبری ترک (C43 و C45)", "Crack roughness effect (C43 and C45)", "غیرفعال: جریان موازی، C42 و C44 (معادلات ۸٫۵ و ۸٫۷؛ روش مثال کتاب). خودکار: ضریب زبری فقط برای ترک‌های کوچک‌تر از ۰٫۲ mm (معادلات ۸٫۶ و ۸٫۸ → C43 و C45). فعال: ضریب زبری برای همهٔ ترک‌ها", "Off: parallel flow, C42 and C44 (Eqs. 8.5 and 8.7; the book example's method). Auto: roughness factor only for cracks below 0.2 mm (Eqs. 8.6 and 8.8 → C43 and C45). On: roughness factor for all cracks", ["off", "auto", "on"]));
   h += sec8("c8_sec_crit", "", "",
     num8("vc", "ضریب پواسون بتن νc", "Poisson ratio of concrete νc", "", "", 0.2, "0.01") +
     num8("bw", "مقاومت فشاری بتن βw (MPa)", "Compressive strength of concrete βw (MPa)", "مقاومت نهایی فشاری بتن", "Ultimate compressive strength of concrete", 30, "1") +
@@ -2918,7 +2925,7 @@ function collect8() {
   const inp = {
     type, zone, lining, ri: v("ri"), ra, b: v("b"), Kr, Kc, nu_w: +g("nu_w"), rg: v("rg"),
     KgAuto: c("Kgauto"), RAuto: c("Rauto"), vc: v("vc"), bw: v("bw"), SF: v("SF"), gradient: g("grad"),
-    a1_mm: un ? 0 : v("a1"), n, a2_mm: un ? 0 : v("a2"), d: v("d"), eps_mm: v("eps"), useRough: c("rough")
+    a1_mm: un ? 0 : v("a1"), n, a2_mm: un ? 0 : v("a2"), d: v("d"), eps_mm: v("eps"), useRough: g("rough")
   };
   inp.Kg = zone === "none" ? null : (inp.KgAuto ? CH8.autoKg(zone, Kr) : +g("Kg"));
   inp.R = type === "shaft" ? (inp.RAuto ? CH8.autoRra(Kr, Kc) : v("Rra")) * ra : null;
@@ -3032,8 +3039,9 @@ function render8() {
   if (r.C3 != null) { h += sec(t8("۳ — ناحیهٔ سست‌شده / تزریق‌شده", "3 — Loosened / grouted zone")); h += row(`C<sub>3</sub> ${eq("8.3")}`, E8(r.C3), "m/s"); }
   h += sec(t8("۴ — رسانایی پوشش بتنی", "4 — Concrete lining conductivity"));
   h += row(`C<sub>41</sub> ${eq("8.4")}`, E8(r.C41), "m/s", "بتن سالم بین ترک‌ها", "Intact concrete between cracks");
-  h += row(`C<sub>42</sub> ${eq(r.eq.c42)}`, E8(r.C42), "m/s", "ترک‌های طولی (موازی محور)", "Longitudinal cracks");
-  h += row(`C<sub>44</sub> ${eq(r.eq.c44)}`, E8(r.C44), "m/s", "ترک‌های عرضی (عمود بر محور)، با تقسیم بر d", "Transverse cracks, including 1/d");
+  h += row(`C<sub>${r.rough1 ? "43" : "42"}</sub> ${eq(r.eq.c42)}`, E8(r.C42), "m/s", r.rough1 ? "ترک‌های طولی با اثر زبری (ضریب کاهش " + r.f1.toFixed(2) + ")" : "ترک‌های طولی (موازی محور)", r.rough1 ? "Longitudinal cracks with roughness (reduction factor " + r.f1.toFixed(2) + ")" : "Longitudinal cracks (parallel flow)");
+  h += row(`C<sub>${r.rough2 ? "45" : "44"}</sub> ${eq(r.eq.c44)}`, E8(r.C44), "m/s", r.rough2 ? "ترک‌های عرضی با اثر زبری (ضریب کاهش " + r.f2.toFixed(2) + ")، با تقسیم بر d" : "ترک‌های عرضی (عمود بر محور)، با تقسیم بر d", r.rough2 ? "Transverse cracks with roughness (reduction factor " + r.f2.toFixed(2) + "), including 1/d" : "Transverse cracks (parallel flow), including 1/d");
+  if (!r.rough1 && !r.rough2) h += `<div class="val-warn" style="font-size:.78rem">${r.roughMode === "off" ? t8("اثر زبری ترک (C43 و C45، معادلات ۸٫۶ و ۸٫۸) غیرفعال است؛ جریان موازی (C42 و C44) استفاده شده است. برای ترک‌های کوچک‌تر از ۰٫۲ mm حالت «خودکار» یا «فعال» را انتخاب کنید.", "Crack roughness (C43 and C45, Eqs. 8.6 and 8.8) is off; parallel flow (C42 and C44) is used. For cracks below 0.2 mm choose Auto or On.") : t8("حالت زبری «خودکار» است ولی هیچ ترکی کوچک‌تر از ۰٫۲ mm نیست؛ ضریب زبری ۱ است (C42 و C44).", "Roughness is set to Auto, but no crack is narrower than 0.2 mm; the factor is 1 (C42 and C44).")}</div>`;
   h += row(`C<sub>4</sub> ${eq("8.9")}`, E8(r.C4), "m/s");
   h += sec(t8("۵ — پیوستگی جریان q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub>", "5 — Continuity q<sub>r</sub> = q<sub>g</sub> = q<sub>c</sub>"));
   h += row("q", E8(r.q), "m³/s/m", "دبی نشت در واحد طول", "Seepage per unit length");
@@ -3059,7 +3067,7 @@ function rerender8() { if (C8.last) { render8(); drawCharts8(); } onLining8(true
 
 /* ---- samples ---- */
 const S8_COMMON = { type: "tunnel", ri: 5, ra: 5.5, b: 300, Kr: "1e-5", Kc: "1e-8", nu_w: "1e-6", zone: "none", rg: 6.5, Kgauto: true, Kg: "1e-5", Rauto: true, Rra: 10,
-  eps: 0.3, rough: false, vc: 0.2, bw: 30, SF: 2, grad: "linear", rgL: 6.5, rgG: 8.5, KgG: "1e-7", cinC: false };
+  eps: 0.3, rough: "off", vc: 0.2, bw: 30, SF: 2, grad: "linear", rgL: 6.5, rgG: 8.5, KgG: "1e-7", cinC: false };
 const S8 = {
   A: { lining: "uncracked" },
   B: { lining: "custom", a2: 0.1, d: 3, a1: 0, n: 0 },

@@ -36,7 +36,7 @@ Calculation logic is implemented in client-side JavaScript and checked against t
 ### Chapter 8 (new in 2.1.0)
 - Horizontal tunnel (Eq. 8.1, 8.10, 8.12) and vertical shaft (Eq. 8.2, 8.11, 8.13)
 - Optional loosened / grouted rock zone (Eq. 8.3, 8.14)
-- Lining conductivity from intact concrete, longitudinal and perpendicular cracks (Eq. 8.4–8.9, optional roughness 8.6 / 8.8)
+- Lining conductivity from intact concrete, longitudinal and perpendicular cracks (Eq. 8.4–8.9, roughness 8.6 / 8.8 → C43 / C45 selectable: off / auto / on)
 - **Crack-width sliders limited to the ranges of Table 8.1** (unreinforced / reinforced / custom)
 - Compressive-stress check, linear and logarithmic gradient (Eq. 8.15–8.17), safety factor, allowable head, buckling slenderness, drainage / grouting advice
 - Charts similar to Figures 8.5, 8.6, 8.7, CSV export of the curves, printable chapter-8 notebook (`report.html?ch=8`)

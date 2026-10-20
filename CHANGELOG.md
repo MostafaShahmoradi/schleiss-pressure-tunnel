@@ -15,6 +15,8 @@ All notable changes to **Schleiss Pressure Tunnel Design** are documented in thi
 - **Chapter 7 (ABOGWL):** if the first value of the seepage reach `R` is smaller than `ra`, `R = 2·ra` is used (previously `R` was held at 1.05·`ra`). Samples with a valid solution are unaffected.
 - Eq. 8.7 / 8.8: the conductivity of cracks perpendicular to the axis is divided by the crack spacing `d` (missing in the printed equations; required to reproduce the book's example, see VALIDATION.md).
 - Page title, meta tags and structured data now describe both chapters.
+- **Crack roughness effect** is now a three-way option: Off (parallel flow, default), Auto (roughness only for cracks < 0.2 mm, as in the book) and On (all cracks). Older project files with the former checkbox are converted (checked → Auto).
+- Chapter 8 results and notebook now show the roughness conductivities under their book names **C43** (Eq. 8.6) and **C45** (Eq. 8.8) when the roughness option is active (with the reduction factor), and state explicitly when roughness is not applied (default: parallel-plate flow, C42 / C44).
 
 ## [2.0.2] – 2026-10-11
 ### Changed

@@ -26,5 +26,18 @@ const wrong = CH8.compute({ ...base, ...cs.B, ...zn.none, d: 1, Kr: 1e-5 }).ha;
 console.log("INFO Eq. 8.7 without 1/d would give " + wrong.toFixed(1) + " m for Case B (book: 129 m)");
 const sh = CH8.compute({ ...base, ...cs.B, type: "shaft", b: 150, R: 55, Kr: 1e-6, ...zn.none });
 chk("Shaft path (Eqs 8.2/8.13): 0 < head < b", sh.ha > 0 && sh.ha < 150 ? 1 : 0, 1, 0);
+// Roughness modes (Eqs 8.6 / 8.8 -> C43 / C45): off = parallel flow, auto = only cracks < 0.2 mm, on = all cracks
+{
+  const B = { ...base, ...cs.B, ...zn.none, Kr: 1e-5 }, Cc = { ...base, ...cs.C, ...zn.none, Kr: 1e-4 };
+  const off = CH8.compute({ ...B, useRough: "off" }), auto = CH8.compute({ ...B, useRough: "auto" });
+  chk("Roughness off = book method (Case B 129 m)", off.ha, 129, 1);
+  console.log((auto.rough2 && auto.ha > off.ha ? "PASS " : "FAIL ") + "auto: 0.1 mm cracks get roughness (C45), head " + auto.ha.toFixed(1) + " m > " + off.ha.toFixed(1) + " m"); if (!(auto.rough2 && auto.ha > off.ha)) fail++;
+  const cAuto = CH8.compute({ ...Cc, useRough: "auto" }), cOn = CH8.compute({ ...Cc, useRough: "on" }), cOff = CH8.compute({ ...Cc, useRough: "off" });
+  const okAuto = !cAuto.rough2 && Math.abs(cAuto.ha - cOff.ha) < 1e-9, okOn = cOn.rough2 && cOn.ha > cOff.ha;
+  console.log((okAuto ? "PASS " : "FAIL ") + "auto leaves 0.3 mm cracks unchanged (factor 1)"); if (!okAuto) fail++;
+  console.log((okOn ? "PASS " : "FAIL ") + "on applies roughness also to 0.3 mm cracks (" + cOff.ha.toFixed(1) + " -> " + cOn.ha.toFixed(1) + " m)"); if (!okOn) fail++;
+  const legacy = CH8.compute({ ...B, useRough: true });
+  chk("Legacy project value true -> auto", legacy.ha, auto.ha, 1e-9);
+}
 console.log(fail ? `\n${fail} check(s) FAILED` : "\nAll checks passed");
 process.exit(fail ? 1 : 0);
