@@ -1,3 +1,32 @@
+# ابزار آنلاین طراحی تونل‌های تحت فشار بر اساس تئوری اشلایس (Schleiss Pressure Tunnel Design)
+
+[![Online Tool](https://img.shields.io/badge/Live-Demo-brightgreen)](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+این پروژه یک **ماشین‌حساب و ابزار محاسباتی آنلاین** پیشرفته در حوزه مهندسی عمران و سازه‌های هیدرولیکی است که به **طراحی تونل‌های تحت فشار نفوذپذیر و پوشش بتن مسلح** می‌پردازد. این ابزار بر اساس اصول، روابط و تئوری مرجع **پروفسور اشلایس (Schleiss Theory)** و مطابق با **فصول ۷ و ۸ کتاب اشلایس** پیاده‌سازی شده است.
+
+🔗 **[مشاهده و استفاده آنلاین از ابزار طراحی تونل اشلایس](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/)**
+
+---
+
+## 🚀 امکانات و ویژگی‌های اصلی پروژه
+
+این نرم‌افزار وب‌بیس (Web-based) محاسبات پیچیده تئوریک را به صورت خودکار و دقیق انجام می‌دهد:
+* **محاسبه حالت‌های مختلف بارگذاری:** تحلیل و طراحی برای دو حالت اصلی **دارای فشار داخلی** و **بدون فشار داخلی / شرایط تخلیه**.
+* **پوشش بتن مسلح:** تحلیل رفتار پوشش بتنی تونل‌های تحت فشار نفوذپذیر.
+* **مطابقت کامل با مرجع:** پیاده‌سازی گام‌به‌گام فصول ۷ و ۸ کتاب اشلایس.
+* **رابط کاربری تعاملی:** محاسبات سریع، ترسیم نمودارهای مرتبط و ارائه دفترچه محاسبات مهندسی.
+
+---
+
+## 🧮 کلمات کلیدی و حوزه‌های تخصصی (Keywords)
+این پروژه برای مهندسان عمران، طراحان سازه‌های هیدرولیکی و پژوهشگران مکانیک سنگ کاربرد دارد و مباحث زیر را پوشش می‌دهد:
+* طراحی تونل‌های تحت فشار (Pressure Tunnel Design)
+* تئوری و روش اشلایس (Schleiss Theory)
+* پوشش بتنی تونل نفوذپذیر (Permeable Pressure Tunnel Lining)
+* تحلیل فشار داخلی و حالت تخلیه تونل (Internal Pressure and Emptying States)
+* فصول ۷ و ۸ کتاب اشلایس (Schleiss Book Chapters 7 & 8)
+* طراحی سازه‌های آبی و انتقال آب
 # Design of permeable pressure tunnels for reinforced concrete linings under internal pressure using Schleiss theory
 
 **Chapter 7:** reinforced concrete linings under internal pressure · **Chapter 8:** external water pressure during dewatering and down-surges
