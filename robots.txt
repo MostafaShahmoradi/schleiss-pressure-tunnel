@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/sitemap.xml

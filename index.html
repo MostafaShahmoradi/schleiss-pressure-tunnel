@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس) | مصطفی شاهمرادی</title>
   <meta name="description" content="طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس). ماشین‌حساب آنلاین حالت‌های ABOGWL، BELGWL و VSHAFT، بهینه‌سازی آرماتور، نمودار و دفترچه محاسبات. توسعه‌دهنده: مصطفی شاهمرادی." />
-  <meta name="keywords" content="permeable pressure tunnels, reinforced concrete linings, internal pressure, Schleiss theory, pressure tunnel design, shaft lining, ABOGWL, BELGWL, VSHAFT, hydropower, external water pressure, dewatering, Chapter 8, طراحی تونل تحت فشار, فشار آب خارجی, پوشش بتن مسلح, اشلایس, مصطفی شاهمرادی, Mostafa Shahmoradi" />
+  <meta name="keywords" content="permeable pressure tunnels, reinforced concrete linings, internal pressure, Schleiss theory, pressure tunnel design, shaft lining, ABOGWL, BELGWL, VSHAFT, hydropower, external water pressure, dewatering, Chapter 8, طراحی تونل تحت فشار, فشار آب خارجی, پوشش بتن مسلح, اشلایس, مصطفی شاهمرادی, Mostafa Shahmoradi, pressure tunnel design calculator, tunnel lining design, external water pressure on tunnel lining, tunnel dewatering, crack width calculation, seepage through cracked lining, hydropower tunnel, Schleiss chapter 7, Schleiss chapter 8, free online calculator, تونل تحت فشار نفوذپذیر, فشار آب خارجی روی پوشش تونل, تخلیه تونل, عرض ترک پوشش بتنی, طراحی پوشش تونل نیروگاه برق‌آبی, ماشین‌حساب مهندسی عمران, اشلایس فصل ۷, اشلایس فصل ۸" />
   <meta name="author" content="Mostafa Shahmoradi / مصطفی شاهمرادی" />
   <meta name="robots" content="index, follow" />
   <meta property="og:type" content="website" />
@@ -38,7 +38,8 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="vendor/chart.umd.min.js"></script>
+  <script>window.Chart || document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');</script>
   <style>
     :root {
       --bg: #f8f9fa;
@@ -1749,12 +1750,15 @@ function runCalculation() {
 
     status.textContent = i18n[currentLang].done;
 
+    // Keep the results for the Chapter 8 import BEFORE drawing the charts (a chart error must not lose them)
+    window.C7LAST = { inputs: { ...inp }, uncracked: uncr, cracked: crack };
+
     // Update charts with parametric sweep + series markers
-    const sweep = updateCharts(inp, uncr.Pi_crit, seriesHistory);
+    let sweep;
+    try { sweep = updateCharts(inp, uncr.Pi_crit, seriesHistory); } catch (e) { console.warn(e); sweep = { seriesHistory }; }
 
     // Save for calculation notebook (English report page)
     // Reuse Pa_at_maxPi / maxPiVal already computed above
-    window.C7LAST = { inputs: { ...inp }, uncracked: uncr, cracked: crack };
     saveReportData({
       inputs: inp,
       uncracked: uncr,
@@ -1837,6 +1841,11 @@ function destroyCharts() {
 }
 
 function updateCharts(baseInp, Pi_crit, seriesHistory) {
+  if (typeof Chart === "undefined") {   // charts library not loaded: skip drawing, but never break the calculation
+    const st = document.getElementById("status");
+    if (st) st.textContent += currentLang === "fa" ? " — نمودارها بارگذاری نشد (فایل vendor/chart.umd.min.js یا اینترنت را بررسی کنید)" : " — charts could not be loaded (check vendor/chart.umd.min.js or the network)";
+    return { labels: [], data2a: [], dataSs2: [], dataQ: [], dataSeries: [], seriesHistory: seriesHistory || [], startPts2aPi: [], endPts2aPi: [], startPts2aSs: [], endPts2aSs: [], scatter2aSs2: [] };
+  }
   destroyCharts();
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
@@ -2564,7 +2573,7 @@ function setDirty(v) {
 function collectProject() {
   const fields = {};
   PROJECT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.type === "checkbox" ? el.checked : el.value; });
-  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.3", name: projectName, tab: currentTab,
+  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.4", name: projectName, tab: currentTab,
     saved: new Date().toISOString(), lang: currentLang, theme: document.documentElement.getAttribute("data-theme") || "light", fields };
 }
 function applyProject(p) {

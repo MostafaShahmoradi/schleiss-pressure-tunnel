@@ -3,7 +3,7 @@
 ## Chapter 7
 
 Engine: client-side JavaScript in `index.html`. Reference: ABOGWL.xls, BELGWL.xls, VSHAFT.xls (Schleiss-style worksheets).  
-Re-run at any time: `node tests/validate.js` (33 checks, all passing for v2.0.3, including the R ≥ 2·ra rule).
+Re-run at any time: `node tests/validate.js` (33 checks, all passing for v2.0.4, including the R ≥ 2·ra rule).
 
 Inputs (all cases): ri=5.075, ra=5.675, rs=5.175 m (VSHAFT: 10.5 / 11 / 10.6), Ec=20000, Er=5000, Es=200000 MPa, ν=0.2, Kr=1e-6, Kc=1e-8 m/s, βz=1, βw=30 MPa, s=20 mm, **ds=20 cm**, R/ra=2 (uncracked), b=0 / 100 / 100 m, (R/ra)cr=10 for the shaft.
 

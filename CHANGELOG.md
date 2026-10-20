@@ -2,6 +2,14 @@
 
 All notable changes to **Schleiss Pressure Tunnel Design** are documented in this file.
 
+## [2.0.4] – 2026-10-20
+### Fixed
+- **"Import from Chapter 7" did not transfer crack width and number** (message "no Chapter 7 calculation yet") when the charts library could not be loaded from the CDN (blocked or slow network): the chart error stopped the calculation before its results were stored. The results are now stored before the charts are drawn, a missing charts library no longer interrupts a calculation (the status line says that charts are unavailable), and the calculation notebook data is saved as well.
+- Chart.js 4.4.1 is now bundled in `vendor/` (MIT, license included) and loaded locally first, with the CDN only as a fallback; charts and notebooks work offline.
+
+### Added
+- SEO: bilingual (English / Persian) README with keywords, FAQ, About text and Topics; extended meta keywords; `sitemap.xml` and `robots.txt` for GitHub Pages.
+
 ## [2.0.3] – 2026-10-20
 ### Added
 - **Import from Chapter 7:** a button in the Chapter 8 tab copies ri, ra, Kr, Kc, νc, βw, structure type, b (if above ra), R/ra (shaft) and, from the last Chapter 7 calculation, the crack width 2a and number n (as 2aI and n; lining type is set to "custom"). Imported cells are shown in a separate colour with a ⇩ mark until edited. If Chapter 7 has not been calculated, or its inputs changed after the calculation, only the inputs are imported and a warning is shown.
