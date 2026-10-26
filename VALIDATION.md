@@ -3,7 +3,7 @@
 ## Chapter 7
 
 Engine: client-side JavaScript in `index.html`. Reference: ABOGWL.xls, BELGWL.xls, VSHAFT.xls (Schleiss-style worksheets).  
-Re-run at any time: `node tests/validate.js` (33 checks, all passing for v2.0.4, including the R ≥ 2·ra rule).
+Re-run at any time: `node tests/validate.js` (36 checks, all passing for v2.1.0, including the R ≥ 2·ra rule and the reinforcement ratio μ).
 
 Inputs (all cases): ri=5.075, ra=5.675, rs=5.175 m (VSHAFT: 10.5 / 11 / 10.6), Ec=20000, Er=5000, Es=200000 MPa, ν=0.2, Kr=1e-6, Kc=1e-8 m/s, βz=1, βw=30 MPa, s=20 mm, **ds=20 cm**, R/ra=2 (uncracked), b=0 / 100 / 100 m, (R/ra)cr=10 for the shaft.
 
@@ -24,6 +24,9 @@ Inputs (all cases): ri=5.075, ra=5.675, rs=5.175 m (VSHAFT: 10.5 / 11 / 10.6), E
 - **BELGWL, uncracked phase:** the spreadsheet inserts ΔPi together with the absolute hydrostatic Pa (Pf(ra) = −7.99 bar). The default reproduces the spreadsheet. The option "consistent uncracked formulation" measures both pressures relative to hydrostatic and gives Pi_crit ≈ 12.64 bar instead of 12.35 bar. Please verify against the book before relying on either.
 - Crack width, spacing and bond use the spreadsheet formulation (τ with exponent 0.25; concrete area for σc1 = full lining thickness).
 - This is a development log, not a substitute for project-specific checks or independent design review.
+
+### Reinforcement ratio (v2.1.0)
+`μ = As / ((ra − ri) · 1000 · 1000) · 100` with `As = n_layers · π s²/4 · 100 / ds` [mm²/m]. Hand check for the ABOGWL sample (s = 20 mm, ds = 20 cm, ra − ri = 0.6 m): As = 1570.8 mm²/m, μ = 0.2618 %; with s = 32 mm, ds = 10 cm: μ = 1.340 %. The 0.5 % default limit is a designer input, not a value validated here.
 
 ## Chapter 8
 Re-run: `node tests/validate-ch8.js` (11 checks). Reference: the worked example of Section 8.5 (`ri = 5.0`, `ra = 5.5`, `b = 300 m`, `Kc = 1e-8`, `βw = 30 MPa`, SF = 2) and Figures 8.5–8.7. The figures are read off the printed graphs (±3 m); the numbers quoted in the text are matched to ±1 m.

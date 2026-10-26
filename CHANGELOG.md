@@ -2,6 +2,21 @@
 
 All notable changes to **Schleiss Pressure Tunnel Design** are documented in this file.
 
+## [2.1.0] – 2026-10-26
+Changes following review comments by an academic reviewer.
+
+### Added
+- **Explicit units** next to every Chapter 7 input (badges such as [m], [MPa], [bar], [m/s]) and a units table in Help (FA/EN). Bar diameter and spacing keep their units in the label (mm, cm).
+- **"Summary of the method" panel** at the top of the Chapter 7 tab (collapsible, FA/EN): uncracked phase, crack series, seepage iteration, design check, optimization, units.
+- **Minimum reinforcement ratio μ** = As / (lining thickness × 1 m) × 100. New input "Min. reinforcement ratio μ" (default 0.5 %, 0 = disabled) in the designer constraints; checked in the design summary card and in the reinforcement optimization (new column in the table, included in the feasibility test). The 0.5 % default should be verified against the project code.
+- **Scope note** (Chapter 7 and 8 tabs, report): rock masses only, not validated for soil. Non-blocking warning when Er < 500 MPa (approximate threshold).
+- Hint under the buttons explaining what the reinforcement optimization does (and that lining-thickness optimization is not available yet).
+- Help sections 13 (units) and 14 (scope, minimum reinforcement); μ row in the calculation notebook.
+- Tests: three checks for μ in `tests/validate.js` (36 checks in total).
+
+### Changed
+- With the default μ ≥ 0.5 % the built-in ABOGWL sample (s = 20 mm, ds = 20 cm, t = 0.6 m → μ = 0.26 %) is flagged ✗ in the summary card and the optimizer proposes heavier reinforcement. Set μ to 0 to reproduce the earlier behaviour.
+
 ## [2.0.4] – 2026-10-20
 ### Fixed
 - **"Import from Chapter 7" did not transfer crack width and number** (message "no Chapter 7 calculation yet") when the charts library could not be loaded from the CDN (blocked or slow network): the chart error stopped the calculation before its results were stored. The results are now stored before the charts are drawn, a missing charts library no longer interrupts a calculation (the status line says that charts are unavailable), and the calculation notebook data is saved as well.

@@ -330,9 +330,11 @@ function buildReport(data) {
   html += "<tr><td>Crack width 2a</td><td class=\"result\">" + fmt(c.two_a, 5) + " mm</td></tr>";
   html += "<tr><td>Steel stress σ<sub>s2</sub></td><td class=\"result\">" + fmt(c.ss2, 2) + " MPa</td></tr>";
   html += "<tr><td>Seepage reach R</td><td class=\"result\">" + fmt(c.R_calc, 2) + " m</td></tr>";
+  var muPct = (Math.max(1, Math.round(+(i.n_layers || 1))) * Math.PI * i.s * i.s / 4 * 100 / i.ds) / ((i.ra - i.ri) * 1e6) * 100;
+  html += "<tr><td>Reinforcement ratio μ = A<sub>s</sub> / (thickness × 1 m)</td><td class=\"result\">" + fmt(muPct, 3) + " %</td></tr>";
   html += "<tr><td>Reinforcement</td><td class=\"result\">s = " + fmt(i.s, 1) + " mm, d<sub>s</sub> = " + fmt(i.ds, 1) + " cm, A<sub>s</sub> ≈ " + fmt(c.As, 1) + " mm²/m</td></tr>";
   html += "</tbody></table>";
-  html += "<p class=\"note\">Assumptions: Schleiss §7.4; Birkenmaier crack model; d locked from first series; ABOGWL / BELGWL / VSHAFT seepage models as selected. Verify against project-specific codes and site data.</p>";
+  html += "<p class=\"note\">Assumptions: Schleiss §7.4; Birkenmaier crack model; d locked from first series; ABOGWL / BELGWL / VSHAFT seepage models as selected. Scope: rock masses only (not validated for soil). Verify against project-specific codes and site data.</p>";
 
   html += "<footer class=\"dev\">";
   html += "<div>Calculation notebook – Schleiss Pressure Tunnel Design</div>";
@@ -425,7 +427,7 @@ function buildReport8(data) {
   h += "<tr><td>Effective external head p<sub>a</sub>/(ρ<sub>w</sub>g)</td><td class=\"result\">" + fmt(r.ha, 1) + " m (" + fmt(r.pa, 3) + " bar)</td></tr>";
   h += "<tr><td>Compressive stress check (Eq. 8.17)</td><td class=\"result\">" + (ok ? "OK" : "NOT OK") + " — σ = " + fmt(r.sigma, 2) + " MPa vs " + fmt(r.sig_allow, 2) + " MPa</td></tr>";
   h += "<tr><td>Buckling (r<sub>a</sub>/(r<sub>a</sub>−r<sub>i</sub>) &lt; 40)</td><td class=\"result\">" + (okb ? "not governing" : "check required") + "</td></tr>";
-  h += "</tbody></table><p class=\"note\">Assumptions: homogeneous isotropic permeability in each zone; linear or logarithmic pore-pressure gradient across the lining; cracks along the axis may close under external pressure (Section 8.2). Verify against project codes and site data.</p>";
+  h += "</tbody></table><p class=\"note\">Assumptions: homogeneous isotropic permeability in each zone; linear or logarithmic pore-pressure gradient across the lining; cracks along the axis may close under external pressure (Section 8.2). Scope: rock masses only (not validated for soil). Verify against project codes and site data.</p>";
   h += "<footer class=\"dev\"><div>Calculation notebook – Schleiss Pressure Tunnel Design, Chapter 8</div><div style=\"margin-top:0.35rem;\"><strong>Developer: Mostafa Shahmoradi / مصطفی شاهمرادی</strong></div><div style=\"margin-top:0.4rem;font-size:0.82rem;color:#555;\">© 2026 Mostafa Shahmoradi. Redistribution or rebranding without permission is prohibited.</div></footer>";
   return h;
 }

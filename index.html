@@ -487,6 +487,13 @@
     .sum-card table{width:100%;border-collapse:collapse;margin-top:.4rem;} .sum-card td{padding:.2rem .3rem;border-bottom:1px solid var(--border);}
     .val-err,.val-warn{border-radius:8px;padding:.5rem .75rem;margin:.5rem 0;font-size:.85rem;}
     .val-err{background:rgba(220,53,69,.12);border:1px solid #dc3545;} .val-warn{background:rgba(255,193,7,.15);border:1px solid #e0a800;}
+    /* ===== v2.1.0: units, scope note, method panel ===== */
+    .unit-badge{display:inline-block;direction:ltr;unicode-bidi:isolate;font-size:.72rem;font-weight:700;color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,transparent);padding:.02rem .38rem;border-radius:999px;white-space:nowrap;}
+    .scope-note{border:1px solid #e0a800;border-inline-start:4px solid #e0a800;background:rgba(255,193,7,.12);border-radius:8px;padding:.55rem .8rem;margin-bottom:.9rem;font-size:.85rem;}
+    details.method{border:1px solid var(--border);border-radius:10px;padding:.55rem .9rem;margin-bottom:.9rem;background:rgba(13,110,253,.05);font-size:.88rem;}
+    details.method summary{cursor:pointer;font-weight:700;color:var(--primary);}
+    details.method ol{margin:.5rem 0 .2rem;padding-inline-start:1.2rem;} details.method li{margin-bottom:.4rem;}
+    .opt-hint{font-size:.8rem;color:var(--muted);margin:.6rem 0 0;}
     /* ===== v2.0.3: tabs + chapter 8 ===== */
     .tabs{flex-basis:100%;display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.15rem;}
     .tab-btn{flex:1;min-width:14rem;background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:.55rem .9rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;}
@@ -557,6 +564,11 @@
 
 <main id="tab7">
   <section class="card">
+    <div class="scope-note"><b data-i18n="scope_title"></b> <span data-i18n="scope_text"></span></div>
+    <details class="method" id="method7">
+      <summary data-i18n="m7_title"></summary>
+      <ol><li data-i18n="m7_1"></li><li data-i18n="m7_2"></li><li data-i18n="m7_3"></li><li data-i18n="m7_4"></li><li data-i18n="m7_5"></li><li data-i18n="m7_6"></li></ol>
+    </details>
     <div class="qs" id="quickStart">
       <button type="button" id="qsClose" aria-label="close">×</button>
       <b data-i18n="qs_title">Quick start</b>
@@ -752,6 +764,12 @@
         </label>
         <input type="number" id="max_ss" value="240" step="10" />
       </div>
+      <div class="form-group">
+        <label><span data-i18n="min_mu">حداقل درصد آرماتور μ</span>
+          <span class="tooltip-icon" data-tip-fa="حداقل نسبت آرماتور به سطح مقطع بتن، μ = As / (ضخامت × ۱ متر) بر حسب درصد (As شامل همه‌ی لایه‌ها). مقدار پیش‌فرض ۰٫۵٪ را با آیین‌نامه/مرجع پروژه تأیید کنید. صفر = غیرفعال." data-tip-en="Minimum reinforcement ratio, μ = As / (lining thickness × 1 m) in percent (As includes all layers). Verify the 0.5 % default against the project code / reference. Zero = disabled.">?</span>
+        </label>
+        <input type="number" id="min_mu" value="0.5" step="0.05" min="0" />
+      </div>
       <div class="form-group" style="grid-column: 1 / -1;">
         <label><span data-i18n="s_candidates">قطرهای میلگرد برای بهینه‌سازی (s)</span>
           <span class="tooltip-icon" data-tip-fa="لیست قطر میلگردها به میلی‌متر، جدا با ویرگول یا فاصله. فقط این سایزها در جستجوی بهینه بررسی می‌شوند." data-tip-en="Bar diameters in mm, separated by commas or spaces. Only these sizes are searched in optimization.">?</span>
@@ -772,6 +790,7 @@
       <button class="btn-primary btn-success" id="btnOptimize" data-i18n="optimize">بهینه‌سازی آرماتور</button>
       <button class="btn-primary btn-purple" id="btnReport" data-i18n="report">دفترچه محاسبات</button>
     </div>
+    <p class="opt-hint" data-i18n="opt_hint"></p>
     <div class="samples-row">
       <button type="button" class="btn-sample abo" id="btnSampleABO" data-i18n="sample_abo">نمونه بالای GWL</button>
       <button type="button" class="btn-sample bel" id="btnSampleBEL" data-i18n="sample_bel">نمونه زیر GWL</button>
@@ -828,6 +847,7 @@
 
 <main id="tab8" class="tab-hidden">
   <section class="card">
+    <div class="scope-note"><b data-i18n="scope_title"></b> <span data-i18n="scope_text"></span></div>
     <div class="qs" id="quickStart8">
       <b data-i18n="c8_qs_title">هدف و روش کار</b>
       <ol><li data-i18n="c8_qs1"></li><li data-i18n="c8_qs2"></li><li data-i18n="c8_qs3"></li></ol>
@@ -1019,6 +1039,32 @@ Object.assign(i18n.en, {
   bel_cons:"BELGWL: consistent uncracked formulation",
   s:"Bar diameter s (mm)", ds:"Bar spacing ds (cm)", ds_candidates:"Bar spacings for optimization (ds, cm)", s_candidates:"Bar diameters for optimization (s, mm)"
 });
+Object.assign(i18n.fa, {
+  scope_title: "محدوده‌ی کاربرد:",
+  scope_text: "این برنامه بر پایه‌ی نظریه‌ی اشلایس فقط برای تونل‌ها و شفت‌های داخل توده‌ی سنگ است. برای خاک (سفتی کم، خطر شکست هیدرولیکی و شسته‌شدن ریزدانه) اعتبارسنجی نشده و نباید برای طراحی به‌کار رود. نتایج را با آیین‌نامه‌ی پروژه و بازبینی مستقل کنترل کنید.",
+  m7_title: "خلاصه‌ی روش محاسبه (اشلایس، بخش ۷٫۴) — برای مشاهده کلیک کنید",
+  m7_1: "فاز ترک‌نخورده: پوشش استوانه‌ی ضخیم الاستیک در توده‌ی سنگ فرض می‌شود. فشار آب خارجی Pa از نشت (بالای GWL) یا فشار آب زیرزمینی (زیر GWL) به‌دست می‌آید. فشار داخلی بحرانی Pi,crit فشاری است که در آن حداکثر تنش مماسی به مقاومت کششی βz می‌رسد.",
+  m7_2: "فاز ترک‌خورده: فاصله‌ی ترک d در سری اول قفل می‌شود. برای هر سری ترک، تنش فولاد σs2، عرض ترک 2a = (σs2 + 2σs1)·d / (3·Es) و تعداد ترک n محاسبه می‌شود؛ وقتی تنش بتن بین ترک‌ها (σc1) به βz برسد، سری بعدی (با d نصف) آغاز می‌شود.",
+  m7_3: "نشت: Pa و شعاع تأثیر R با پیوستگی دبی ترک‌ها و دبی سنگ، به‌صورت تکراری تا همگرایی حل می‌شوند (بالای GWL: الگوی Bouvard؛ زیر GWL: R = b؛ شفت: R = (R/ra)cr · ra).",
+  m7_4: "کنترل طراحی: عرض ترک 2a، تنش فولاد σs2، دبی نشت q، شعاع نشت R و حداقل درصد آرماتور μ با حدود بخش «محدودیت‌های طراح» مقایسه می‌شوند (کارت خلاصه‌ی بالای نتایج).",
+  m7_5: "بهینه‌سازی آرماتور: همه‌ی ترکیب‌های قطر s و فاصله‌ی ds در حداکثر Pi آزمایش می‌شود و سبک‌ترین ترکیبی که همه‌ی حدود را ارضا کند پیشنهاد می‌شود. ضخامت پوشش و شعاع‌ها ثابت‌اند و بهینه نمی‌شوند.",
+  m7_6: "واحدها: طول m، تنش و مدول MPa، فشار bar، نفوذپذیری m/s، قطر میلگرد mm، فاصله‌ی میلگرد cm. فرمول‌ها، مثال‌ها و جدول واحدها در راهنما (Help) آمده است.",
+  min_mu: "حداقل درصد آرماتور μ",
+  opt_hint: "بهینه‌سازی آرماتور: همه‌ی ترکیب‌های قطر و فاصله‌ی میلگرد را در حداکثر Pi آزمایش می‌کند و سبک‌ترین ترکیبی را که 2a، σs2، q، R و حداقل μ را هم‌زمان ارضا کند پیشنهاد می‌دهد. بهینه‌سازی ضخامت پوشش فعلاً وجود ندارد."
+});
+Object.assign(i18n.en, {
+  scope_title: "Scope:",
+  scope_text: "Based on Schleiss theory, this tool is for tunnels and shafts in rock masses only. It has not been validated for soil (low stiffness, hydraulic fracturing, erosion of fines) and must not be used for soil design. Check results against the project code and an independent review.",
+  m7_title: "Summary of the method (Schleiss, Section 7.4) — click to open",
+  m7_1: "Uncracked phase: the lining is a thick elastic cylinder in a rock mass. The outer water pressure Pa comes from seepage (above GWL) or groundwater head (below GWL). The critical internal pressure Pi,crit is where the maximum tangential stress reaches the tensile strength βz.",
+  m7_2: "Cracked phase: the crack spacing d is locked in series 1. For each crack series the steel stress σs2, crack width 2a = (σs2 + 2σs1)·d / (3·Es) and number of cracks n are computed; when the concrete stress between cracks (σc1) reaches βz the next series (d halved) starts.",
+  m7_3: "Seepage: Pa and the seepage reach R are solved iteratively from continuity of crack flow and rock flow (above GWL: Bouvard pattern; below GWL: R = b; shaft: R = (R/ra)cr · ra).",
+  m7_4: "Design check: crack width 2a, steel stress σs2, seepage q, reach R and the minimum reinforcement ratio μ are compared with the limits in 'Designer constraints' (summary card above the results).",
+  m7_5: "Reinforcement optimization: every bar diameter s and spacing ds is tested at the maximum Pi and the lightest combination that meets all limits is proposed. Lining thickness and radii are fixed and are not optimized.",
+  m7_6: "Units: lengths m, stresses and moduli MPa, pressure bar, permeability m/s, bar diameter mm, bar spacing cm. Formulas, examples and the units table are in the Help manual.",
+  min_mu: "Min. reinforcement ratio μ",
+  opt_hint: "Reinforcement optimization tests every bar diameter / spacing combination at the maximum Pi and proposes the lightest one that satisfies 2a, σs2, q, R and the minimum μ at the same time. Optimization of the lining thickness is not available yet."
+});
 let currentLang = "fa";
 
 function setLanguage(lang) {
@@ -1069,6 +1115,14 @@ function resolveStructMode(inp) {
   // auto
   if (b > 0) return "below";
   return "above";
+}
+
+/** Reinforcement ratio mu [%] = As / (lining thickness x 1 m) * 100; As in mm2/m incl. all layers (s in mm, ds in cm). */
+function reinfRatioPct(inp) {
+  const nl = Math.max(1, Math.min(10, Math.round(+(inp.n_layers || 1))));
+  const As = nl * (Math.PI * inp.s * inp.s / 4) * 100 / inp.ds;      // mm2/m
+  const Ac = (inp.ra - inp.ri) * 1000 * 1000;                         // mm2 per metre of tunnel
+  return As / Ac * 100;
 }
 
 /* ========== Uncracked Phase (ABOGWL / BELGWL / VSHAFT) ========== */
@@ -2295,6 +2349,7 @@ function runOptimization() {
   const max_Pi = +document.getElementById("max_Pi").value;
   const max_R = +document.getElementById("max_R").value;
   const max_ss = +document.getElementById("max_ss").value;
+  const min_mu = Math.max(+document.getElementById("min_mu").value || 0, 0);
 
   const vopt = validateInputs({ ...base, Pi: max_Pi, s: 20, ds: 20 });
   showValidation(vopt);
@@ -2338,12 +2393,14 @@ function runOptimization() {
       const ok_q = crack.q <= max_q;
       const ok_R = (crack.R_calc || 0) <= max_R;
       const ok_ss = crack.ss2 <= max_ss;
-      const allOk = ok_2a && ok_q && ok_R && ok_ss;
+      const mu = reinfRatioPct(inp);
+      const ok_mu = mu >= min_mu - 1e-9;
+      const allOk = ok_2a && ok_q && ok_R && ok_ss && ok_mu;
 
       const cand = {
         s, ds, As: crack.As, two_a: crack.two_a, q: crack.q,
         R: crack.R_calc, ss2: crack.ss2, series: crack.currentSeries,
-        Pa: crack.Pa_cracked, ok_2a, ok_q, ok_R, ok_ss, allOk
+        Pa: crack.Pa_cracked, mu, ok_2a, ok_q, ok_R, ok_ss, ok_mu, allOk
       };
       allCands.push(cand);
 
@@ -2382,6 +2439,7 @@ function runOptimization() {
           <div class="param-cell"><span class="pname">Pa</span><span class="pval">${(best.Pa||0).toFixed(4)} <span class="punit">bar</span></span></div>
           <div class="param-cell"><span class="pname">2a</span><span class="pval">${best.two_a.toFixed(4)} <span class="punit">mm</span></span></div>
           <div class="param-cell"><span class="pname">σs2</span><span class="pval">${best.ss2.toFixed(1)} <span class="punit">MPa</span></span></div>
+          <div class="param-cell"><span class="pname">μ</span><span class="pval">${best.mu.toFixed(3)} <span class="punit">%</span></span></div>
           <div class="param-cell"><span class="pname">R</span><span class="pval">${(best.R||0).toFixed(2)} <span class="punit">m</span></span></div>
           <div class="param-cell"><span class="pname">q</span><span class="pval">${best.q.toExponential(3)}</span></div>
           <div class="param-cell"><span class="pname">${fa ? "قابل قبول از" : "Feasible of"}</span><span class="pval">${feasible.length} / ${allCands.length}</span></div>
@@ -2403,8 +2461,8 @@ function runOptimization() {
     html += `<div class="series-card"><div class="series-point" style="overflow-x:auto;">
       <p style="margin:0 0 0.5rem;font-size:0.78rem;color:var(--muted);">
         ${fa
-          ? `محدودیت‌ها در Pi=${max_Pi} bar: 2a ≤ ${max_2a} mm · q ≤ ${max_q} · R ≤ ${max_R} m · σs2 ≤ ${max_ss} MPa`
-          : `Limits at Pi=${max_Pi} bar: 2a ≤ ${max_2a} mm · q ≤ ${max_q} · R ≤ ${max_R} m · σs2 ≤ ${max_ss} MPa`}
+          ? `محدودیت‌ها در Pi=${max_Pi} bar: 2a ≤ ${max_2a} mm · q ≤ ${max_q} · R ≤ ${max_R} m · σs2 ≤ ${max_ss} MPa · μ ≥ ${min_mu} %`
+          : `Limits at Pi=${max_Pi} bar: 2a ≤ ${max_2a} mm · q ≤ ${max_q} · R ≤ ${max_R} m · σs2 ≤ ${max_ss} MPa · μ ≥ ${min_mu} %`}
       </p>
       <table style="width:100%;border-collapse:collapse;font-size:0.8rem;min-width:720px;">
         <thead>
@@ -2417,6 +2475,7 @@ function runOptimization() {
             <th style="padding:0.4rem;">q ≤ ${max_q}</th>
             <th style="padding:0.4rem;">R ≤ ${max_R}</th>
             <th style="padding:0.4rem;">σs2 ≤ ${max_ss}</th>
+            <th style="padding:0.4rem;">μ ≥ ${min_mu}%</th>
             <th style="padding:0.4rem;">${fa ? "نتیجه" : "Result"}</th>
             <th style="padding:0.4rem;">2a<br><span style="font-weight:400;color:var(--muted);">mm</span></th>
             <th style="padding:0.4rem;">σs2<br><span style="font-weight:400;color:var(--muted);">MPa</span></th>
@@ -2440,6 +2499,7 @@ function runOptimization() {
         <td style="padding:0.35rem;">${pass(c.ok_q)}</td>
         <td style="padding:0.35rem;">${pass(c.ok_R)}</td>
         <td style="padding:0.35rem;">${pass(c.ok_ss)}</td>
+        <td style="padding:0.35rem;">${pass(c.ok_mu)} <span style="color:var(--muted);font-size:.72rem">${c.mu.toFixed(2)}%</span></td>
         <td style="padding:0.35rem;">${c.allOk
           ? `<span style="color:#198754;font-weight:700;">${fa ? "قابل قبول" : "OK"}</span>`
           : `<span style="color:#dc3545;">${fa ? "رد" : "No"}</span>`}</td>
@@ -2479,7 +2539,7 @@ function runOptimization() {
           series: best.series, feasibleCount: feasible.length,
           allCands: allCands.map(c => ({
             s: c.s, ds: c.ds, As: c.As, two_a: c.two_a, ss2: c.ss2, R: c.R, q: c.q,
-            ok_2a: c.ok_2a, ok_q: c.ok_q, ok_R: c.ok_R, ok_ss: c.ok_ss, allOk: c.allOk
+            ok_2a: c.ok_2a, ok_q: c.ok_q, ok_R: c.ok_R, ok_ss: c.ok_ss, ok_mu: c.ok_mu, mu: c.mu, allOk: c.allOk
           }))
         },
         sweep,
@@ -2501,6 +2561,7 @@ function validateInputs(inp) {
   if (!(inp.R_over_ra > 1)) errs.push(t("R/ra (ترک‌نخورده) باید بزرگ‌تر از ۱ باشد", "R/ra (uncracked) must be greater than 1"));
   if (inp.ds * 10 < inp.s) warns.push(t("ds (cm) خیلی کوچک است؛ میلگردها روی هم می‌افتند. ds را به سانتی‌متر وارد کنید (مثلاً ۲۰ = ۲۰ cm).", "ds looks too small (bars would overlap). Enter ds in centimetres (e.g. 20 = 20 cm)."));
   if (inp.ds > 100) warns.push(t("ds بیش از ۱۰۰ cm است. اگر میلی‌متر وارد کرده‌اید، تقسیم بر ۱۰ کنید.", "ds is above 100 cm. If you entered millimetres, divide by 10."));
+  if (inp.Er < 500) warns.push(t("Er کمتر از ۵۰۰ MPa است (مقدار تقریبی هشدار): این مدول معمولاً به خاک یا سنگ بسیار ضعیف مربوط است. نظریه‌ی اشلایس برای توده‌ی سنگ است و برای خاک (شکست هیدرولیکی، شسته‌شدن ریزدانه) اعتبارسنجی نشده؛ نتایج را برای طراحی به‌کار نبرید.", "Er is below 500 MPa (approximate warning threshold): this usually means soil or very weak rock. Schleiss theory is for rock masses and has not been validated for soil (hydraulic fracturing, erosion of fines); do not use the results for design."));
   const mode = resolveStructMode(inp), Pgw = 9.81 * (inp.b || 0) / 100;
   if (mode === "below" || mode === "shaft") {
     if (!(inp.b > 0)) errs.push(t("برای این نوع سازه b باید بزرگ‌تر از صفر باشد", "b must be greater than zero for this structure type"));
@@ -2551,16 +2612,17 @@ function buildSummary(c, inp, uncr) {
     ["q", c.q, v("max_q"), "m³/s/m", -2], ["R", c.R_calc, v("max_R"), "m", 1]
   ];
   const fmt = (x, d) => d < 0 ? x.toExponential(2) : x.toFixed(d);
-  const allOk = rows.every(r => r[1] <= r[2]);
+  const mu = reinfRatioPct(inp), muMin = Math.max(+document.getElementById("min_mu").value || 0, 0), muOk = mu >= muMin - 1e-9;
+  const allOk = rows.every(r => r[1] <= r[2]) && muOk;
   return `<div class="sum-card ${allOk ? "" : "bad"}"><b>${allOk ? "✅" : "❌"} ${fa ? "خلاصه‌ی کنترل طراحی" : "Design check summary"}</b>
     — ${fa ? "سری ترک" : "crack series"} ${c.currentSeries}, Pi = ${(+inp.Pi).toFixed(2)} bar (Pi_crit = ${uncr.Pi_crit.toFixed(3)})
-    <table>${rows.map(r => `<tr><td>${r[0]}</td><td>${fmt(r[1], r[4])} ${r[3]}</td><td>≤ ${r[2]}</td><td>${r[1] <= r[2] ? "✓" : "✗"}</td></tr>`).join("")}</table>
+    <table>${rows.map(r => `<tr><td>${r[0]}</td><td>${fmt(r[1], r[4])} ${r[3]}</td><td>≤ ${r[2]}</td><td>${r[1] <= r[2] ? "✓" : "✗"}</td></tr>`).join("")}<tr><td>μ</td><td>${mu.toFixed(3)} %</td><td>≥ ${muMin}</td><td>${muOk ? "✓" : "✗"}</td></tr></table>
     <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">${fa ? "حدود از بخش «محدودیت‌های طراح» خوانده می‌شوند." : "Limits are read from the 'Designer constraints' section."}</div></div>`;
 }
 
 /* ========== Project files: New / Open / Save / Save As ========== */
 const PROJECT_FIELDS = ["ri","ra","rs","Ec","Er","Es","vc","vr","Kr","Kc","Bz","Bw","Pi","b","R_over_ra","Rra_cracked","struct_mode","bel_consistent",
-  "s","ds","n_layers","max_2a","max_q","max_Pi","max_R","max_ss","Pi_hist_max","s_candidates","ds_candidates"];
+  "s","ds","n_layers","max_2a","max_q","max_Pi","max_R","max_ss","min_mu","Pi_hist_max","s_candidates","ds_candidates"];
 let projectName = "untitled", fileHandle = null, dirty = false;
 const FILE_TYPES = [{ description: "Schleiss project (.json)", accept: { "application/json": [".json"] } }];
 const pfa = () => currentLang === "fa";
@@ -2573,7 +2635,7 @@ function setDirty(v) {
 function collectProject() {
   const fields = {};
   PROJECT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.type === "checkbox" ? el.checked : el.value; });
-  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.0.4", name: projectName, tab: currentTab,
+  return { app: "schleiss-pressure-tunnel", format: 1, version: "2.1.0", name: projectName, tab: currentTab,
     saved: new Date().toISOString(), lang: currentLang, theme: document.documentElement.getAttribute("data-theme") || "light", fields };
 }
 function applyProject(p) {
@@ -3222,6 +3284,19 @@ loadSample8("B"); document.getElementById("status8").textContent = i18n[currentL
 try { showTab(localStorage.getItem("tunnelAppTab") === "8" ? "8" : "7"); } catch (e) {}
 
 C8_FIELDS.forEach(k => PROJECT_FIELDS.push("c8_" + k));
+
+/* v2.1.0: explicit units next to every Chapter 7 input (s and ds already carry theirs in the label) */
+const UNITS7 = { ri:"m", ra:"m", rs:"m", Ec:"MPa", Er:"MPa", Es:"MPa", vc:"–", vr:"–", Kr:"m/s", Kc:"m/s", Bz:"MPa", Bw:"MPa",
+  Pi:"bar", b:"m", R_over_ra:"–", Rra_cracked:"–", n_layers:"–", max_2a:"mm", max_q:"m³/s/m", max_Pi:"bar", Pi_hist_max:"bar",
+  max_R:"m", max_ss:"MPa", min_mu:"%" };
+(function addUnits7() {
+  Object.entries(UNITS7).forEach(([id, u]) => {
+    const el = document.getElementById(id); if (!el) return;
+    const lab = el.closest(".form-group") && el.closest(".form-group").querySelector("label"); if (!lab || lab.querySelector(".unit-badge")) return;
+    const b = document.createElement("span"); b.className = "unit-badge"; b.textContent = "[" + u + "]";
+    lab.insertBefore(b, lab.querySelector(".tooltip-icon"));
+  });
+})();
 
 // Init
 setLanguage("fa");

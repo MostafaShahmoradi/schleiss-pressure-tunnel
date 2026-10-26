@@ -348,7 +348,7 @@
       </div>
 
       <h2 id="fa-opt">۱۰. بهینه‌سازی آرماتور</h2>
-      <p>در <code>max_Pi</code> همه ترکیب‌های مجاز <code>s × d<sub>s</sub></code> بررسی می‌شوند. ترکیب‌هایی که محدودیت‌های 2a، q، R و σs را پاس کنند، از سبک به سنگین رتبه‌بندی می‌شوند و سبک‌ترین <code>A<sub>s</sub></code> پیشنهاد می‌شود.</p>
+      <p>در <code>max_Pi</code> همه ترکیب‌های مجاز <code>s × d<sub>s</sub></code> بررسی می‌شوند. ترکیب‌هایی که محدودیت‌های 2a، q، R، σs و حداقل درصد آرماتور μ را پاس کنند، از سبک به سنگین رتبه‌بندی می‌شوند و سبک‌ترین <code>A<sub>s</sub></code> پیشنهاد می‌شود.</p>
 
       <h2 id="fa-notes">۱۱. نکات و فرضیات</h2>
       <ul>
@@ -424,6 +424,31 @@
         <li><strong>رنگ دکمه‌ها:</strong> ذخیره/باز کردن/جدید سبز، راهنما بنفش، زبان نارنجی، تم خاکستری؛ تب فصل ۷ آبی و تب فصل ۸ فیروزه‌ای.</li>
         <li>فایل پروژه فصل ۷ و ۸ یکی است (<code>.schleiss.json</code>) و تب فعال هم ذخیره می‌شود.</li>
       </ul>
+
+      <h2 id="fa-units">۱۳. واحدهای برنامه</h2>
+      <p>همه‌ی ورودی‌ها در دستگاه متریک و با واحدهای زیر وارد می‌شوند (واحد کنار هر ورودی هم نوشته شده است). برنامه تبدیل واحد خودکار ندارد؛ پیش از وارد کردن، مقدار را به این واحدها تبدیل کنید.</p>
+      <table>
+        <thead><tr><th>کمیت</th><th>نماد</th><th>واحد</th></tr></thead>
+        <tbody>
+          <tr><td>شعاع‌ها، عمق زیر GWL، شعاع نشت</td><td><code>r<sub>i</sub>, r<sub>a</sub>, r<sub>s</sub>, b, R</code></td><td>m</td></tr>
+          <tr><td>مدول‌های الاستیسیته</td><td><code>E<sub>c</sub>, E<sub>r</sub>, E<sub>s</sub></code></td><td>MPa</td></tr>
+          <tr><td>مقاومت‌های بتن، تنش فولاد</td><td><code>β<sub>z</sub>, β<sub>w</sub>, σ<sub>s</sub></code></td><td>MPa</td></tr>
+          <tr><td>فشار آب (داخلی/خارجی)</td><td><code>P<sub>i</sub>, P<sub>a</sub></code></td><td>bar (۱ bar ≈ ۱۰٫۲ m ستون آب = ۰٫۱ MPa)</td></tr>
+          <tr><td>نفوذپذیری</td><td><code>K<sub>r</sub>, K<sub>c</sub>, K<sub>g</sub></code></td><td>m/s (۱ لوژان ≈ ۱e-7 m/s)</td></tr>
+          <tr><td>قطر میلگرد</td><td><code>s</code></td><td>mm</td></tr>
+          <tr><td>فاصله‌ی میلگردها</td><td><code>d<sub>s</sub></code></td><td>cm</td></tr>
+          <tr><td>سطح آرماتور در واحد طول</td><td><code>A<sub>s</sub></code></td><td>mm²/m</td></tr>
+          <tr><td>عرض ترک (فصل ۷ و ۸)، فاصله‌ی ترک</td><td><code>2a, d</code></td><td>mm، m</td></tr>
+          <tr><td>دبی نشت</td><td><code>q</code></td><td>m³/s/m</td></tr>
+          <tr><td>درصد آرماتور</td><td><code>μ</code></td><td>٪</td></tr>
+          <tr><td>ویسکوزیته‌ی سینماتیک آب</td><td><code>ν<sub>w</sub></code></td><td>m²/s</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="fa-scope">۱۴. محدوده‌ی کاربرد و حداقل آرماتور</h2>
+      <p class="callout"><strong>فقط توده‌ی سنگ.</strong> نظریه‌ی اشلایس برای تونل و شفت داخل توده‌ی سنگ نوشته شده است. این برنامه برای خاک اعتبارسنجی نشده و نباید برای طراحی در خاک به‌کار رود: در خاک سفتی و محصورشدگی کم است و خطر شکست هیدرولیکی و شسته‌شدن ریزدانه (فرسایش درونی) وجود دارد که مدل کنترل نمی‌کند. اگر <code>E<sub>r</sub></code> کمتر از ≈۵۰۰ MPa وارد شود (آستانه‌ی تقریبی)، فقط هشدار نمایش داده می‌شود و محاسبه متوقف نمی‌شود.</p>
+      <p><strong>حداقل درصد آرماتور μ:</strong> <code>μ = A<sub>s</sub> / (ضخامت پوشش × ۱ m) × ۱۰۰</code> (<code>A<sub>s</sub></code> شامل همه‌ی لایه‌ها). مقدار پیش‌فرض ۰٫۵٪ است و در «محدودیت‌های طراح» تغییر می‌کند (۰ = غیرفعال). در کارت خلاصه و در بهینه‌سازی آرماتور کنترل می‌شود. مقدار ۰٫۵٪ را با آیین‌نامه یا مرجع پروژه تأیید کنید.</p>
+      <p><strong>بهینه‌سازی:</strong> فقط قطر و فاصله‌ی میلگرد (و نتیجتاً <code>A<sub>s</sub></code>) در حداکثر <code>P<sub>i</sub></code> بهینه می‌شود. ضخامت پوشش، شعاع‌ها و تعداد لایه‌ها ثابت‌اند.</p>
 
       <footer class="dev">
         <div>راهنمای کاربری — طراحی تونل تحت فشار نفوذپذیر — پوشش بتن مسلح (نظریه اشلایس)</div>
@@ -579,7 +604,7 @@
       </div>
 
       <h2 id="en-opt">10. Reinforcement optimization</h2>
-      <p>At <code>max_Pi</code> all allowed <code>s × d<sub>s</sub></code> pairs are checked. Combinations that satisfy 2a, q, R and σs limits are ranked light-to-heavy; the smallest feasible <code>A<sub>s</sub></code> is recommended.</p>
+      <p>At <code>max_Pi</code> all allowed <code>s × d<sub>s</sub></code> pairs are checked. Combinations that satisfy the 2a, q, R, σs and minimum-μ limits are ranked light-to-heavy; the smallest feasible <code>A<sub>s</sub></code> is recommended.</p>
 
       <h2 id="en-notes">11. Notes &amp; assumptions</h2>
       <ul>
@@ -656,6 +681,31 @@
         <li>One project file format (<code>.schleiss.json</code>) holds both chapters; the active tab is saved too.</li>
       </ul>
 
+      <h2 id="en-units">13. Units used by the program</h2>
+      <p>All inputs are metric with the units below (the unit is also shown next to each input). There is no automatic unit conversion; convert values to these units before entering them.</p>
+      <table>
+        <thead><tr><th>Quantity</th><th>Symbol</th><th>Unit</th></tr></thead>
+        <tbody>
+          <tr><td>Radii, depth below GWL, seepage reach</td><td><code>r<sub>i</sub>, r<sub>a</sub>, r<sub>s</sub>, b, R</code></td><td>m</td></tr>
+          <tr><td>Moduli of elasticity</td><td><code>E<sub>c</sub>, E<sub>r</sub>, E<sub>s</sub></code></td><td>MPa</td></tr>
+          <tr><td>Concrete strengths, steel stress</td><td><code>β<sub>z</sub>, β<sub>w</sub>, σ<sub>s</sub></code></td><td>MPa</td></tr>
+          <tr><td>Water pressure (internal / external)</td><td><code>P<sub>i</sub>, P<sub>a</sub></code></td><td>bar (1 bar ≈ 10.2 m of water = 0.1 MPa)</td></tr>
+          <tr><td>Permeability</td><td><code>K<sub>r</sub>, K<sub>c</sub>, K<sub>g</sub></code></td><td>m/s (1 Lugeon ≈ 1e-7 m/s)</td></tr>
+          <tr><td>Bar diameter</td><td><code>s</code></td><td>mm</td></tr>
+          <tr><td>Bar spacing</td><td><code>d<sub>s</sub></code></td><td>cm</td></tr>
+          <tr><td>Reinforcement area per unit length</td><td><code>A<sub>s</sub></code></td><td>mm²/m</td></tr>
+          <tr><td>Crack width (Ch. 7 and 8), crack spacing</td><td><code>2a, d</code></td><td>mm, m</td></tr>
+          <tr><td>Seepage rate</td><td><code>q</code></td><td>m³/s/m</td></tr>
+          <tr><td>Reinforcement ratio</td><td><code>μ</code></td><td>%</td></tr>
+          <tr><td>Kinematic viscosity of water</td><td><code>ν<sub>w</sub></code></td><td>m²/s</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="en-scope">14. Scope and minimum reinforcement</h2>
+      <p class="callout"><strong>Rock masses only.</strong> Schleiss theory was developed for tunnels and shafts in rock. This program has not been validated for soil and must not be used for soil design: soil has low stiffness and confinement, and the model does not check hydraulic fracturing or erosion of fines (internal erosion). If <code>E<sub>r</sub></code> is entered below ≈500 MPa (approximate threshold), only a warning is shown and the calculation is not blocked.</p>
+      <p><strong>Minimum reinforcement ratio μ:</strong> <code>μ = A<sub>s</sub> / (lining thickness × 1 m) × 100</code> (<code>A<sub>s</sub></code> includes all layers). The default is 0.5 % and can be changed under "Designer constraints" (0 = disabled). It is checked in the summary card and in the reinforcement optimization. Verify the 0.5 % value against the project code or reference.</p>
+      <p><strong>Optimization:</strong> only bar diameter and spacing (hence <code>A<sub>s</sub></code>) are optimized, at the maximum <code>P<sub>i</sub></code>. Lining thickness, radii and number of layers are fixed.</p>
+
       <footer class="dev">
         <div>User manual — Schleiss Pressure Tunnel Design</div>
         <div style="margin-top:0.35rem;"><strong>Developer: Mostafa Shahmoradi / مصطفی شاهمرادی</strong></div>
@@ -678,7 +728,9 @@ const tocFa = [
   ["fa-ex3", "۹. مثال VSHAFT"],
   ["fa-opt", "۱۰. بهینه‌سازی"],
   ["fa-notes", "۱۱. نکات"],
-  ["fa-ch8", "۱۲. فصل ۸"]
+  ["fa-ch8", "۱۲. فصل ۸"],
+  ["fa-units", "۱۳. واحدها"],
+  ["fa-scope", "۱۴. محدوده و حداقل آرماتور"]
 ];
 const tocEn = [
   ["en-intro", "1. Introduction"],
@@ -692,7 +744,9 @@ const tocEn = [
   ["en-ex3", "9. Example VSHAFT"],
   ["en-opt", "10. Optimization"],
   ["en-notes", "11. Notes"],
-  ["en-ch8", "12. Chapter 8"]
+  ["en-ch8", "12. Chapter 8"],
+  ["en-units", "13. Units"],
+  ["en-scope", "14. Scope & min. reinforcement"]
 ];
 
 function renderToc() {

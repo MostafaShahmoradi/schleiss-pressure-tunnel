@@ -4,10 +4,10 @@
 
 **Short name:** Schleiss Pressure Tunnel Design  
 **Developer / توسعه‌دهنده:** Mostafa Shahmoradi / مصطفی شاهمرادی  
-**Version:** 2.0.4
+**Version:** 2.1.0
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue)](https://mostafashahmoradi.github.io/schleiss-pressure-tunnel/)
-[![Version](https://img.shields.io/badge/version-2.0.4-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
+[![Version](https://img.shields.io/badge/version-2.1.0-green)](https://github.com/MostafaShahmoradi/schleiss-pressure-tunnel/releases)
 [![License: proprietary](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)](LICENSE)
 
 **Free online calculator for pressure tunnels and shafts of hydropower plants**, based on A. J. Schleiss, *Design of Pressure Tunnels and Shafts for Hydropower Plants*. It runs in the browser (no installation, no login) and has two tabs:
@@ -52,6 +52,13 @@ Help / Manual (راهنما): https://mostafashahmoradi.github.io/schleiss-press
 - Detailed per-formula results with units and tooltips, charts with crack-series markers
 - Reinforcement optimization, multi-layer reinforcement, CSV export, sensitivity analysis
 - If the first seepage reach R is smaller than ra, R = 2·ra is used
+### New in 2.1.0
+- Explicit units next to every Chapter 7 input and a units table in Help
+- "Summary of the method" panel inside the Chapter 7 tab
+- Minimum reinforcement ratio μ (default 0.5 %, editable) in the design check and in the reinforcement optimization
+- Scope note: rock masses only; warning when Er < 500 MPa (soil or very weak rock)
+- Not available yet: optimization of the lining thickness (only bar diameter / spacing are optimized)
+
 ### Both tabs / هر دو تب
 - Persian / English interface, light / dark theme, colour-coded buttons and tabs
 - Save / Open projects (`.schleiss.json`, Ctrl+S / Ctrl+O), design-check summary cards, input validation
@@ -93,6 +100,7 @@ See **[VALIDATION.md](VALIDATION.md)**. Run `node tests/validate.js` (Chapter 7 
 | `tests/validate.js` | Chapter 7 regression test (+ R ≥ 2·ra rule) |
 | `tests/validate-ch8.js` | Chapter 8 regression test |
 | `VALIDATION.md` | Numeric checks vs. references |
+| `RELEASE_v2.1.0.md` | Release notes of the current version |
 | `CHANGELOG.md` | Version history |
 | `sitemap.xml`, `robots.txt` | Search-engine files for GitHub Pages |
 | `LICENSE` | © 2026 Mostafa Shahmoradi |
@@ -113,5 +121,7 @@ Personal and educational use with attribution is allowed.
 **Redistribution, rehosting, or rebranding without written permission is prohibited.**
 
 This is intentional for a specialized engineering calculator (IP protection). It is **not** an MIT/Apache open-source grant. See [LICENSE](LICENSE). The bundled Chart.js library keeps its own MIT license (`vendor/LICENSE-chart.js.txt`).
+
+**Scope / محدوده:** rock masses only; not validated for soil. / فقط توده‌ی سنگ؛ برای خاک اعتبارسنجی نشده است.
 
 This is a study tool and does not replace project-specific checks or independent design review. / این ابزار برای مطالعه است و جایگزین کنترل‌های ویژه‌ی پروژه و بازبینی مستقل طراحی نیست.

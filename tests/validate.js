@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path");
 const src = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 const i = src.indexOf("/* ========== Structure mode"), j = src.indexOf("/* ========== Main calculation");
 const E = new Function("const document={getElementById:()=>null};" + src.slice(i, j) +
-  "return {calculateUncracked,computeCrackedExcel,calculateCrackedPhase};")();
+  "return {calculateUncracked,computeCrackedExcel,calculateCrackedPhase,reinfRatioPct,resolveStructMode};")();
 const base = { ri: 5.075, ra: 5.675, rs: 5.175, Ec: 20000, Er: 5000, Es: 200000, vc: .2, vr: .2, Kr: 1e-6, Kc: 1e-8,
   Bz: 1, Bw: 30, s: 20, ds: 20, n_layers: 1, R_over_ra: 2, Rra_cracked: 10 };
 const cases = {
@@ -60,6 +60,15 @@ line(sw.currentSeries === 1, "series switch only when sigma_c1 >= Bz (Pi=25.8 st
   const rw = E.computeCrackedExcel({ ...w, Pi: uw.Pi_crit }, uw.Pi_crit, 0, null);
   line(Math.abs(rw.R_calc - 2 * w.ra) < 1e-6 && rw.R_rule === true, `R < ra -> R = 2*ra (R=${rw.R_calc.toFixed(3)}, 2ra=${(2 * w.ra).toFixed(3)})`);
   line(Math.abs(U.ABOGWL.Pi_crit - 2.827408) < 1e-3 && D.ABOGWL > 0, "ABOGWL sample unaffected by the R rule");
+}
+// v2.1.0: reinforcement ratio mu = As / (thickness x 1 m)
+{
+  const mu = E.reinfRatioPct(base);                       // s=20 mm, ds=20 cm, t=0.6 m -> As=1570.8 mm2/m
+  line(Math.abs(mu - 0.26180) < 1e-4, `mu (s=20, ds=20 cm, t=0.6 m) = ${mu.toFixed(5)} % (expected 0.26180)`);
+  const mu2 = E.reinfRatioPct({ ...base, n_layers: 2 });
+  line(Math.abs(mu2 / mu - 2) < 1e-9, "mu doubles with two layers");
+  const mu3 = E.reinfRatioPct({ ...base, s: 32, ds: 10 });  // As=8042.5 mm2/m
+  line(mu3 >= 0.5 && mu < 0.5, `0.5 % limit: s=20/ds=20 fails (${mu.toFixed(3)} %), s=32/ds=10 passes (${mu3.toFixed(3)} %)`);
 }
 console.log(fail ? `\n${fail} check(s) FAILED` : "\nAll checks passed");
 process.exit(fail ? 1 : 0);
